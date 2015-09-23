@@ -53,6 +53,9 @@ class car_module
 {
 private:
 	int mac;                           //车库模块地址
+	int sumcar;                        //总存车量
+	int spendcar;                      //已存车量
+	int condition;                     //状态
 	int rows;                          //行
 	int cols;                          //列
 	double speed_rows;                 //行速度
@@ -61,11 +64,17 @@ private:
 
 public:
 	int readdate();
+	int readdate(int mac);             //从mysql读取车库信息
 
 	int judgeposition(int num);        //获取空闲状态
 	int getid(int num);                //获取id
+	int combine(int id,int idle);      //合并id和空闲状态
 	int getmac();                      //获取模块地址
 	void setmac(int mac);              //设置模块地址
+	int getsumcar();                   //获取总量
+	int getspendcar();                 //获取已存车量
+	int getcondition();                //获取当前状态
+	void setconditopn(int num);        //设置状态
 	int getrows();                     //获取车库行
 	void setrows(int rows);            //设置车库行
 	int getcols();                     //获取车库列
@@ -79,7 +88,8 @@ public:
 	int countqueue();                  //按花费时间从小到大排序
 	int findemptycarport();            //查找最近的车位,未找到返回-1
 	int savecar();                     //存车
-	void savedatetomysql();            //保存数据到mysql
+	int deletecar(int index);          //取车
+	int savedatetomysql();            //保存数据到mysql
 
 	void putinfo();
 };

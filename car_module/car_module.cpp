@@ -47,18 +47,31 @@ int car_module::readdate()
 	fscanf(fpin,"%d\n",&mac);
 	fscanf(fpin,"%d%d\n",&rows,&cols);
 	fscanf(fpin,"%lf%lf\n",&speed_rows,&speed_cols);
+	sumcar=rows*cols;
+	spendcar=0;
 	for(int i=0;i<rows*cols;i++)
 	{
 		speed_location tmp;
 		fscanf(fpin,"%d",&tmp.id);
 		tmp.idle=judgeposition(tmp.id);
 		tmp.id=getid(tmp.id)-1;
+
+		if(tmp.idle==2)sumcar--;
+		if(!tmp.idle)spendcar++;
+
 		//突然发现不需要用到rows值计算时间
 		//难怪一直找不到问题出在哪
 		tmp.time=(tmp.id/cols)/speed_rows+(tmp.id%cols)/speed_cols;
 		map_queue.push_back(tmp);
 	}
+	fclose(fpin);
 	countqueue();
+	return 0;
+}
+
+int car_module::readdate(int mac)
+{
+	this->mac=mac;
 	return 0;
 }
 
@@ -78,6 +91,11 @@ int car_module::getid(int num)
 	//////////////////////////////////////////////////////////////////////////
 }
 
+int car_module::combine(int id,int idle)
+{
+	return ((unsigned int)idle<<(sizeof(int)*4))|(id+1);
+}
+
 int car_module::getmac()
 {
 	return this->mac;
@@ -86,6 +104,26 @@ int car_module::getmac()
 void car_module::setmac(int mac)
 {
 	this->mac=mac;
+}
+
+int car_module::getsumcar()
+{
+	return this->sumcar;
+}
+
+int car_module::getspendcar()
+{
+	return this->spendcar;
+}
+
+int car_module::getcondition()
+{
+	return this->condition;
+}
+
+void car_module::setconditopn(int num)
+{
+	this->condition=num;
 }
 
 int car_module::getrows()
@@ -160,6 +198,8 @@ int car_module::countqueue()
 
 int car_module::findemptycarport()
 {
+	//////////////////////////////////////////////////////////////////////////
+	//查找空余车位
 	for(int i=0;i<map_queue.size();i++)
 	{
 		if(map_queue[i].idle==0)
@@ -168,6 +208,7 @@ int car_module::findemptycarport()
 		}
 	}
 	return -1;
+	//////////////////////////////////////////////////////////////////////////
 }
 
 int car_module::savecar()
@@ -175,18 +216,50 @@ int car_module::savecar()
 	int index=findemptycarport();
 	if(index==-1)return index;
 	map_queue[index].idle=1;
+
+	savedatetomysql();
+
 	return index;
 }
 
-void car_module::savedatetomysql()
+int car_module::deletecar(int index)
 {
+	if(index<0)return -1;
+	if(index>=map_queue.size())return -1;
+	if(map_queue[index].idle==0)return -1;
+	map_queue[index].idle=0;
+
+	savedatetomysql();
+
+	return 0;
+}
+
+int car_module::savedatetomysql()
+{
+	FILE* fpout;
+	fpout=fopen("date.txt","w");
+	if(fpout==NULL)
+	{
+		printf("can not open date.txt\n");
+		return 1;
+	}
+	fprintf(fpout,"%d\n",mac);
+	fprintf(fpout,"%d %d\n",rows,cols);
+	fprintf(fpout,"%.3lf %.3lf\n",speed_rows,speed_cols);
+	for(int i=0;i<rows*cols;i++)
+	{
+		fprintf(fpout,"%d ",combine(map_queue[i].id,map_queue[i].idle));
+	}
+	fclose(fpout);
+	return 0;
 }
 
 void car_module::putinfo()
 {
-	printf("%d\n",mac);
-	printf("%d %d\n",rows,cols);
-	printf("%lf %lf\n",speed_rows,speed_cols);
+	printf("mac=%d\n",mac);
+	printf("sumcar=%2d spendcar=%2d\n",sumcar,spendcar);
+	printf("rows=%2d cols=%2d\n",rows,cols);
+	printf("speed_rows=%.3lf speed_cols=%.3lf\n",speed_rows,speed_cols);
 
 	printf("\n");
 	for(int i=rows-1;i>=0;i--)
@@ -201,7 +274,7 @@ void car_module::putinfo()
 
 	for(i=0;i<rows*cols;i++)
 	{
-		printf("rows=%2d cols=%2d id=%2d free=%2d time=%lf\n",map_queue[i].id/cols,map_queue[i].id%cols,map_queue[i].id,map_queue[i].idle,map_queue[i].time);
+		printf("rows=%2d cols=%2d id=%2d free=%2d time=%.3lf\n",getrows(map_queue[i].id),getcols(map_queue[i].id),map_queue[i].id,map_queue[i].idle,map_queue[i].time);
 	}
 	printf("\n");
 }
