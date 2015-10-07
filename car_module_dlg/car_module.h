@@ -36,6 +36,7 @@
 #if !defined(_CAR_MODULE_)
 #define _CAR_MODULE_
 
+#include "StdAfx.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -61,9 +62,12 @@ private:
 	double speed_rows;                 //行速度
 	double speed_cols;                 //列速度
 	vector <speed_location> map_queue; //位置列表
+	MYSQL mysql;                       //mysql数据库
+	MYSQL_RES *res;                    //查询结果集
+	MYSQL_ROW column;                  //数据行的列
 
 public:
-	int readdate();
+	int readdate();                    //从文件读取数据
 	int readdate(int mac);             //从mysql读取车库信息
 
 	int judgeposition(int num);        //获取空闲状态
@@ -93,7 +97,8 @@ public:
 	int findemptycarport();            //查找最近的车位,未找到返回-1
 	int savecar();                     //存车
 	int deletecar(int index);          //取车
-	int savedatetomysql();             //保存数据到mysql
+	int savedatetomysql();             //保存数据到文件
+	int savedatetomysql(int mac);      //保存数据到mysql
 	int clear();                       //清空库存数据
 
 	void putinfo();

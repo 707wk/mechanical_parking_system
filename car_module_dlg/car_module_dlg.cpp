@@ -5,6 +5,17 @@
 #include "car_module_dlg.h"
 #include "car_module_dlgDlg.h"
 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#include "DataStructure.h"
+#include "car_module.h"
+
+using namespace std;
+
+struct serverset serverinfo;
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -21,6 +32,21 @@ BEGIN_MESSAGE_MAP(CCar_module_dlgApp, CWinApp)
 	//}}AFX_MSG
 	ON_COMMAND(ID_HELP, CWinApp::OnHelp)
 END_MESSAGE_MAP()
+
+int readserverset()
+{
+	FILE* fp=fopen("serverSet.ini","r");
+	if(fp==NULL)
+	{
+		printf("Œ¥’“µΩ≈‰÷√Œƒº˛!");
+		return -1;
+	}
+	
+	fscanf(fp,"server=%s\nusername=%s\npwd=%s\ndatabase=%s\nport=%d",
+		serverinfo.ip,serverinfo.name,serverinfo.password,serverinfo.database,&serverinfo.port);
+	
+	return 0;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CCar_module_dlgApp construction
@@ -53,6 +79,8 @@ BOOL CCar_module_dlgApp::InitInstance()
 #else
 	Enable3dControlsStatic();	// Call this when linking to MFC statically
 #endif
+
+	if(readserverset())return FALSE;
 
 	CCar_module_dlgDlg dlg;
 	m_pMainWnd = &dlg;

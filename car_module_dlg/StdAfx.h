@@ -24,4 +24,15 @@
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
+#include "windows.h"
+#include "wininet.h"
+#include "winsock.h"
+
+#include "mysql/mysql.h"
+
+#pragma comment(lib,"ws2_32.lib")
+#pragma comment(lib,"ws2_32.lib")
+#pragma comment(lib, "libmysql.lib")
+#pragma comment(lib, "Wininet.lib")
+
 #endif // !defined(AFX_STDAFX_H__32DBE141_C92A_412D_B8B9_B167AFB8E9F0__INCLUDED_)

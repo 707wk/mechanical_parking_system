@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "car_module_dlg.h"
 #include "car_module_dlgDlg.h"
+#include "DataStructure.h"
 #include "car_module.h"
 
 #include <iostream>
@@ -11,6 +12,8 @@
 #include <algorithm>
 
 using namespace std;
+
+extern struct serverset serverinfo;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -70,7 +73,7 @@ BOOL CCar_module_dlgDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
 	// TODO: Add extra initialization here
-	garage.readdate();
+	if(garage.readdate(1234))return FALSE;
 	//////////////////////////////////////////////////////////////////////////
 	//不知道为什么,行列反了,但在显示的却是正确的
 	int cols=garage.getcols();
@@ -111,40 +114,20 @@ tmp.Format("%d",cols*rows-i);
 		}
     } 
 
-	CString str;
-	str.Format("%d",garage.getmac());
-	m_mac.SetWindowText(str);
-
-	str.Format("%d",garage.getsumcar());
-	m_sum.SetWindowText(str);
-
-	str.Format("%d",garage.getspendcar());
-	m_finish.SetWindowText(str);
-
-	str.Format("%f",garage.getspeedrows());
-	m_speedrows.SetWindowText(str);
-
-	str.Format("%f",garage.getspeedcols());
-	m_speedcols.SetWindowText(str);
-
-	str.Format("%d",garage.getrows());
-	m_rows.SetWindowText(str);
-
-	str.Format("%d",garage.getcols());
-	m_cols.SetWindowText(str);
-
+	upinfodate();
+		
 	//////////////////////////////////////////////////////////////////////////
 	//设置窗口大小
 	CRect rect;
 	GetClientRect (&rect);
 	int cx=rect.Width ();
 	int cy=rect.Height ();
-
+	
 	cx=startpoint[0]+cols*kuan+30;
 	cy=startpoint[1]+rows*gao;
 	cy=cy>rect.Height ()?cy+startpoint[1]:rect.Height ();
 	cy+=(startpoint[1]*2);
-
+	
 	::SetWindowPos(this->m_hWnd,HWND_BOTTOM,0,0,cx,cy,SWP_NOZORDER|SWP_NOMOVE);
 	//////////////////////////////////////////////////////////////////////////
 	
@@ -216,12 +199,59 @@ void CCar_module_dlgDlg::OnButton1()
 		MessageBox("没有空余车位");
 	}
 	//garage.readdate();
+
+	garage.savedatetomysql(1234);
+	upinfodate();
 }
 
 //取车
 void CCar_module_dlgDlg::OnButton2() 
 {
 	// TODO: Add your control notification handler code here
-	
+	CString str;
+	m_carid.GetWindowText(str);
+
+	int index=atoi(str.GetBuffer(0));
+	int sum=garage.getrows()*garage.getcols();
+
+	index=garage.deletecar(index);
+
+	if(index!=-1)
+	{
+		btn[sum-index-1].SetIcon(m_hicnok);
+	}
+	else
+	{
+		MessageBox("未找到车辆");
+	}
+
+	garage.savedatetomysql(1234);
+
+	upinfodate();
 }
 
+//刷新信息
+void CCar_module_dlgDlg::upinfodate()
+{
+	CString str;
+	str.Format("%d",garage.getmac());
+	m_mac.SetWindowText(str);
+	
+	str.Format("%d",garage.getsumcar());
+	m_sum.SetWindowText(str);
+	
+	str.Format("%d",garage.getspendcar());
+	m_finish.SetWindowText(str);
+	
+	str.Format("%f",garage.getspeedrows());
+	m_speedrows.SetWindowText(str);
+	
+	str.Format("%f",garage.getspeedcols());
+	m_speedcols.SetWindowText(str);
+	
+	str.Format("%d",garage.getrows());
+	m_rows.SetWindowText(str);
+	
+	str.Format("%d",garage.getcols());
+	m_cols.SetWindowText(str);
+}

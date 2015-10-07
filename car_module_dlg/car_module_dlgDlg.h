@@ -8,6 +8,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "StdAfx.h"
 #include "car_module.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -45,6 +46,7 @@ public:
 
 // Implementation
 protected:
+	void upinfodate();
 	HICON m_hIcon;
 
 	// Generated message map functions

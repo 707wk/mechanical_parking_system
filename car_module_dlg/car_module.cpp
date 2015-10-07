@@ -34,6 +34,16 @@
 ***************************************/
 #include "StdAfx.h"
 #include "car_module.h"
+#include "DataStructure.h"
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <sstream>
+
+using namespace std;
+
+extern struct serverset serverinfo;
 
 int car_module::readdate()
 {
@@ -57,12 +67,12 @@ int car_module::readdate()
 		fscanf(fpin,"%d",&tmp.id);
 		if(!feof(fpin))
 		{
-		tmp.idle=judgeposition(tmp.id);
-		tmp.id=getid(tmp.id)-1;
+			tmp.idle=judgeposition(tmp.id);
+			tmp.id=getid(tmp.id)-1;
 		}
 
 		if(tmp.idle==2)sumcar--;
-		if(!tmp.idle)spendcar++;
+		if(tmp.idle==1)spendcar++;
 
 		//////////////////////////////////////////////////////////////////////////
 		//突然发现不需要用到rows值计算时间
@@ -86,6 +96,135 @@ int car_module::readdate()
 int car_module::readdate(int mac)
 {
 	this->mac=mac;
+
+	mysql_init(&mysql);
+	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
+	{
+		AfxMessageBox("数据库无法连接!");
+		return -1;
+	}
+
+	CString str;
+	str.Format("select * from t_garageinfo where mac=%d",mac);
+
+	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+
+	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
+	{
+		res=mysql_store_result(&mysql);//保存查询到的数据到result
+		column=mysql_fetch_row(res);//获取具体的数据
+		if(column)
+		{
+			rows=atoi(column[3]);
+			cols=atoi(column[4]);
+			speed_rows=atof(column[5]);
+			speed_cols=atof(column[6]);
+			sumcar=0;//atoi(column[7]);
+			spendcar=0;//atoi(column[8]);
+			string tmpstr=column[9];
+
+			stringstream stream;
+			stream<<tmpstr;
+			for(int i=0;i<rows*cols;i++)
+			{
+				speed_location tmp;
+				tmp.id=i;
+				tmp.idle=0;
+				stream>>tmp.id;
+				if(tmp.id)
+				{
+					tmp.idle=judgeposition(tmp.id);
+					tmp.id=getid(tmp.id)-1;
+				}
+				
+				if(tmp.idle==2)sumcar--;
+				if(tmp.idle==1)spendcar++;
+				
+				//////////////////////////////////////////////////////////////////////////
+				//突然发现不需要用到rows值计算时间
+				//难怪一直找不到问题出在哪
+				//////////////////////////////////////////////////////////////////////////
+				//突然发现横纵轴速度算反了
+				tmp.time=(tmp.id/cols)/speed_cols+(tmp.id%cols)/speed_rows;
+				//////////////////////////////////////////////////////////////////////////
+				map_queue.push_back(tmp);
+			}
+		}
+		else
+		{
+			AfxMessageBox("readdate:未找到数据");
+		}
+	}
+	else
+	{
+		AfxMessageBox("数据库连接失败");
+		return -1;
+	}
+
+	return 0;
+}
+
+int car_module::savedatetomysql()
+{
+	FILE* fpout;
+	fpout=fopen("date.txt","w");
+	if(fpout==NULL)
+	{
+		printf("can not open date.txt\n");
+		return 1;
+	}
+	fprintf(fpout,"%d\n",mac);
+	fprintf(fpout,"%d %d\n",rows,cols);
+	fprintf(fpout,"%.3lf %.3lf\n",speed_rows,speed_cols);
+	for(int i=0;i<rows*cols&&map_queue.size();i++)
+	{
+		fprintf(fpout,"%d ",combine(map_queue[i].id,map_queue[i].idle));
+	}
+	fclose(fpout);
+	return 0;
+}
+
+int car_module::savedatetomysql(int mac)
+{
+	this->mac=mac;
+
+	mysql_init(&mysql);
+	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
+	{
+		AfxMessageBox("数据库无法连接!");
+		return -1;
+	}
+	
+	string tmpstr;
+	CString str;
+
+	for(int i=0;i<rows*cols;i++)
+	{
+		str.Format("%d ",combine(map_queue[i].id,map_queue[i].idle));
+		tmpstr=tmpstr+str.GetBuffer(0);
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	//把速度用%d输出造成程序崩溃了
+	//CString str;
+	str.Format("\
+UPDATE t_garageinfo set rows=%d,cols=%d,\
+speedrows=%f,speedcols=%f,sumcar=%d,spendcar=%d,map_queue='%s' where mac=%d",
+rows,cols,speed_rows,speed_cols,sumcar,spendcar,tmpstr.c_str(),mac);
+	//////////////////////////////////////////////////////////////////////////
+
+	//AfxMessageBox(str);
+	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+	
+	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
+	{
+	}
+	else
+	{
+		AfxMessageBox("数据库连接失败");
+		return -1;
+	}
+
 	return 0;
 }
 
@@ -252,41 +391,44 @@ int car_module::savecar()
 	if(index==-1)return index;
 	map_queue[index].idle=1;
 
+	spendcar++;
+
 	savedatetomysql();
 
+	//////////////////////////////////////////////////////////////////////////
+	//最开始返回了内部下标,后来改成外部下标
 	return map_queue[index].id;
+	//////////////////////////////////////////////////////////////////////////
 }
 
 int car_module::deletecar(int index)
 {
+	//////////////////////////////////////////////////////////////////////////
+	//使下标与id对应
+	index--;
+	//////////////////////////////////////////////////////////////////////////
 	if(index<0)return -1;
 	if(index>=map_queue.size())return -1;
-	if(map_queue[index].idle==0)return -1;
-	map_queue[index].idle=0;
+
+	//////////////////////////////////////////////////////////////////////////
+	//转换外部坐标为内部坐标
+	int i;
+	for(i=0;i<map_queue.size();)
+	{
+		if(map_queue[i].id==index)
+			break;
+		i++;
+	}
+	//////////////////////////////////////////////////////////////////////////
+	
+	if(map_queue[i].idle==0)return -1;
+	map_queue[i].idle=0;
+
+	spendcar--;
 
 	savedatetomysql();
 
-	return 0;
-}
-
-int car_module::savedatetomysql()
-{
-	FILE* fpout;
-	fpout=fopen("date.txt","w");
-	if(fpout==NULL)
-	{
-		printf("can not open date.txt\n");
-		return 1;
-	}
-	fprintf(fpout,"%d\n",mac);
-	fprintf(fpout,"%d %d\n",rows,cols);
-	fprintf(fpout,"%.3lf %.3lf\n",speed_rows,speed_cols);
-	for(int i=0;i<rows*cols&&map_queue.size();i++)
-	{
-		fprintf(fpout,"%d ",combine(map_queue[i].id,map_queue[i].idle));
-	}
-	fclose(fpout);
-	return 0;
+	return map_queue[i].id;
 }
 
 void car_module::putinfo()
