@@ -79,10 +79,10 @@ BOOL CCar_module_dlgDlg::OnInitDialog()
 
     btn = new CButton[cols*rows];  
     DWORD dwStyle = WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_ICON;  
-    for(int i = 0; i < cols*rows; i++){ 
-		int startpoint[2]={220,15};       //起始点
-		int gao=50;              //间隔高
-		int kuan=50;             //间隔宽
+	int startpoint[2]={220,15};       //起始点
+	int gao=50;              //间隔高
+	int kuan=50;             //间隔宽
+    for(int i = 0; i < cols*rows; i++){ 	
 		int num[2]={50,50};      //长宽
 		CString tmp;
 tmp.Format("%d",cols*rows-i);
@@ -106,8 +106,8 @@ tmp.Format("%d",cols*rows-i);
 		}
 		else
 		{
-			tmp.Format("%d:%d",cols*rows-i,garage.getcond(cols*rows-i));
-			MessageBox(tmp);
+			tmp.Format("未知数据 第%d车位:%d",cols*rows-i,garage.getcond(cols*rows-i));
+			//MessageBox(tmp);
 		}
     } 
 
@@ -132,6 +132,21 @@ tmp.Format("%d",cols*rows-i);
 
 	str.Format("%d",garage.getcols());
 	m_cols.SetWindowText(str);
+
+	//////////////////////////////////////////////////////////////////////////
+	//设置窗口大小
+	CRect rect;
+	GetClientRect (&rect);
+	int cx=rect.Width ();
+	int cy=rect.Height ();
+
+	cx=startpoint[0]+cols*kuan+30;
+	cy=startpoint[1]+rows*gao;
+	cy=cy>rect.Height ()?cy+startpoint[1]:rect.Height ();
+	cy+=(startpoint[1]*2);
+
+	::SetWindowPos(this->m_hWnd,HWND_BOTTOM,0,0,cx,cy,SWP_NOZORDER|SWP_NOMOVE);
+	//////////////////////////////////////////////////////////////////////////
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -190,7 +205,17 @@ void CCar_module_dlgDlg::OnCancel()
 void CCar_module_dlgDlg::OnButton1() 
 {
 	// TODO: Add your control notification handler code here
-	
+	int index=garage.savecar();
+	int sum=garage.getrows()*garage.getcols();
+	if(index!=-1)
+	{
+		btn[sum-index-1].SetIcon(m_hicnno);
+	}
+	else
+	{
+		MessageBox("没有空余车位");
+	}
+	//garage.readdate();
 }
 
 //取车
@@ -199,3 +224,4 @@ void CCar_module_dlgDlg::OnButton2()
 	// TODO: Add your control notification handler code here
 	
 }
+

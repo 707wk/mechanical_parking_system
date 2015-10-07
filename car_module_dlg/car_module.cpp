@@ -52,7 +52,7 @@ int car_module::readdate()
 	for(int i=0;i<rows*cols;i++)
 	{
 		speed_location tmp;
-		tmp.id=i+1;
+		tmp.id=i;
 		tmp.idle=0;
 		fscanf(fpin,"%d",&tmp.id);
 		if(!feof(fpin))
@@ -64,13 +64,22 @@ int car_module::readdate()
 		if(tmp.idle==2)sumcar--;
 		if(!tmp.idle)spendcar++;
 
+		//////////////////////////////////////////////////////////////////////////
 		//突然发现不需要用到rows值计算时间
 		//难怪一直找不到问题出在哪
-		tmp.time=(tmp.id/cols)/speed_rows+(tmp.id%cols)/speed_cols;
+		//////////////////////////////////////////////////////////////////////////
+		//突然发现横纵轴速度算反了
+		tmp.time=(tmp.id/cols)/speed_cols+(tmp.id%cols)/speed_rows;
+		//////////////////////////////////////////////////////////////////////////
 		map_queue.push_back(tmp);
 	}
 	fclose(fpin);
-	countqueue();
+
+	if(rows*cols)
+	{
+		countqueue();
+	}
+
 	return 0;
 }
 
@@ -176,7 +185,7 @@ double car_module::getspeedrows()
 	return this->speed_rows;
 }
 
-void car_module::setspeesrows(double rows)
+void car_module::setspeedrows(double rows)
 {
 	this->speed_rows=rows;
 }
@@ -245,7 +254,7 @@ int car_module::savecar()
 
 	savedatetomysql();
 
-	return index;
+	return map_queue[index].id;
 }
 
 int car_module::deletecar(int index)
@@ -272,7 +281,7 @@ int car_module::savedatetomysql()
 	fprintf(fpout,"%d\n",mac);
 	fprintf(fpout,"%d %d\n",rows,cols);
 	fprintf(fpout,"%.3lf %.3lf\n",speed_rows,speed_cols);
-	for(int i=0;i<rows*cols;i++)
+	for(int i=0;i<rows*cols&&map_queue.size();i++)
 	{
 		fprintf(fpout,"%d ",combine(map_queue[i].id,map_queue[i].idle));
 	}
@@ -305,3 +314,15 @@ void car_module::putinfo()
 	printf("\n");
 }
 
+int car_module::clear()
+{
+	map_queue.clear();
+	map_queue.swap( (std::vector <speed_location>)(map_queue));
+
+	rows=0;
+	cols=0;
+
+	savedatetomysql();
+	readdate();
+	return 0;
+}

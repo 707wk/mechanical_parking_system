@@ -6,7 +6,13 @@
 --------------------Configuration: car_module_dlg - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP9E43.tmp" with contents
+Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP5F0.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/car_module_dlg.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\Administrator\Desktop\car_module_dlg\car_module.cpp"
+]
+Creating command line "cl.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP5F0.tmp" 
+Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP5F1.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/car_module_dlg.pdb" /debug /machine:I386 /out:"Debug/car_module_dlg.exe" /pdbtype:sept 
 .\Debug\car_module.obj
@@ -15,8 +21,10 @@ Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP9E43.tmp" with 
 .\Debug\StdAfx.obj
 .\Debug\car_module_dlg.res
 ]
-Creating command line "link.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP9E43.tmp"
+Creating command line "link.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP5F1.tmp"
 <h3>Output Window</h3>
+Compiling...
+car_module.cpp
 Linking...
 
 

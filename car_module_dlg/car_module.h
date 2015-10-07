@@ -84,7 +84,7 @@ public:
 	int getcols();                     //获取车库列
 	void setcols(int cols);            //设置车库列
 	double getspeedrows();             //获取行移动速度
-	void setspeesrows(double rows);    //设置行移动速度
+	void setspeedrows(double rows);    //设置行移动速度
 	double getspeedcols();             //获取列移动速度
 	void setspeedcols(double cols);    //设置列移动速度
 	int getrows(int location);         //获取location的行
@@ -94,6 +94,7 @@ public:
 	int savecar();                     //存车
 	int deletecar(int index);          //取车
 	int savedatetomysql();             //保存数据到mysql
+	int clear();                       //清空库存数据
 
 	void putinfo();
 };

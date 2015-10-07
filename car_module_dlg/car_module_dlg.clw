@@ -11,9 +11,9 @@ ClassCount=2
 Class1=CCar_module_dlgApp
 Class2=CCar_module_dlgDlg
 
-ResourceCount=3
-Resource2=IDR_MAINFRAME
-Resource3=IDD_CAR_MODULE_DLG_DIALOG
+ResourceCount=2
+Resource1=IDR_MAINFRAME
+Resource2=IDD_CAR_MODULE_DLG_DIALOG
 
 [CLS:CCar_module_dlgApp]
 Type=0
@@ -28,7 +28,7 @@ ImplementationFile=car_module_dlgDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=IDC_EDIT8
+LastObject=CCar_module_dlgDlg
 
 
 
