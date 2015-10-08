@@ -95,11 +95,30 @@ public:
 	int getcols(int location);         //获取location的列
 	int countqueue();                  //按花费时间从小到大排序
 	int findemptycarport();            //查找最近的车位,未找到返回-1
-	int savecar();                     //存车
-	int deletecar(int index);          //取车
+	//////////////////////////////////////////////////////////////////////////
+	/*存车
+	{
+		读取carid
+			int mac=搜索最近的停车库
+			int index=搜索mac车库的最近停车点
+			将index换算成行列坐标
+			存储到数据库
+	}
+	
+	取车
+	{
+		读取carid
+			int mac=carid.mac
+			int index=(carid.rows-1)*cols+carid.cols;
+		删除此条记录
+	}
+	*/////////////////////////////////////////////////////////////////////////
+	int savecar();                     //存车,未找到返回-1
+	int deletecar(int index);          //取车,未找到返回-1
 	int savedatetomysql();             //保存数据到文件
 	int savedatetomysql(int mac);      //保存数据到mysql
-	int clear();                       //清空库存数据
+	int clear();                       //清空库存数据[已废弃]
+	void deletedate();                 //删除模块
 
 	void putinfo();
 };

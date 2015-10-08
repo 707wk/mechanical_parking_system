@@ -206,7 +206,7 @@ int car_module::savedatetomysql(int mac)
 
 	//////////////////////////////////////////////////////////////////////////
 	//把速度用%d输出造成程序崩溃了
-	//CString str;
+	//CString str;卧槽这样都可以
 	str.Format("\
 UPDATE t_garageinfo set rows=%d,cols=%d,\
 speedrows=%f,speedcols=%f,sumcar=%d,spendcar=%d,map_queue='%s' where mac=%d",
@@ -467,4 +467,45 @@ int car_module::clear()
 	savedatetomysql();
 	readdate();
 	return 0;
+}
+
+void car_module::deletedate()
+{
+	mysql_init(&mysql);
+	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
+	{
+		AfxMessageBox("数据库无法连接!");
+		return ;
+	}
+	
+	CString str;
+	//////////////////////////////////////////////////////////////////////////
+	str.Format("DELETE FROM t_garageinfo where mac=%d",mac);
+	//////////////////////////////////////////////////////////////////////////
+	//AfxMessageBox(str);
+	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+	
+	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
+	{
+	}
+	else
+	{
+		AfxMessageBox("数据库连接失败");
+		return ;
+	}
+	
+	//////////////////////////////////////////////////////////////////////////
+	str.Format("DELETE FROM t_carinfo where mac=%d",mac);
+	//////////////////////////////////////////////////////////////////////////
+	//AfxMessageBox(str);
+	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+	
+	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
+	{
+	}
+	else
+	{
+		AfxMessageBox("数据库连接失败");
+		return ;
+	}
 }
