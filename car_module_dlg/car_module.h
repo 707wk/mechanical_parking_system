@@ -67,6 +67,8 @@ private:
 	MYSQL_ROW column;                  //数据行的列
 
 public:
+	car_module();
+	int checkfist();                   //检测是否初始化
 	int readdate();                    //从文件读取数据
 	int readdate(int mac);             //从mysql读取车库信息
 
@@ -119,6 +121,17 @@ public:
 	int savedatetomysql(int mac);      //保存数据到mysql
 	int clear();                       //清空库存数据[已废弃]
 	void deletedate();                 //删除模块
+
+	/*////////////////////////////////////////////////////////////////////////
+	增加 setentry(int index)［设置入口］ 
+		 cancelentry(int index) ［取消入口］ 
+		 newgarage() ［创建车库］
+		 switchid() ［外部坐标转换为内部坐标］
+	*/////////////////////////////////////////////////////////////////////////
+	int setentry(int index);
+	int cancelentry(int index);
+	int newgarage();
+	int switchid(int index);
 
 	void putinfo();
 };

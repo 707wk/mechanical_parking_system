@@ -23,14 +23,14 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCar_module_dlgDlg)
 	enum { IDD = IDD_CAR_MODULE_DLG_DIALOG };
-	CEdit	m_mac;
+	CEdit	m_carid;
+	CComboBox	m_maclist;
 	CEdit	m_cols;
 	CEdit	m_rows;
 	CEdit	m_speedcols;
 	CEdit	m_speedrows;
 	CEdit	m_finish;
 	CEdit	m_sum;
-	CEdit	m_carid;
 	car_module garage;
 	CButton* btn;
 	HICON m_hicnok;
@@ -46,6 +46,9 @@ public:
 
 // Implementation
 protected:
+	void showmaclist();
+	void hidebutton();
+	void showbutton();
 	void upinfodate();
 	HICON m_hIcon;
 
@@ -58,6 +61,9 @@ protected:
 	virtual void OnOK();
 	afx_msg void OnButton1();
 	afx_msg void OnButton2();
+	afx_msg void OnButton4();
+	afx_msg void OnButton3();
+	afx_msg void OnSelchangeCombo1();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

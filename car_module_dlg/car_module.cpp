@@ -45,6 +45,30 @@ using namespace std;
 
 extern struct serverset serverinfo;
 
+car_module::car_module()
+{
+	this->mac=-1;
+	this->sumcar=0;
+	this->spendcar=0;
+	this->condition=0;
+	this->rows=0;
+	this->cols=0;
+	this->speed_rows=0;
+	this->speed_cols=0;
+
+	mysql_init(&mysql);
+	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
+	{
+		AfxMessageBox("数据库无法连接!");
+		return ;
+	}
+}
+
+int car_module::checkfist()
+{
+	return this->mac;
+}
+
 int car_module::readdate()
 {
 	FILE* fpin;
@@ -95,15 +119,15 @@ int car_module::readdate()
 
 int car_module::readdate(int mac)
 {
-	this->mac=mac;
-
+	this->mac=-1;
+/*
 	mysql_init(&mysql);
 	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
 	{
 		AfxMessageBox("数据库无法连接!");
 		return -1;
 	}
-
+*/
 	CString str;
 	str.Format("select * from t_garageinfo where mac=%d",mac);
 
@@ -115,14 +139,24 @@ int car_module::readdate(int mac)
 		column=mysql_fetch_row(res);//获取具体的数据
 		if(column)
 		{
+			this->mac=mac;
 			rows=atoi(column[3]);
 			cols=atoi(column[4]);
 			speed_rows=atof(column[5]);
 			speed_cols=atof(column[6]);
 			sumcar=0;//atoi(column[7]);
 			spendcar=0;//atoi(column[8]);
+			if(column[9]==NULL)return -1;
 			string tmpstr=column[9];
 
+			if(rows<0)return -1;
+			if(cols<0)return -1;
+/*
+			CString tmp;
+			tmp=column[3];
+			tmp=tmp+":"+column[4];
+			AfxMessageBox(tmp);
+*/
 			stringstream stream;
 			stream<<tmpstr;
 			for(int i=0;i<rows*cols;i++)
@@ -153,6 +187,10 @@ int car_module::readdate(int mac)
 		else
 		{
 			AfxMessageBox("readdate:未找到数据");
+			//////////////////////////////////////////////////////////////////////////
+			//错误未返回值,造成程序崩溃
+			return -1;
+			//////////////////////////////////////////////////////////////////////////
 		}
 	}
 	else
@@ -187,18 +225,18 @@ int car_module::savedatetomysql()
 int car_module::savedatetomysql(int mac)
 {
 	this->mac=mac;
-
+/*
 	mysql_init(&mysql);
 	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
 	{
 		AfxMessageBox("数据库无法连接!");
 		return -1;
 	}
-	
+*/	
 	string tmpstr;
 	CString str;
 
-	for(int i=0;i<rows*cols;i++)
+	for(int i=0;i<rows*cols&&i<map_queue.size();i++)
 	{
 		str.Format("%d ",combine(map_queue[i].id,map_queue[i].idle));
 		tmpstr=tmpstr+str.GetBuffer(0);
@@ -385,6 +423,27 @@ int car_module::findemptycarport()
 	//////////////////////////////////////////////////////////////////////////
 }
 
+int car_module::switchid(int index)
+{
+	//////////////////////////////////////////////////////////////////////////
+	//使下标与id对应
+	index--;
+	//////////////////////////////////////////////////////////////////////////
+	if(index<0)return -1;
+	if(index>=map_queue.size())return -1;
+	
+	//////////////////////////////////////////////////////////////////////////
+	//转换外部坐标为内部坐标
+	int i;
+	for(i=0;i<map_queue.size();i++)
+	{
+		if(map_queue[i].id==index)
+			return i;
+	}
+	//////////////////////////////////////////////////////////////////////////
+	return -1;
+}
+
 int car_module::savecar()
 {
 	int index=findemptycarport();
@@ -401,34 +460,96 @@ int car_module::savecar()
 	//////////////////////////////////////////////////////////////////////////
 }
 
+int car_module::setentry(int index)
+{
+	//////////////////////////////////////////////////////////////////////////
+	//坐标转换
+	index=switchid(index);
+	if(index<0)return -1;
+	//////////////////////////////////////////////////////////////////////////
+
+	map_queue[index].idle=2;
+	
+	spendcar--;
+	
+	savedatetomysql();
+	
+	return map_queue[index].id;
+}
+
+int car_module::cancelentry(int index)
+{
+	//////////////////////////////////////////////////////////////////////////
+	//坐标转换
+	index=switchid(index);
+	if(index<0)return -1;
+	//////////////////////////////////////////////////////////////////////////
+	
+	map_queue[index].idle=0;
+	
+	spendcar--;
+	
+	savedatetomysql();
+	
+	return map_queue[index].id;
+}
+
+int car_module::newgarage()
+{
+	/*
+	mysql_init(&mysql);
+	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
+	{
+		AfxMessageBox("数据库无法连接!");
+		return -1;
+	}
+	*/
+
+	string tmpstr;
+	CString str;
+	
+	for(int i=0;i<rows*cols;i++)
+	{
+		str.Format("%d ",i);
+		tmpstr=tmpstr+str.GetBuffer(0);
+	}
+
+	str.Format("INSERT INTO t_garageinfo \
+(mac,rows,cols,speedrows,speedcols,sumcar,spendcar,map_queue) \
+VALUES(%d,%d,%d,%f,%f,%d,%d,'%s')",
+this->mac,this->rows,this->cols,this->speed_rows,this->speed_cols,this->sumcar,this->spendcar,tmpstr.c_str());
+
+	//AfxMessageBox(str);
+	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+	
+	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
+	{
+	}
+	else
+	{
+		AfxMessageBox("数据库连接失败");
+		return -1;
+	}
+	
+	return 0;
+}
+
 int car_module::deletecar(int index)
 {
 	//////////////////////////////////////////////////////////////////////////
-	//使下标与id对应
-	index--;
-	//////////////////////////////////////////////////////////////////////////
+	//坐标转换
+	index=switchid(index);
 	if(index<0)return -1;
-	if(index>=map_queue.size())return -1;
-
-	//////////////////////////////////////////////////////////////////////////
-	//转换外部坐标为内部坐标
-	int i;
-	for(i=0;i<map_queue.size();)
-	{
-		if(map_queue[i].id==index)
-			break;
-		i++;
-	}
 	//////////////////////////////////////////////////////////////////////////
 	
-	if(map_queue[i].idle==0)return -1;
-	map_queue[i].idle=0;
+	if(map_queue[index].idle==0)return -1;
+	map_queue[index].idle=0;
 
 	spendcar--;
 
 	savedatetomysql();
 
-	return map_queue[i].id;
+	return map_queue[index].id;
 }
 
 void car_module::putinfo()
@@ -464,19 +585,21 @@ int car_module::clear()
 	rows=0;
 	cols=0;
 
-	savedatetomysql();
-	readdate();
+	//savedatetomysql();
+	//readdate();
 	return 0;
 }
 
 void car_module::deletedate()
 {
+	/*
 	mysql_init(&mysql);
 	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
 	{
 		AfxMessageBox("数据库无法连接!");
 		return ;
 	}
+	*/
 	
 	CString str;
 	//////////////////////////////////////////////////////////////////////////

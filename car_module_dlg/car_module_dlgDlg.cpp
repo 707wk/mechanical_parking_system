@@ -40,14 +40,14 @@ void CCar_module_dlgDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCar_module_dlgDlg)
-	DDX_Control(pDX, IDC_EDIT8, m_mac);
+	DDX_Control(pDX, IDC_EDIT1, m_carid);
+	DDX_Control(pDX, IDC_COMBO1, m_maclist);
 	DDX_Control(pDX, IDC_EDIT7, m_cols);
 	DDX_Control(pDX, IDC_EDIT6, m_rows);
 	DDX_Control(pDX, IDC_EDIT5, m_speedcols);
 	DDX_Control(pDX, IDC_EDIT4, m_speedrows);
 	DDX_Control(pDX, IDC_EDIT3, m_finish);
 	DDX_Control(pDX, IDC_EDIT2, m_sum);
-	DDX_Control(pDX, IDC_EDIT1, m_carid);
 	//}}AFX_DATA_MAP
 }
 
@@ -57,6 +57,9 @@ BEGIN_MESSAGE_MAP(CCar_module_dlgDlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, OnButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, OnButton2)
+	ON_BN_CLICKED(IDC_BUTTON4, OnButton4)
+	ON_BN_CLICKED(IDC_BUTTON3, OnButton3)
+	ON_CBN_SELCHANGE(IDC_COMBO1, OnSelchangeCombo1)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -73,63 +76,10 @@ BOOL CCar_module_dlgDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
 	// TODO: Add extra initialization here
-	if(garage.readdate(1234))return FALSE;
-	//////////////////////////////////////////////////////////////////////////
-	//不知道为什么,行列反了,但在显示的却是正确的
-	int cols=garage.getcols();
-	int rows=garage.getrows();
-	//////////////////////////////////////////////////////////////////////////
-
-    btn = new CButton[cols*rows];  
-    DWORD dwStyle = WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_ICON;  
-	int startpoint[2]={220,15};       //起始点
-	int gao=50;              //间隔高
-	int kuan=50;             //间隔宽
-    for(int i = 0; i < cols*rows; i++){ 	
-		int num[2]={50,50};      //长宽
-		CString tmp;
-tmp.Format("%d",cols*rows-i);
-        btn[i].Create(tmp, dwStyle,CRect(startpoint[0]+i%cols*kuan,startpoint[1]+i/cols*gao,startpoint[0]+i%cols*kuan+num[0],startpoint[1]+i/cols*gao+num[1]),this,buttonID+i);   
-        //btn[i].SetFont(GetParent()->GetFont());  
-		//btn[i].SetIcon(m_hicnok);
-		if(garage.getcond(cols*rows-i)==0)
-		{
-			//tmp="空闲";
-			btn[i].SetIcon(m_hicnok);
-		}
-		else if(garage.getcond(cols*rows-i)==1)
-		{
-			//tmp="占用";
-			btn[i].SetIcon(m_hicnno);
-		}
-		else if(garage.getcond(cols*rows-i)==2)
-		{
-			//tmp="入口";
-			btn[i].SetIcon(m_hicncar);
-		}
-		else
-		{
-			tmp.Format("未知数据 第%d车位:%d",cols*rows-i,garage.getcond(cols*rows-i));
-			//MessageBox(tmp);
-		}
-    } 
-
-	upinfodate();
-		
-	//////////////////////////////////////////////////////////////////////////
-	//设置窗口大小
-	CRect rect;
-	GetClientRect (&rect);
-	int cx=rect.Width ();
-	int cy=rect.Height ();
+	/*if(garage.readdate(1234))return FALSE;
 	
-	cx=startpoint[0]+cols*kuan+30;
-	cy=startpoint[1]+rows*gao;
-	cy=cy>rect.Height ()?cy+startpoint[1]:rect.Height ();
-	cy+=(startpoint[1]*2);
-	
-	::SetWindowPos(this->m_hWnd,HWND_BOTTOM,0,0,cx,cy,SWP_NOZORDER|SWP_NOMOVE);
-	//////////////////////////////////////////////////////////////////////////
+	showbutton();*/
+	showmaclist();
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -180,7 +130,13 @@ void CCar_module_dlgDlg::OnOK()
 void CCar_module_dlgDlg::OnCancel() 
 {
 	// TODO: Add extra cleanup here
-	garage.savedatetomysql();
+	/*
+	CString str;
+	int nIndex = m_maclist.GetCurSel();
+	m_maclist.GetLBText( nIndex, str);
+	if(str=="")return ;
+	garage.savedatetomysql(atoi(str.GetBuffer(0)));
+	*/
 	CDialog::OnCancel();
 }
 
@@ -200,7 +156,11 @@ void CCar_module_dlgDlg::OnButton1()
 	}
 	//garage.readdate();
 
-	garage.savedatetomysql(1234);
+	CString str;
+	int nIndex = m_maclist.GetCurSel();
+	m_maclist.GetLBText( nIndex, str);
+	if(str=="")return ;
+	garage.savedatetomysql(atoi(str.GetBuffer(0)));
 	upinfodate();
 }
 
@@ -225,7 +185,10 @@ void CCar_module_dlgDlg::OnButton2()
 		MessageBox("未找到车辆");
 	}
 
-	garage.savedatetomysql(1234);
+	int nIndex = m_maclist.GetCurSel();
+	m_maclist.GetLBText( nIndex, str);
+	if(str=="")return ;
+	garage.savedatetomysql(atoi(str.GetBuffer(0)));
 
 	upinfodate();
 }
@@ -234,8 +197,8 @@ void CCar_module_dlgDlg::OnButton2()
 void CCar_module_dlgDlg::upinfodate()
 {
 	CString str;
-	str.Format("%d",garage.getmac());
-	m_mac.SetWindowText(str);
+	//str.Format("%d",garage.getmac());
+	//m_maclist.SetWindowText(str);
 	
 	str.Format("%d",garage.getsumcar());
 	m_sum.SetWindowText(str);
@@ -254,4 +217,171 @@ void CCar_module_dlgDlg::upinfodate()
 	
 	str.Format("%d",garage.getcols());
 	m_cols.SetWindowText(str);
+
+	m_carid.SetWindowText("");
+}
+
+//刷新列表
+void CCar_module_dlgDlg::OnButton4() 
+{
+	// TODO: Add your control notification handler code here
+	showmaclist();
+}
+
+//新增
+void CCar_module_dlgDlg::OnButton3() 
+{
+	// TODO: Add your control notification handler code here
+	
+}
+
+void CCar_module_dlgDlg::showbutton()
+{
+	//////////////////////////////////////////////////////////////////////////
+	//不知道为什么,行列反了,但在显示的却是正确的
+	int cols=garage.getcols();
+	int rows=garage.getrows();
+	//////////////////////////////////////////////////////////////////////////
+	
+    btn = new CButton[cols*rows];  
+    DWORD dwStyle = WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_ICON;//|WS_DISABLED;  
+	int startpoint[2]={220,15};           //起始点
+	int gao=50;                           //间隔高
+	int kuan=50;                          //间隔宽
+	int num[2]={50,50};                   //长宽
+    for(int i = 0; i < cols*rows; i++){
+		CString tmp;
+		tmp.Format("%d",cols*rows-i);
+        btn[i].Create(tmp, dwStyle,CRect(startpoint[0]+i%cols*kuan,startpoint[1]+i/cols*gao,startpoint[0]+i%cols*kuan+num[0],startpoint[1]+i/cols*gao+num[1]),this,buttonID+i);   
+        //btn[i].SetFont(GetParent()->GetFont());  
+		//btn[i].SetIcon(m_hicnok);
+		if(garage.getcond(cols*rows-i)==0)
+		{
+			//tmp="空闲";
+			btn[i].SetIcon(m_hicnok);
+		}
+		else if(garage.getcond(cols*rows-i)==1)
+		{
+			//tmp="占用";
+			btn[i].SetIcon(m_hicnno);
+		}
+		else if(garage.getcond(cols*rows-i)==2)
+		{
+			//tmp="入口";
+			btn[i].SetIcon(m_hicncar);
+		}
+		else
+		{
+			tmp.Format("未知数据 第%d车位:%d",cols*rows-i,garage.getcond(cols*rows-i));
+			//MessageBox(tmp);
+		}
+    } 
+	
+	upinfodate();
+	
+	//////////////////////////////////////////////////////////////////////////
+	//设置窗口大小
+	CRect rect;
+	GetClientRect (&rect);
+	int cx=rect.Width ();
+	int cy=rect.Height ();
+	
+	cx=startpoint[0]+cols*kuan+30;
+	cy=startpoint[1]+rows*gao;
+	cy=cy>rect.Height ()?cy+startpoint[1]:rect.Height ()+8;
+	cy+=(startpoint[1]*2);
+	
+	::SetWindowPos(this->m_hWnd,HWND_BOTTOM,0,0,cx,cy,SWP_NOZORDER|SWP_NOMOVE);
+	//////////////////////////////////////////////////////////////////////////
+}
+
+void CCar_module_dlgDlg::hidebutton()
+{
+	//////////////////////////////////////////////////////////////////////////
+	//不知道为什么,行列反了,但在显示的却是正确的
+	int cols=garage.getcols();
+	int rows=garage.getrows();
+	//////////////////////////////////////////////////////////////////////////
+
+	int startpoint[2]={220,15};           //起始点
+	int gao=50;                           //间隔高
+	int kuan=50;                          //间隔宽
+	int num[2]={50,50};                   //长宽
+
+    for(int i = 0; i < cols*rows; i++){
+		btn[i].DestroyWindow();	
+		delete btn[i];  
+    } 
+	
+	//upinfodate();
+	/*
+	//////////////////////////////////////////////////////////////////////////
+	//设置窗口大小
+	CRect rect;
+	GetClientRect (&rect);
+	int cx=rect.Width ();
+	int cy=rect.Height ();
+	
+	cx=startpoint[0]+cols*kuan+30;
+	cy=startpoint[1]+rows*gao;
+	cy=cy>rect.Height ()?cy+startpoint[1]:rect.Height ();
+	cy+=(startpoint[1]*2);
+	
+	::SetWindowPos(this->m_hWnd,HWND_BOTTOM,0,0,cx,cy,SWP_NOZORDER|SWP_NOMOVE);
+	//////////////////////////////////////////////////////////////////////////
+	*/
+}
+
+void CCar_module_dlgDlg::OnSelchangeCombo1() 
+{
+	// TODO: Add your control notification handler code here
+	if(garage.checkfist()!=-1)hidebutton();
+	CString str;
+	int nIndex = m_maclist.GetCurSel();
+	m_maclist.GetLBText( nIndex, str);
+	//if(str=="")return ;
+	garage.clear();
+	if(garage.readdate(atoi(str.GetBuffer(0))))return ;
+	showbutton();
+	upinfodate();
+}
+
+void CCar_module_dlgDlg::showmaclist()
+{
+	MYSQL_RES *res;     //查询结果集
+	MYSQL_ROW column;   //数据行的列
+	MYSQL mysql;
+	mysql_init(&mysql);
+	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
+	{
+		MessageBox("数据库无法连接!");
+		return ;
+	}
+
+	CString str="select mac from t_garageinfo";
+
+	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+
+	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
+	{
+		m_maclist.ResetContent();
+		res=mysql_store_result(&mysql);//保存查询到的数据到result
+		while(column=mysql_fetch_row(res))//获取具体的数据
+		{
+			if(column)
+			{
+				m_maclist.AddString(column[0]);
+			}
+			else
+			{
+				MessageBox("未找到车库数据");
+				break;
+			}
+		}
+	}
+	else
+	{
+		AfxMessageBox("数据库连接失败");
+		return ;
+	}
 }
