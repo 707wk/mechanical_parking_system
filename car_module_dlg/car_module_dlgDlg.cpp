@@ -35,7 +35,7 @@ CCar_module_dlgDlg::CCar_module_dlgDlg(CWnd* pParent /*=NULL*/)
 	m_hicnok=AfxGetApp()->LoadIcon(IDI_ICON3);
 	m_hicnno=AfxGetApp()->LoadIcon(IDI_ICON2);
 	m_hicncar=AfxGetApp()->LoadIcon(IDI_ICON1);
-	newflage=1;
+	btnnum=0;
 	btn=NULL;
 }
 
@@ -152,7 +152,10 @@ void CCar_module_dlgDlg::OnButton1()
 	int sum=garage.getrows()*garage.getcols();
 	if(index!=-1)
 	{
-		btn[sum-index-1].SetIcon(m_hicnno);
+		//////////////////////////////////////////////////////////////////////////
+		//下标与序号不对应
+		btn[sum-index].SetIcon(m_hicnno);
+		//////////////////////////////////////////////////////////////////////////
 	}
 	else
 	{
@@ -182,7 +185,10 @@ void CCar_module_dlgDlg::OnButton2()
 
 	if(index!=-1)
 	{
-		btn[sum-index-1].SetIcon(m_hicnok);
+		//////////////////////////////////////////////////////////////////////////
+		//下标与序号不对应
+		btn[sum-index].SetIcon(m_hicnok);
+		//////////////////////////////////////////////////////////////////////////
 	}
 	else
 	{
@@ -269,7 +275,7 @@ void CCar_module_dlgDlg::OnButton3()
 	//garage.savedatetomysql(garage.getmac());
 
 	showmaclist();
-	newflage=0;
+	btnnum=0;
 }
 
 void CCar_module_dlgDlg::showbutton()
@@ -341,11 +347,6 @@ void CCar_module_dlgDlg::hidebutton()
 	{
 		return ;
 	}
-	if(!newflage)
-	{
-		newflage=1;
-		return ;
-	}
 	//////////////////////////////////////////////////////////////////////////
 	//不知道为什么,行列反了,但在显示的却是正确的
 	int cols=garage.getcols();
@@ -357,7 +358,7 @@ void CCar_module_dlgDlg::hidebutton()
 	int kuan=50;                          //间隔宽
 	int num[2]={50,50};                   //长宽
 
-    for(int i = 0; i < cols*rows; i++){
+    for(int i = 0; i < btnnum; i++){
 			btn[i].DestroyWindow();	
 			delete btn[i];
     }
@@ -391,6 +392,7 @@ void CCar_module_dlgDlg::OnSelchangeCombo1()
 	//if(str=="")return ;
 	garage.clear();
 	if(garage.readdate(atoi(str.GetBuffer(0))))return ;
+	btnnum=garage.getrows()*garage.getcols();
 	showbutton();
 	upinfodate();
 }

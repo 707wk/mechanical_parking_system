@@ -37,7 +37,7 @@ public:
 	HICON m_hicnok;
 	HICON m_hicnno;
 	HICON m_hicncar;
-	int newflage;
+	int btnnum;
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides
