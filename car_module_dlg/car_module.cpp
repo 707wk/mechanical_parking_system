@@ -427,15 +427,14 @@ int car_module::switchid(int index)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//使下标与id对应
-	index--;
+	//index--;忘了删除了
 	//////////////////////////////////////////////////////////////////////////
-	if(index<0)return -1;
-	if(index>=map_queue.size())return -1;
+	if(index<1)return -1;
+	if(index>map_queue.size())return -1;
 	
 	//////////////////////////////////////////////////////////////////////////
 	//转换外部坐标为内部坐标
-	int i;
-	for(i=0;i<map_queue.size();i++)
+	for(int i=0;i<map_queue.size();i++)
 	{
 		if(map_queue[i].id==index)
 			return i;
@@ -470,7 +469,7 @@ int car_module::setentry(int index)
 
 	map_queue[index].idle=2;
 	
-	spendcar--;
+	//spendcar--;
 	
 	savedatetomysql();
 	
@@ -487,7 +486,7 @@ int car_module::cancelentry(int index)
 	
 	map_queue[index].idle=0;
 	
-	spendcar--;
+	//spendcar--;
 	
 	savedatetomysql();
 	
@@ -508,16 +507,24 @@ int car_module::newgarage()
 	string tmpstr;
 	CString str;
 	
+	map_queue.clear();
+	map_queue.swap( (std::vector <speed_location>)(map_queue));
+
 	for(int i=0;i<rows*cols;i++)
 	{
-		str.Format("%d ",i);
+		speed_location tmp;
+		tmp.id=i+1;
+		tmp.idle=0;
+		str.Format("%d ",tmp.id);
 		tmpstr=tmpstr+str.GetBuffer(0);
+
+		map_queue.push_back(tmp);
 	}
 
 	str.Format("INSERT INTO t_garageinfo \
 (mac,rows,cols,speedrows,speedcols,sumcar,spendcar,map_queue) \
 VALUES(%d,%d,%d,%f,%f,%d,%d,'%s')",
-this->mac,this->rows,this->cols,this->speed_rows,this->speed_cols,this->sumcar,this->spendcar,tmpstr.c_str());
+this->mac,this->rows,this->cols,this->speed_rows,this->speed_cols,0,0,tmpstr.c_str());
 
 	//AfxMessageBox(str);
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
@@ -527,7 +534,7 @@ this->mac,this->rows,this->cols,this->speed_rows,this->speed_cols,this->sumcar,t
 	}
 	else
 	{
-		AfxMessageBox("数据库连接失败");
+		AfxMessageBox("插入失败");
 		return -1;
 	}
 	
@@ -542,7 +549,7 @@ int car_module::deletecar(int index)
 	if(index<0)return -1;
 	//////////////////////////////////////////////////////////////////////////
 	
-	if(map_queue[index].idle==0)return -1;
+	if(map_queue[index].idle!=1)return -1;
 	map_queue[index].idle=0;
 
 	spendcar--;

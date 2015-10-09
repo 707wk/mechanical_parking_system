@@ -23,6 +23,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCar_module_dlgDlg)
 	enum { IDD = IDD_CAR_MODULE_DLG_DIALOG };
+	CEdit	m_entry;
 	CEdit	m_carid;
 	CComboBox	m_maclist;
 	CEdit	m_cols;
@@ -36,6 +37,7 @@ public:
 	HICON m_hicnok;
 	HICON m_hicnno;
 	HICON m_hicncar;
+	int newflage;
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides

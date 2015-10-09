@@ -47,6 +47,9 @@ struct speed_location
 {
 	double time;                       //花费时间
 	int idle;                          //空闲状态
+		                               //0:空闲
+	                                   //1:占用
+	                                   //2:入口
 	int id;                            //编号
 };
 

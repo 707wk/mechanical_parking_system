@@ -10,6 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <sstream>
 
 using namespace std;
 
@@ -34,12 +35,15 @@ CCar_module_dlgDlg::CCar_module_dlgDlg(CWnd* pParent /*=NULL*/)
 	m_hicnok=AfxGetApp()->LoadIcon(IDI_ICON3);
 	m_hicnno=AfxGetApp()->LoadIcon(IDI_ICON2);
 	m_hicncar=AfxGetApp()->LoadIcon(IDI_ICON1);
+	newflage=1;
+	btn=NULL;
 }
 
 void CCar_module_dlgDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCar_module_dlgDlg)
+	DDX_Control(pDX, IDC_EDIT9, m_entry);
 	DDX_Control(pDX, IDC_EDIT1, m_carid);
 	DDX_Control(pDX, IDC_COMBO1, m_maclist);
 	DDX_Control(pDX, IDC_EDIT7, m_cols);
@@ -232,7 +236,40 @@ void CCar_module_dlgDlg::OnButton4()
 void CCar_module_dlgDlg::OnButton3() 
 {
 	// TODO: Add your control notification handler code here
+	if(garage.checkfist()!=-1)hidebutton();
+
+	CString str;
+	m_maclist.GetWindowText(str);
+	garage.setmac(atoi(str.GetBuffer(0)));
+
+	m_rows.GetWindowText(str);
+	garage.setrows(atoi(str.GetBuffer(0)));
+
+	m_cols.GetWindowText(str);
+	garage.setcols(atoi(str.GetBuffer(0)));
 	
+	m_speedrows.GetWindowText(str);
+	garage.setspeedrows(atof(str.GetBuffer(0)));
+
+	m_speedcols.GetWindowText(str);
+	garage.setspeedcols(atof(str.GetBuffer(0)));
+
+	garage.newgarage();
+
+	m_entry.GetWindowText(str);
+	string tmpstr=str.GetBuffer(0);
+	stringstream stream;
+	stream<<tmpstr;
+	for(int index;stream>>index;)
+	{
+		//str.Format("%d:%d",index,garage.setentry(index));
+		//MessageBox(str);
+		garage.setentry(index);
+	}
+	//garage.savedatetomysql(garage.getmac());
+
+	showmaclist();
+	newflage=1;
 }
 
 void CCar_module_dlgDlg::showbutton()
@@ -297,6 +334,10 @@ void CCar_module_dlgDlg::showbutton()
 
 void CCar_module_dlgDlg::hidebutton()
 {
+	if(btn==NULL)
+	{
+		return ;
+	}
 	//////////////////////////////////////////////////////////////////////////
 	//不知道为什么,行列反了,但在显示的却是正确的
 	int cols=garage.getcols();
@@ -309,9 +350,9 @@ void CCar_module_dlgDlg::hidebutton()
 	int num[2]={50,50};                   //长宽
 
     for(int i = 0; i < cols*rows; i++){
-		btn[i].DestroyWindow();	
-		delete btn[i];  
-    } 
+			btn[i].DestroyWindow();	
+			delete btn[i];
+    }
 	
 	//upinfodate();
 	/*
