@@ -241,6 +241,7 @@ int car_module::savedatetomysql(int mac)
 		str.Format("%d ",combine(map_queue[i].id,map_queue[i].idle));
 		tmpstr=tmpstr+str.GetBuffer(0);
 	}
+	//AfxMessageBox(tmpstr.c_str());
 
 	//////////////////////////////////////////////////////////////////////////
 	//把速度用%d输出造成程序崩溃了
@@ -286,8 +287,11 @@ int car_module::getcond(int num)
 {
 	for(int i=0;i<map_queue.size();i++)
 	{
-		if(map_queue[i].id==num-1)
+		//////////////////////////////////////////////////////////////////////////
+		//shict,为什么我没把序号和下标改过来,费了这么久时间
+		if(map_queue[i].id==num)
 			return this->map_queue[i].idle;
+		//////////////////////////////////////////////////////////////////////////
 	}
 	return -1;
 }
@@ -451,7 +455,7 @@ int car_module::savecar()
 
 	spendcar++;
 
-	savedatetomysql();
+	savedatetomysql(this->mac);
 
 	//////////////////////////////////////////////////////////////////////////
 	//最开始返回了内部下标,后来改成外部下标
@@ -471,7 +475,7 @@ int car_module::setentry(int index)
 	
 	//spendcar--;
 	
-	savedatetomysql();
+	savedatetomysql(this->mac);
 	
 	return map_queue[index].id;
 }
@@ -488,7 +492,7 @@ int car_module::cancelentry(int index)
 	
 	//spendcar--;
 	
-	savedatetomysql();
+	savedatetomysql(this->mac);
 	
 	return map_queue[index].id;
 }
@@ -520,6 +524,8 @@ int car_module::newgarage()
 
 		map_queue.push_back(tmp);
 	}
+
+	//AfxMessageBox(tmpstr.c_str());
 
 	str.Format("INSERT INTO t_garageinfo \
 (mac,rows,cols,speedrows,speedcols,sumcar,spendcar,map_queue) \
@@ -554,7 +560,7 @@ int car_module::deletecar(int index)
 
 	spendcar--;
 
-	savedatetomysql();
+	savedatetomysql(this->mac);
 
 	return map_queue[index].id;
 }
@@ -592,7 +598,7 @@ int car_module::clear()
 	rows=0;
 	cols=0;
 
-	//savedatetomysql();
+	//savedatetomysql(this->mac);
 	//readdate();
 	return 0;
 }

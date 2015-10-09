@@ -269,7 +269,7 @@ void CCar_module_dlgDlg::OnButton3()
 	//garage.savedatetomysql(garage.getmac());
 
 	showmaclist();
-	newflage=1;
+	newflage=0;
 }
 
 void CCar_module_dlgDlg::showbutton()
@@ -292,6 +292,8 @@ void CCar_module_dlgDlg::showbutton()
         btn[i].Create(tmp, dwStyle,CRect(startpoint[0]+i%cols*kuan,startpoint[1]+i/cols*gao,startpoint[0]+i%cols*kuan+num[0],startpoint[1]+i/cols*gao+num[1]),this,buttonID+i);   
         //btn[i].SetFont(GetParent()->GetFont());  
 		//btn[i].SetIcon(m_hicnok);
+		//////////////////////////////////////////////////////////////////////////
+		//坐标不一致,导致少一个车位
 		if(garage.getcond(cols*rows-i)==0)
 		{
 			//tmp="空闲";
@@ -310,8 +312,9 @@ void CCar_module_dlgDlg::showbutton()
 		else
 		{
 			tmp.Format("未知数据 第%d车位:%d",cols*rows-i,garage.getcond(cols*rows-i));
-			//MessageBox(tmp);
+			MessageBox(tmp);
 		}
+		//////////////////////////////////////////////////////////////////////////
     } 
 	
 	upinfodate();
@@ -336,6 +339,11 @@ void CCar_module_dlgDlg::hidebutton()
 {
 	if(btn==NULL)
 	{
+		return ;
+	}
+	if(!newflage)
+	{
+		newflage=1;
 		return ;
 	}
 	//////////////////////////////////////////////////////////////////////////
