@@ -32,7 +32,7 @@ public:
 	CEdit	m_speedrows;
 	CEdit	m_finish;
 	CEdit	m_sum;
-	car_module garage;
+	car_module* garage;
 	CButton* btn;
 	HICON m_hicnok;
 	HICON m_hicnno;
@@ -66,6 +66,7 @@ protected:
 	afx_msg void OnButton4();
 	afx_msg void OnButton3();
 	afx_msg void OnSelchangeCombo1();
+	afx_msg void OnButton5();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

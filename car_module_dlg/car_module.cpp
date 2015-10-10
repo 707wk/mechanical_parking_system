@@ -64,12 +64,17 @@ car_module::car_module()
 	}
 }
 
-int car_module::checkfist()
+car_module::~car_module()
 {
-	return this->mac;
+	mysql_close(&mysql);
 }
 
-int car_module::readdate()
+/*int car_module::checkfist()
+{
+	return this->mac;
+}*/
+
+/*int car_module::readdate()
 {
 	FILE* fpin;
 	fpin=fopen("date.txt","r");
@@ -115,11 +120,11 @@ int car_module::readdate()
 	}
 
 	return 0;
-}
+}*/
 
 int car_module::readdate(int mac)
 {
-	this->mac=-1;
+	//this->mac=-1;
 /*
 	mysql_init(&mysql);
 	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
@@ -162,13 +167,16 @@ int car_module::readdate(int mac)
 			for(int i=0;i<rows*cols;i++)
 			{
 				speed_location tmp;
-				tmp.id=i;
+				tmp.id=i+1;
 				tmp.idle=0;
 				stream>>tmp.id;
 				if(tmp.id)
 				{
 					tmp.idle=judgeposition(tmp.id);
-					tmp.id=getid(tmp.id)-1;
+					//////////////////////////////////////////////////////////////////////////
+					//多减了个1
+					tmp.id=getid(tmp.id);
+					//////////////////////////////////////////////////////////////////////////
 				}
 				
 				if(tmp.idle==2)sumcar--;
@@ -179,10 +187,21 @@ int car_module::readdate(int mac)
 				//难怪一直找不到问题出在哪
 				//////////////////////////////////////////////////////////////////////////
 				//突然发现横纵轴速度算反了
-				tmp.time=(tmp.id/cols)/speed_cols+(tmp.id%cols)/speed_rows;
+				//shit,横轴坐标又少加1
+				tmp.time=(tmp.id/cols)/speed_cols+(tmp.id-tmp.id/cols*cols)/speed_rows;
 				//////////////////////////////////////////////////////////////////////////
 				map_queue.push_back(tmp);
 			}
+
+			//////////////////////////////////////////////////////////////////////////
+			//排序函数忘加了
+			if(rows*cols)
+			{
+				countqueue();
+			}
+			//////////////////////////////////////////////////////////////////////////
+
+			return 0;
 		}
 		else
 		{
@@ -199,10 +218,10 @@ int car_module::readdate(int mac)
 		return -1;
 	}
 
-	return 0;
+	return -1;
 }
 
-int car_module::savedatetomysql()
+/*int car_module::savedatetomysql()
 {
 	FILE* fpout;
 	fpout=fopen("date.txt","w");
@@ -220,19 +239,12 @@ int car_module::savedatetomysql()
 	}
 	fclose(fpout);
 	return 0;
-}
+}*/
 
 int car_module::savedatetomysql(int mac)
 {
 	this->mac=mac;
-/*
-	mysql_init(&mysql);
-	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
-	{
-		AfxMessageBox("数据库无法连接!");
-		return -1;
-	}
-*/	
+
 	string tmpstr;
 	CString str;
 
@@ -285,22 +297,29 @@ int car_module::getid(int num)
 
 int car_module::getcond(int num)
 {
-	for(int i=0;i<map_queue.size();i++)
-	{
+	int index=switchid(num);
+	//AfxMessageBox("1");
+	if(index<0)return -1;
+	//AfxMessageBox("2");
+	if(index>=map_queue.size())return -1;
+	//AfxMessageBox("3");
+	//for(int i=0;i<map_queue.size();i++)
+	//{
 		//////////////////////////////////////////////////////////////////////////
 		//shict,为什么我没把序号和下标改过来,费了这么久时间
-		if(map_queue[i].id==num)
-			return this->map_queue[i].idle;
+		//if(map_queue[i].id==num)
+	return this->map_queue[index].idle;
 		//////////////////////////////////////////////////////////////////////////
-	}
-	return -1;
+	//}
+	//return -1;
 }
 
 int car_module::combine(int id,int idle)
 {
 	/////////////////////////////////////////////////////////////////////////
 	//真是个悲伤的故事,id少加了个1,然后每保存一次数值就往后移动一位,还好改过来了
-	return ((unsigned int)idle<<(sizeof(int)*4))|(id+1);
+	//shit,改了序号后又忘了改回来,第二次改这个函数了
+	return ((unsigned int)idle<<(sizeof(int)*4))|id;
 	/////////////////////////////////////////////////////////////////////////
 }
 
@@ -391,7 +410,8 @@ int car_module::getcols(int location)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//忘了行列怎么算了,还好改过来了
-	return (location%cols);
+	//shit,这边也忘了改了
+	return (location-location/cols);
 	//////////////////////////////////////////////////////////////////////////
 }
 
@@ -438,10 +458,13 @@ int car_module::switchid(int index)
 	
 	//////////////////////////////////////////////////////////////////////////
 	//转换外部坐标为内部坐标
+
 	for(int i=0;i<map_queue.size();i++)
 	{
 		if(map_queue[i].id==index)
+		{
 			return i;
+		}
 	}
 	//////////////////////////////////////////////////////////////////////////
 	return -1;
@@ -499,15 +522,6 @@ int car_module::cancelentry(int index)
 
 int car_module::newgarage()
 {
-	/*
-	mysql_init(&mysql);
-	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
-	{
-		AfxMessageBox("数据库无法连接!");
-		return -1;
-	}
-	*/
-
 	string tmpstr;
 	CString str;
 	
@@ -605,15 +619,6 @@ int car_module::clear()
 
 void car_module::deletedate()
 {
-	/*
-	mysql_init(&mysql);
-	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
-	{
-		AfxMessageBox("数据库无法连接!");
-		return ;
-	}
-	*/
-	
 	CString str;
 	//////////////////////////////////////////////////////////////////////////
 	str.Format("DELETE FROM t_garageinfo where mac=%d",mac);

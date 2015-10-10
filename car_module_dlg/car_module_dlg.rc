@@ -109,6 +109,7 @@ BEGIN
     LTEXT           "ÁÐÊý:",IDC_STATIC,19,112,21,8
     LTEXT           "Ä£¿éid:",IDC_STATIC,19,22,29,8
     GROUPBOX        "",IDC_STATIC,7,212,132,104
+    PUSHBUTTON      "É¾³ý",IDC_BUTTON5,18,295,50,18
 END
 
 

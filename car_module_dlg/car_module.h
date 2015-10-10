@@ -71,8 +71,12 @@ private:
 
 public:
 	car_module();
-	int checkfist();                   //检测是否初始化
-	int readdate();                    //从文件读取数据
+	~car_module();
+	//////////////////////////////////////////////////////////////////////////
+	//函数重载挺蛋疼的
+	//int checkfist();                   //检测是否初始化
+	//int readdate();                    //从文件读取数据
+	//////////////////////////////////////////////////////////////////////////
 	int readdate(int mac);             //从mysql读取车库信息
 
 	int judgeposition(int num);        //获取空闲状态
@@ -120,7 +124,7 @@ public:
 	*/////////////////////////////////////////////////////////////////////////
 	int savecar();                     //存车,未找到返回-1
 	int deletecar(int index);          //取车,未找到返回-1
-	int savedatetomysql();             //保存数据到文件
+	//int savedatetomysql();           //保存数据到文件
 	int savedatetomysql(int mac);      //保存数据到mysql
 	int clear();                       //清空库存数据[已废弃]
 	void deletedate();                 //删除模块
@@ -131,11 +135,11 @@ public:
 		 newgarage() ［创建车库］
 		 switchid() ［外部坐标转换为内部坐标］
 	*/////////////////////////////////////////////////////////////////////////
-	int setentry(int index);
-	int cancelentry(int index);
-	int newgarage();
-	int switchid(int index);
+	int setentry(int index);           //设置入口
+	int cancelentry(int index);        //取消入口
+	int newgarage();                   //创建队列
+	int switchid(int index);           //外部坐标转换为内部坐标
 
-	void putinfo();
+	void putinfo();                    //输出信息[终端用]
 };
 #endif

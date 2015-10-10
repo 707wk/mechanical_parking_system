@@ -37,6 +37,10 @@ CCar_module_dlgDlg::CCar_module_dlgDlg(CWnd* pParent /*=NULL*/)
 	m_hicncar=AfxGetApp()->LoadIcon(IDI_ICON1);
 	btnnum=0;
 	btn=NULL;
+	//////////////////////////////////////////////////////////////////////////
+	//蛋蛋啊,创建一个就没事了
+	garage=new car_module;
+	//////////////////////////////////////////////////////////////////////////
 }
 
 void CCar_module_dlgDlg::DoDataExchange(CDataExchange* pDX)
@@ -64,6 +68,7 @@ BEGIN_MESSAGE_MAP(CCar_module_dlgDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON4, OnButton4)
 	ON_BN_CLICKED(IDC_BUTTON3, OnButton3)
 	ON_CBN_SELCHANGE(IDC_COMBO1, OnSelchangeCombo1)
+	ON_BN_CLICKED(IDC_BUTTON5, OnButton5)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -80,7 +85,7 @@ BOOL CCar_module_dlgDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
 	// TODO: Add extra initialization here
-	/*if(garage.readdate(1234))return FALSE;
+	/*if(garage->readdate(1234))return FALSE;
 	
 	showbutton();*/
 	showmaclist();
@@ -139,8 +144,9 @@ void CCar_module_dlgDlg::OnCancel()
 	int nIndex = m_maclist.GetCurSel();
 	m_maclist.GetLBText( nIndex, str);
 	if(str=="")return ;
-	garage.savedatetomysql(atoi(str.GetBuffer(0)));
+	garage->savedatetomysql(atoi(str.GetBuffer(0)));
 	*/
+	delete garage;
 	CDialog::OnCancel();
 }
 
@@ -148,8 +154,13 @@ void CCar_module_dlgDlg::OnCancel()
 void CCar_module_dlgDlg::OnButton1() 
 {
 	// TODO: Add your control notification handler code here
-	int index=garage.savecar();
-	int sum=garage.getrows()*garage.getcols();
+	CString str;
+	int nIndex = m_maclist.GetCurSel();
+	m_maclist.GetLBText( nIndex, str);
+	if(str=="")return ;
+
+	int index=garage->savecar();
+	int sum=garage->getrows()*garage->getcols();
 	if(index!=-1)
 	{
 		//////////////////////////////////////////////////////////////////////////
@@ -161,13 +172,8 @@ void CCar_module_dlgDlg::OnButton1()
 	{
 		MessageBox("没有空余车位");
 	}
-	//garage.readdate();
-
-	CString str;
-	int nIndex = m_maclist.GetCurSel();
-	m_maclist.GetLBText( nIndex, str);
-	if(str=="")return ;
-	garage.savedatetomysql(atoi(str.GetBuffer(0)));
+	//garage->readdate();
+	//garage->savedatetomysql(atoi(str.GetBuffer(0)));
 	upinfodate();
 }
 
@@ -176,12 +182,17 @@ void CCar_module_dlgDlg::OnButton2()
 {
 	// TODO: Add your control notification handler code here
 	CString str;
+	int nIndex = m_maclist.GetCurSel();
+	m_maclist.GetLBText( nIndex, str);
+	if(str=="")return ;
+	
 	m_carid.GetWindowText(str);
+	if(str=="")return ;
 
 	int index=atoi(str.GetBuffer(0));
-	int sum=garage.getrows()*garage.getcols();
+	int sum=garage->getrows()*garage->getcols();
 
-	index=garage.deletecar(index);
+	index=garage->deletecar(index);
 
 	if(index!=-1)
 	{
@@ -194,11 +205,7 @@ void CCar_module_dlgDlg::OnButton2()
 	{
 		MessageBox("未找到车辆");
 	}
-
-	int nIndex = m_maclist.GetCurSel();
-	m_maclist.GetLBText( nIndex, str);
-	if(str=="")return ;
-	garage.savedatetomysql(atoi(str.GetBuffer(0)));
+	//garage->savedatetomysql(atoi(str.GetBuffer(0)));
 
 	upinfodate();
 }
@@ -207,25 +214,25 @@ void CCar_module_dlgDlg::OnButton2()
 void CCar_module_dlgDlg::upinfodate()
 {
 	CString str;
-	//str.Format("%d",garage.getmac());
+	//str.Format("%d",garage->getmac());
 	//m_maclist.SetWindowText(str);
 	
-	str.Format("%d",garage.getsumcar());
+	str.Format("%d",garage->getsumcar());
 	m_sum.SetWindowText(str);
 	
-	str.Format("%d",garage.getspendcar());
+	str.Format("%d",garage->getspendcar());
 	m_finish.SetWindowText(str);
 	
-	str.Format("%f",garage.getspeedrows());
+	str.Format("%f",garage->getspeedrows());
 	m_speedrows.SetWindowText(str);
 	
-	str.Format("%f",garage.getspeedcols());
+	str.Format("%f",garage->getspeedcols());
 	m_speedcols.SetWindowText(str);
 	
-	str.Format("%d",garage.getrows());
+	str.Format("%d",garage->getrows());
 	m_rows.SetWindowText(str);
 	
-	str.Format("%d",garage.getcols());
+	str.Format("%d",garage->getcols());
 	m_cols.SetWindowText(str);
 
 	m_carid.SetWindowText("");
@@ -242,25 +249,28 @@ void CCar_module_dlgDlg::OnButton4()
 void CCar_module_dlgDlg::OnButton3() 
 {
 	// TODO: Add your control notification handler code here
-	if(garage.checkfist()!=-1)hidebutton();
+	//if(garage->checkfist()!=-1)
+	hidebutton();
 
 	CString str;
 	m_maclist.GetWindowText(str);
-	garage.setmac(atoi(str.GetBuffer(0)));
+	if(str=="")return ;
+
+	garage->setmac(atoi(str.GetBuffer(0)));
 
 	m_rows.GetWindowText(str);
-	garage.setrows(atoi(str.GetBuffer(0)));
+	garage->setrows(atoi(str.GetBuffer(0)));
 
 	m_cols.GetWindowText(str);
-	garage.setcols(atoi(str.GetBuffer(0)));
+	garage->setcols(atoi(str.GetBuffer(0)));
 	
 	m_speedrows.GetWindowText(str);
-	garage.setspeedrows(atof(str.GetBuffer(0)));
+	garage->setspeedrows(atof(str.GetBuffer(0)));
 
 	m_speedcols.GetWindowText(str);
-	garage.setspeedcols(atof(str.GetBuffer(0)));
+	garage->setspeedcols(atof(str.GetBuffer(0)));
 
-	garage.newgarage();
+	garage->newgarage();
 
 	m_entry.GetWindowText(str);
 	string tmpstr=str.GetBuffer(0);
@@ -268,11 +278,11 @@ void CCar_module_dlgDlg::OnButton3()
 	stream<<tmpstr;
 	for(int index;stream>>index;)
 	{
-		//str.Format("%d:%d",index,garage.setentry(index));
+		//str.Format("%d:%d",index,garage->setentry(index));
 		//MessageBox(str);
-		garage.setentry(index);
+		garage->setentry(index);
 	}
-	//garage.savedatetomysql(garage.getmac());
+	//garage->savedatetomysql(garage->getmac());
 
 	showmaclist();
 	btnnum=0;
@@ -282,10 +292,14 @@ void CCar_module_dlgDlg::showbutton()
 {
 	//////////////////////////////////////////////////////////////////////////
 	//不知道为什么,行列反了,但在显示的却是正确的
-	int cols=garage.getcols();
-	int rows=garage.getrows();
+	int cols=garage->getcols();
+	int rows=garage->getrows();
 	//////////////////////////////////////////////////////////////////////////
 	
+	//CString str;
+	//str.Format("%d:%d",rows,cols);
+	//MessageBox(str);
+
     btn = new CButton[cols*rows];  
     DWORD dwStyle = WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_ICON;//|WS_DISABLED;  
 	int startpoint[2]={220,15};           //起始点
@@ -294,34 +308,37 @@ void CCar_module_dlgDlg::showbutton()
 	int num[2]={50,50};                   //长宽
     for(int i = 0; i < cols*rows; i++){
 		CString tmp;
-		tmp.Format("%d",cols*rows-i);
+		tmp.Format("%d ",cols*rows-i);
+		//str+=tmp;
         btn[i].Create(tmp, dwStyle,CRect(startpoint[0]+i%cols*kuan,startpoint[1]+i/cols*gao,startpoint[0]+i%cols*kuan+num[0],startpoint[1]+i/cols*gao+num[1]),this,buttonID+i);   
         //btn[i].SetFont(GetParent()->GetFont());  
 		//btn[i].SetIcon(m_hicnok);
 		//////////////////////////////////////////////////////////////////////////
 		//坐标不一致,导致少一个车位
-		if(garage.getcond(cols*rows-i)==0)
+		int index=garage->getcond(cols*rows-i);
+		if(index==0)
 		{
 			//tmp="空闲";
 			btn[i].SetIcon(m_hicnok);
 		}
-		else if(garage.getcond(cols*rows-i)==1)
+		else if(index==1)
 		{
 			//tmp="占用";
 			btn[i].SetIcon(m_hicnno);
 		}
-		else if(garage.getcond(cols*rows-i)==2)
+		else if(index==2)
 		{
 			//tmp="入口";
 			btn[i].SetIcon(m_hicncar);
 		}
 		else
 		{
-			tmp.Format("未知数据 第%d车位:%d",cols*rows-i,garage.getcond(cols*rows-i));
+			tmp.Format("未知数据 第%d车位:%d",cols*rows-i,index);
 			MessageBox(tmp);
 		}
 		//////////////////////////////////////////////////////////////////////////
     } 
+	//MessageBox(str);
 	
 	upinfodate();
 	
@@ -349,8 +366,8 @@ void CCar_module_dlgDlg::hidebutton()
 	}
 	//////////////////////////////////////////////////////////////////////////
 	//不知道为什么,行列反了,但在显示的却是正确的
-	int cols=garage.getcols();
-	int rows=garage.getrows();
+	int cols=garage->getcols();
+	int rows=garage->getrows();
 	//////////////////////////////////////////////////////////////////////////
 
 	int startpoint[2]={220,15};           //起始点
@@ -385,14 +402,20 @@ void CCar_module_dlgDlg::hidebutton()
 void CCar_module_dlgDlg::OnSelchangeCombo1() 
 {
 	// TODO: Add your control notification handler code here
-	if(garage.checkfist()!=-1)hidebutton();
+	delete garage;
+	garage=new car_module;
+	
+	//if(garage->checkfist()!=-1)
+	hidebutton();
 	CString str;
 	int nIndex = m_maclist.GetCurSel();
 	m_maclist.GetLBText( nIndex, str);
 	//if(str=="")return ;
-	garage.clear();
-	if(garage.readdate(atoi(str.GetBuffer(0))))return ;
-	btnnum=garage.getrows()*garage.getcols();
+	//garage->clear();
+	//MessageBox(str);
+	
+	if(garage->readdate(atoi(str.GetBuffer(0))))return ;
+	btnnum=garage->getrows()*garage->getcols();
 	showbutton();
 	upinfodate();
 }
@@ -433,6 +456,24 @@ void CCar_module_dlgDlg::showmaclist()
 	else
 	{
 		AfxMessageBox("数据库连接失败");
-		return ;
+		//return ;
 	}
+
+	mysql_close(&mysql);
+}
+
+void CCar_module_dlgDlg::OnButton5() 
+{
+	// TODO: Add your control notification handler code here
+	CString str;
+	m_maclist.GetWindowText(str);
+	if(str=="")return ;
+
+	garage->readdate(atoi(str.GetBuffer(0)));
+
+	garage->deletedate();
+	hidebutton();
+	
+	showmaclist();
+	btnnum=0;
 }

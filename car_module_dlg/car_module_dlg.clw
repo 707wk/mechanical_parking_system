@@ -35,7 +35,7 @@ LastObject=IDC_EDIT9
 [DLG:IDD_CAR_MODULE_DLG_DIALOG]
 Type=1
 Class=CCar_module_dlgDlg
-ControlCount=24
+ControlCount=25
 Control1=IDC_COMBO1,combobox,1344340226
 Control2=IDC_BUTTON4,button,1342242816
 Control3=IDC_EDIT2,edit,1350631552
@@ -60,4 +60,5 @@ Control21=IDC_STATIC,static,1342308352
 Control22=IDC_STATIC,static,1342308352
 Control23=IDC_STATIC,static,1342308352
 Control24=IDC_STATIC,button,1342177287
+Control25=IDC_BUTTON5,button,1342242816
 
