@@ -98,6 +98,13 @@ int management::savecar(char* str)
 	md5str=md5.toString();
 	md5.reset();
 
+	CString tmp;
+	tmp.Format("select plate from t_carinfo where plate='%s'",str);
+	mysql_query(&mysql,tmp.GetBuffer(0));
+	res=mysql_store_result(&mysql);
+	column=mysql_fetch_row(res);
+	if(column)return -1;
+
 	car_module garage;
 	garage.readdate(findmac);
 	index=garage.savecar();

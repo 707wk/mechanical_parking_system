@@ -207,11 +207,6 @@ void CCar_module_dlgDlg::OnButton2()
 	//int index=garage->savecar();
 	int sum=garage->getrows()*garage->getcols();
 
-	//int index=atoi(str.GetBuffer(0));
-	//int sum=garage->getrows()*garage->getcols();
-
-	//index=garage->deletecar(index);
-
 	if(atoi(str.GetBuffer(0))==mana.getmac())
 	if(index!=-1)
 	{
