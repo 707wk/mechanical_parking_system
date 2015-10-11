@@ -405,7 +405,7 @@ void car_module::setspeedcols(double cols)
 
 int car_module::getrows(int location)
 {
-	return (location/cols+1);
+	return (location/cols);
 }
 /////////////////////////////////////////////////////////////////////////
 

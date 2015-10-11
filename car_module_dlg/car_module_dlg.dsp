@@ -106,6 +106,14 @@ SOURCE=.\car_module_dlgDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\management.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\md5.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
@@ -128,6 +136,14 @@ SOURCE=.\car_module_dlgDlg.h
 # Begin Source File
 
 SOURCE=.\DataStructure.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\management.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\md5.h
 # End Source File
 # Begin Source File
 

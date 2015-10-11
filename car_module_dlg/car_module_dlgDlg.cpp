@@ -6,6 +6,8 @@
 #include "car_module_dlgDlg.h"
 #include "DataStructure.h"
 #include "car_module.h"
+#include "management.h"
+#include "md5.h"
 
 #include <iostream>
 #include <vector>
@@ -47,8 +49,8 @@ void CCar_module_dlgDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCar_module_dlgDlg)
+	DDX_Control(pDX, IDC_COMBO2, m_platelist);
 	DDX_Control(pDX, IDC_EDIT9, m_entry);
-	DDX_Control(pDX, IDC_EDIT1, m_carid);
 	DDX_Control(pDX, IDC_COMBO1, m_maclist);
 	DDX_Control(pDX, IDC_EDIT7, m_cols);
 	DDX_Control(pDX, IDC_EDIT6, m_rows);
@@ -159,7 +161,15 @@ void CCar_module_dlgDlg::OnButton1()
 	m_maclist.GetLBText( nIndex, str);
 	if(str=="")return ;
 
-	int index=garage->savecar();
+	CString id;
+	m_platelist.GetWindowText(id);
+	if(id=="")return ;
+
+	management mana;
+	mana.setfindmac(atoi(str.GetBuffer(0)));
+
+	int index=mana.savecar(id.GetBuffer(0));
+	//int index=garage->savecar();
 	int sum=garage->getrows()*garage->getcols();
 	if(index!=-1)
 	{
@@ -170,7 +180,7 @@ void CCar_module_dlgDlg::OnButton1()
 	}
 	else
 	{
-		MessageBox("没有空余车位");
+		MessageBox("没有空余车位:1");
 	}
 	//garage->readdate();
 	//garage->savedatetomysql(atoi(str.GetBuffer(0)));
@@ -186,14 +196,23 @@ void CCar_module_dlgDlg::OnButton2()
 	m_maclist.GetLBText( nIndex, str);
 	if(str=="")return ;
 	
-	m_carid.GetWindowText(str);
-	if(str=="")return ;
-
-	int index=atoi(str.GetBuffer(0));
+	CString id;
+	m_platelist.GetWindowText(id);
+	if(id=="")return ;
+	
+	management mana;
+	mana.setfindmac(atoi(str.GetBuffer(0)));
+	
+	int index=mana.deletecar(id.GetBuffer(0));
+	//int index=garage->savecar();
 	int sum=garage->getrows()*garage->getcols();
 
-	index=garage->deletecar(index);
+	//int index=atoi(str.GetBuffer(0));
+	//int sum=garage->getrows()*garage->getcols();
 
+	//index=garage->deletecar(index);
+
+	if(atoi(str.GetBuffer(0))==mana.getmac())
 	if(index!=-1)
 	{
 		//////////////////////////////////////////////////////////////////////////
@@ -235,7 +254,7 @@ void CCar_module_dlgDlg::upinfodate()
 	str.Format("%d",garage->getcols());
 	m_cols.SetWindowText(str);
 
-	m_carid.SetWindowText("");
+	showplatelist();
 }
 
 //刷新列表
@@ -416,6 +435,7 @@ void CCar_module_dlgDlg::OnSelchangeCombo1()
 	
 	if(garage->readdate(atoi(str.GetBuffer(0))))return ;
 	btnnum=garage->getrows()*garage->getcols();
+	showplatelist();
 	showbutton();
 	upinfodate();
 }
@@ -476,4 +496,53 @@ void CCar_module_dlgDlg::OnButton5()
 	
 	showmaclist();
 	btnnum=0;
+}
+
+
+void CCar_module_dlgDlg::showplatelist()
+{
+	MYSQL_RES *res;     //查询结果集
+	MYSQL_ROW column;   //数据行的列
+	MYSQL mysql;
+	mysql_init(&mysql);
+	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
+	{
+		MessageBox("数据库无法连接!");
+		return ;
+	}
+	
+	CString tmp;
+	int nIndex = m_maclist.GetCurSel();
+	m_maclist.GetLBText( nIndex, tmp);
+
+	CString str="select plate from t_carinfo where mac=";
+	str=str+tmp;
+	//AfxMessageBox(str);
+	
+	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+	
+	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
+	{
+		m_platelist.ResetContent();
+		res=mysql_store_result(&mysql);//保存查询到的数据到result
+		while(column=mysql_fetch_row(res))//获取具体的数据
+		{
+			if(column)
+			{
+				m_platelist.AddString(column[0]);
+			}
+			else
+			{
+				MessageBox("未找到车辆数据");
+				break;
+			}
+		}
+	}
+	else
+	{
+		AfxMessageBox("数据库连接失败");
+		//return ;
+	}
+	
+	mysql_close(&mysql);
 }

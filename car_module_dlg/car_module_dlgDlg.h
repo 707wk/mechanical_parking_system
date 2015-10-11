@@ -23,8 +23,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCar_module_dlgDlg)
 	enum { IDD = IDD_CAR_MODULE_DLG_DIALOG };
+	CComboBox	m_platelist;
 	CEdit	m_entry;
-	CEdit	m_carid;
 	CComboBox	m_maclist;
 	CEdit	m_cols;
 	CEdit	m_rows;
@@ -48,6 +48,7 @@ public:
 
 // Implementation
 protected:
+	void showplatelist();
 	void showmaclist();
 	void hidebutton();
 	void showbutton();

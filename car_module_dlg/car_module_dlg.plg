@@ -6,19 +6,21 @@
 --------------------Configuration: car_module_dlg - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP29C1.tmp" with contents
+Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSPB880.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/car_module_dlg.pdb" /debug /machine:I386 /out:"Debug/car_module_dlg.exe" /pdbtype:sept 
 .\Debug\car_module.obj
 .\Debug\car_module_dlg.obj
 .\Debug\car_module_dlgDlg.obj
+.\Debug\md5.obj
 .\Debug\StdAfx.obj
 .\Debug\car_module_dlg.res
+.\Debug\management.obj
 ]
-Creating command line "link.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP29C1.tmp"
+Creating command line "link.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSPB880.tmp"
 <h3>Output Window</h3>
 Linking...
-Creating command line "bscmake.exe /nologo /o"Debug/car_module_dlg.bsc"  .\Debug\StdAfx.sbr .\Debug\car_module.sbr .\Debug\car_module_dlg.sbr .\Debug\car_module_dlgDlg.sbr"
+Creating command line "bscmake.exe /nologo /o"Debug/car_module_dlg.bsc"  .\Debug\StdAfx.sbr .\Debug\car_module.sbr .\Debug\car_module_dlg.sbr .\Debug\car_module_dlgDlg.sbr .\Debug\md5.sbr .\Debug\management.sbr"
 Creating browse info file...
 <h3>Output Window</h3>
 
