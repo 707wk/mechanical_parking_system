@@ -140,6 +140,6 @@ public:
 	int newgarage();                   //创建队列
 	int switchid(int index);           //外部坐标转换为内部坐标
 
-	void putinfo();                    //输出信息[终端用]
+	//void putinfo();                    //输出信息[终端用]
 };
 #endif

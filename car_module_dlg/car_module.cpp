@@ -579,7 +579,7 @@ int car_module::deletecar(int index)
 	return map_queue[index].id;
 }
 
-void car_module::putinfo()
+/*void car_module::putinfo()
 {
 	printf("mac=%d\n",mac);
 	printf("sumcar=%2d spendcar=%2d\n",sumcar,spendcar);
@@ -602,7 +602,7 @@ void car_module::putinfo()
 		printf("rows=%2d cols=%2d id=%2d free=%2d time=%.3lf\n",getrows(map_queue[i].id),getcols(map_queue[i].id),map_queue[i].id,map_queue[i].idle,map_queue[i].time);
 	}
 	printf("\n");
-}
+}*/
 
 int car_module::clear()
 {
