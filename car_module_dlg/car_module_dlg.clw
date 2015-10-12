@@ -29,7 +29,7 @@ ImplementationFile=car_module_dlgDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=IDC_COMBO2
+LastObject=IDC_BUTTON2
 
 
 
