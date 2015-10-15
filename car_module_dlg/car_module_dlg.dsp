@@ -90,6 +90,10 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\about.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\car_module.cpp
 # End Source File
 # Begin Source File
@@ -121,6 +125,10 @@ SOURCE=.\StdAfx.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\about.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\car_module.h
@@ -175,7 +183,15 @@ SOURCE=.\res\no.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\offline.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\ok.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\online.ico
 # End Source File
 # End Group
 # Begin Source File

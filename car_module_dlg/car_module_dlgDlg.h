@@ -23,6 +23,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCar_module_dlgDlg)
 	enum { IDD = IDD_CAR_MODULE_DLG_DIALOG };
+	CStatic	m_status;
 	CComboBox	m_platelist;
 	CEdit	m_entry;
 	CComboBox	m_maclist;
@@ -37,6 +38,8 @@ public:
 	HICON m_hicnok;
 	HICON m_hicnno;
 	HICON m_hicncar;
+	HICON m_online;
+	HICON m_offline;
 	int btnnum;
 	//}}AFX_DATA
 
@@ -68,6 +71,7 @@ protected:
 	afx_msg void OnButton3();
 	afx_msg void OnSelchangeCombo1();
 	afx_msg void OnButton5();
+	afx_msg void Onexit();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

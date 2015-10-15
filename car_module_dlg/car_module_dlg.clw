@@ -7,13 +7,16 @@ LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "car_module_dlg.h"
 
-ClassCount=2
+ClassCount=3
 Class1=CCar_module_dlgApp
 Class2=CCar_module_dlgDlg
 
-ResourceCount=2
+ResourceCount=4
 Resource1=IDR_MAINFRAME
-Resource2=IDD_CAR_MODULE_DLG_DIALOG
+Resource2=IDD_about
+Resource3=IDD_CAR_MODULE_DLG_DIALOG
+Class3=about
+Resource4=IDR_MENU1
 
 [CLS:CCar_module_dlgApp]
 Type=0
@@ -29,14 +32,14 @@ ImplementationFile=car_module_dlgDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=IDC_BUTTON2
+LastObject=IDC_status
 
 
 
 [DLG:IDD_CAR_MODULE_DLG_DIALOG]
 Type=1
 Class=CCar_module_dlgDlg
-ControlCount=25
+ControlCount=28
 Control1=IDC_COMBO1,combobox,1344340226
 Control2=IDC_BUTTON4,button,1342242816
 Control3=IDC_EDIT2,edit,1350631552
@@ -62,4 +65,29 @@ Control22=IDC_STATIC,static,1342308352
 Control23=IDC_STATIC,button,1342177287
 Control24=IDC_BUTTON5,button,1342242816
 Control25=IDC_COMBO2,combobox,1344340226
+Control26=IDC_STATIC,static,1342308352
+Control27=IDC_STATIC,static,1342308352
+Control28=IDC_status,static,1342177283
+
+[MNU:IDR_MENU1]
+Type=1
+Class=CCar_module_dlgDlg
+Command1=ID_MENUITEM32772
+Command2=ID_MENUITEM32771
+Command3=ID_MENUITEM32773
+CommandCount=3
+
+[DLG:IDD_about]
+Type=1
+Class=about
+ControlCount=0
+
+[CLS:about]
+Type=0
+HeaderFile=about.h
+ImplementationFile=about.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=about
+VirtualFilter=dWC
 

@@ -37,6 +37,8 @@ CCar_module_dlgDlg::CCar_module_dlgDlg(CWnd* pParent /*=NULL*/)
 	m_hicnok=AfxGetApp()->LoadIcon(IDI_ICON3);
 	m_hicnno=AfxGetApp()->LoadIcon(IDI_ICON2);
 	m_hicncar=AfxGetApp()->LoadIcon(IDI_ICON1);
+	m_online=AfxGetApp()->LoadIcon(IDI_ICON4);
+	m_offline=AfxGetApp()->LoadIcon(IDI_ICON5);
 	btnnum=0;
 	btn=NULL;
 	//////////////////////////////////////////////////////////////////////////
@@ -49,6 +51,7 @@ void CCar_module_dlgDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCar_module_dlgDlg)
+	DDX_Control(pDX, IDC_status, m_status);
 	DDX_Control(pDX, IDC_COMBO2, m_platelist);
 	DDX_Control(pDX, IDC_EDIT9, m_entry);
 	DDX_Control(pDX, IDC_COMBO1, m_maclist);
@@ -71,6 +74,7 @@ BEGIN_MESSAGE_MAP(CCar_module_dlgDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON3, OnButton3)
 	ON_CBN_SELCHANGE(IDC_COMBO1, OnSelchangeCombo1)
 	ON_BN_CLICKED(IDC_BUTTON5, OnButton5)
+	ON_COMMAND(ID_MENUITEM32772, Onexit)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -136,6 +140,12 @@ void CCar_module_dlgDlg::OnOK()
 	// TODO: Add extra validation here
 	
 	//CDialog::OnOK();
+}
+
+void CCar_module_dlgDlg::Onexit() 
+{
+	// TODO: Add your command handler code here
+	OnCancel();
 }
 
 void CCar_module_dlgDlg::OnCancel() 
@@ -430,6 +440,9 @@ void CCar_module_dlgDlg::OnSelchangeCombo1()
 	
 	if(garage->readdate(atoi(str.GetBuffer(0))))return ;
 	btnnum=garage->getrows()*garage->getcols();
+
+	m_status.SetIcon(m_online);
+
 	showplatelist();
 	showbutton();
 	upinfodate();
@@ -541,3 +554,4 @@ void CCar_module_dlgDlg::showplatelist()
 	
 	mysql_close(&mysql);
 }
+
