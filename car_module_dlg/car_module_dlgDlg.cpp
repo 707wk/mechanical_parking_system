@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "car_module_dlg.h"
 #include "car_module_dlgDlg.h"
+#include "about.h"
 #include "DataStructure.h"
 #include "car_module.h"
 #include "management.h"
@@ -33,11 +34,11 @@ CCar_module_dlgDlg::CCar_module_dlgDlg(CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CCar_module_dlgDlg)
 	//}}AFX_DATA_INIT
 	// Note that LoadIcon does not require a subsequent DestroyIcon in Win32
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-	m_hicnok=AfxGetApp()->LoadIcon(IDI_ICON3);
-	m_hicnno=AfxGetApp()->LoadIcon(IDI_ICON2);
+	m_hIcon  =AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_hicnok =AfxGetApp()->LoadIcon(IDI_ICON3);
+	m_hicnno =AfxGetApp()->LoadIcon(IDI_ICON2);
 	m_hicncar=AfxGetApp()->LoadIcon(IDI_ICON1);
-	m_online=AfxGetApp()->LoadIcon(IDI_ICON4);
+	m_online =AfxGetApp()->LoadIcon(IDI_ICON4);
 	m_offline=AfxGetApp()->LoadIcon(IDI_ICON5);
 	btnnum=0;
 	btn=NULL;
@@ -51,6 +52,8 @@ void CCar_module_dlgDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCar_module_dlgDlg)
+	DDX_Control(pDX, IDC_EDIT8, m_port);
+	DDX_Control(pDX, IDC_EDIT1, m_statustext);
 	DDX_Control(pDX, IDC_status, m_status);
 	DDX_Control(pDX, IDC_COMBO2, m_platelist);
 	DDX_Control(pDX, IDC_EDIT9, m_entry);
@@ -61,6 +64,7 @@ void CCar_module_dlgDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT4, m_speedrows);
 	DDX_Control(pDX, IDC_EDIT3, m_finish);
 	DDX_Control(pDX, IDC_EDIT2, m_sum);
+	DDX_Control(pDX, IDC_MSCOMM1, m_Comm);
 	//}}AFX_DATA_MAP
 }
 
@@ -75,6 +79,7 @@ BEGIN_MESSAGE_MAP(CCar_module_dlgDlg, CDialog)
 	ON_CBN_SELCHANGE(IDC_COMBO1, OnSelchangeCombo1)
 	ON_BN_CLICKED(IDC_BUTTON5, OnButton5)
 	ON_COMMAND(ID_MENUITEM32772, Onexit)
+	ON_COMMAND(ID_MENUITEM32773, Onabout)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -91,9 +96,9 @@ BOOL CCar_module_dlgDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
 	// TODO: Add extra initialization here
-	/*if(garage->readdate(1234))return FALSE;
-	
-	showbutton();*/
+
+	ShowWindow(SW_MAXIMIZE);
+
 	showmaclist();
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -151,13 +156,6 @@ void CCar_module_dlgDlg::Onexit()
 void CCar_module_dlgDlg::OnCancel() 
 {
 	// TODO: Add extra cleanup here
-	/*
-	CString str;
-	int nIndex = m_maclist.GetCurSel();
-	m_maclist.GetLBText( nIndex, str);
-	if(str=="")return ;
-	garage->savedatetomysql(atoi(str.GetBuffer(0)));
-	*/
 	delete garage;
 	CDialog::OnCancel();
 }
@@ -179,7 +177,7 @@ void CCar_module_dlgDlg::OnButton1()
 	mana.setfindmac(atoi(str.GetBuffer(0)));
 
 	int index=mana.savecar(id.GetBuffer(0));
-	//int index=garage->savecar();
+
 	int sum=garage->getrows()*garage->getcols();
 	if(index!=-1)
 	{
@@ -187,13 +185,13 @@ void CCar_module_dlgDlg::OnButton1()
 		//下标与序号不对应
 		btn[sum-index].SetIcon(m_hicnno);
 		//////////////////////////////////////////////////////////////////////////
+		m_Comm.SetOutput(COleVariant("a"));//发送数据
 	}
 	else
 	{
 		MessageBox("没有空余车位:1");
 	}
-	//garage->readdate();
-	//garage->savedatetomysql(atoi(str.GetBuffer(0)));
+
 	upinfodate();
 }
 
@@ -214,7 +212,7 @@ void CCar_module_dlgDlg::OnButton2()
 	mana.setfindmac(atoi(str.GetBuffer(0)));
 	
 	int index=mana.deletecar(id.GetBuffer(0));
-	//int index=garage->savecar();
+
 	int sum=garage->getrows()*garage->getcols();
 
 	if(atoi(str.GetBuffer(0))==mana.getmac())
@@ -224,12 +222,12 @@ void CCar_module_dlgDlg::OnButton2()
 		//下标与序号不对应
 		btn[sum-index].SetIcon(m_hicnok);
 		//////////////////////////////////////////////////////////////////////////
+		m_Comm.SetOutput(COleVariant("b"));//发送数据
 	}
 	else
 	{
 		MessageBox("未找到车辆");
 	}
-	//garage->savedatetomysql(atoi(str.GetBuffer(0)));
 
 	upinfodate();
 }
@@ -238,14 +236,15 @@ void CCar_module_dlgDlg::OnButton2()
 void CCar_module_dlgDlg::upinfodate()
 {
 	CString str;
-	//str.Format("%d",garage->getmac());
-	//m_maclist.SetWindowText(str);
 	
 	str.Format("%d",garage->getsumcar());
 	m_sum.SetWindowText(str);
 	
 	str.Format("%d",garage->getspendcar());
 	m_finish.SetWindowText(str);
+
+	str.Format("%d",garage->getcompotr());
+	m_port.SetWindowText(str);
 	
 	str.Format("%f",garage->getspeedrows());
 	m_speedrows.SetWindowText(str);
@@ -273,7 +272,6 @@ void CCar_module_dlgDlg::OnButton4()
 void CCar_module_dlgDlg::OnButton3() 
 {
 	// TODO: Add your control notification handler code here
-	//if(garage->checkfist()!=-1)
 	hidebutton();
 
 	CString str;
@@ -284,6 +282,9 @@ void CCar_module_dlgDlg::OnButton3()
 
 	m_rows.GetWindowText(str);
 	garage->setrows(atoi(str.GetBuffer(0)));
+
+	m_port.GetWindowText(str);
+	garage->setcompotr(atoi(str.GetBuffer(0)));
 
 	m_cols.GetWindowText(str);
 	garage->setcols(atoi(str.GetBuffer(0)));
@@ -302,11 +303,8 @@ void CCar_module_dlgDlg::OnButton3()
 	stream<<tmpstr;
 	for(int index;stream>>index;)
 	{
-		//str.Format("%d:%d",index,garage->setentry(index));
-		//MessageBox(str);
 		garage->setentry(index);
 	}
-	//garage->savedatetomysql(garage->getmac());
 
 	showmaclist();
 	btnnum=0;
@@ -319,10 +317,6 @@ void CCar_module_dlgDlg::showbutton()
 	int cols=garage->getcols();
 	int rows=garage->getrows();
 	//////////////////////////////////////////////////////////////////////////
-	
-	//CString str;
-	//str.Format("%d:%d",rows,cols);
-	//MessageBox(str);
 
     btn = new CButton[cols*rows];  
     DWORD dwStyle = WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_ICON;//|WS_DISABLED;  
@@ -333,10 +327,9 @@ void CCar_module_dlgDlg::showbutton()
     for(int i = 0; i < cols*rows; i++){
 		CString tmp;
 		tmp.Format("%d ",cols*rows-i);
-		//str+=tmp;
+
         btn[i].Create(tmp, dwStyle,CRect(startpoint[0]+i%cols*kuan,startpoint[1]+i/cols*gao,startpoint[0]+i%cols*kuan+num[0],startpoint[1]+i/cols*gao+num[1]),this,buttonID+i);   
-        //btn[i].SetFont(GetParent()->GetFont());  
-		//btn[i].SetIcon(m_hicnok);
+
 		//////////////////////////////////////////////////////////////////////////
 		//坐标不一致,导致少一个车位
 		int index=garage->getcond(cols*rows-i);
@@ -362,24 +355,8 @@ void CCar_module_dlgDlg::showbutton()
 		}
 		//////////////////////////////////////////////////////////////////////////
     } 
-	//MessageBox(str);
 	
 	upinfodate();
-	
-	//////////////////////////////////////////////////////////////////////////
-	//设置窗口大小
-	CRect rect;
-	GetClientRect (&rect);
-	int cx=rect.Width ();
-	int cy=rect.Height ();
-	
-	cx=startpoint[0]+cols*kuan+30;
-	cy=startpoint[1]+rows*gao;
-	cy=cy>rect.Height ()?cy+startpoint[1]:rect.Height ()+8;
-	cy+=(startpoint[1]*2);
-	
-	::SetWindowPos(this->m_hWnd,HWND_BOTTOM,0,0,cx,cy,SWP_NOZORDER|SWP_NOMOVE);
-	//////////////////////////////////////////////////////////////////////////
 }
 
 void CCar_module_dlgDlg::hidebutton()
@@ -403,24 +380,6 @@ void CCar_module_dlgDlg::hidebutton()
 			btn[i].DestroyWindow();	
 			delete btn[i];
     }
-	
-	//upinfodate();
-	/*
-	//////////////////////////////////////////////////////////////////////////
-	//设置窗口大小
-	CRect rect;
-	GetClientRect (&rect);
-	int cx=rect.Width ();
-	int cy=rect.Height ();
-	
-	cx=startpoint[0]+cols*kuan+30;
-	cy=startpoint[1]+rows*gao;
-	cy=cy>rect.Height ()?cy+startpoint[1]:rect.Height ();
-	cy+=(startpoint[1]*2);
-	
-	::SetWindowPos(this->m_hWnd,HWND_BOTTOM,0,0,cx,cy,SWP_NOZORDER|SWP_NOMOVE);
-	//////////////////////////////////////////////////////////////////////////
-	*/
 }
 
 void CCar_module_dlgDlg::OnSelchangeCombo1() 
@@ -429,19 +388,44 @@ void CCar_module_dlgDlg::OnSelchangeCombo1()
 	delete garage;
 	garage=new car_module;
 	
-	//if(garage->checkfist()!=-1)
 	hidebutton();
 	CString str;
 	int nIndex = m_maclist.GetCurSel();
 	m_maclist.GetLBText( nIndex, str);
-	//if(str=="")return ;
-	//garage->clear();
-	//MessageBox(str);
 	
 	if(garage->readdate(atoi(str.GetBuffer(0))))return ;
 	btnnum=garage->getrows()*garage->getcols();
 
-	m_status.SetIcon(m_online);
+	if(garage->getstatus())
+	{
+		m_status.SetIcon(m_online);
+		m_statustext.SetWindowText("在线");
+	}
+	else	
+	{
+		m_status.SetIcon(m_offline);
+		m_statustext.SetWindowText("离线");
+	}
+	if(0){
+	//////////////////////////////////////////////////////////////////////////
+	if(m_Comm.GetPortOpen())
+		m_Comm.SetPortOpen(FALSE);
+	
+	m_Comm.SetCommPort(garage->getcompotr()); //选择com1，可根据具体情况更改
+	m_Comm.SetInBufferSize(1024); //设置输入缓冲区的大小，Bytes
+	m_Comm.SetOutBufferSize(1024); //设置输入缓冲区的大小，Bytes//
+	m_Comm.SetSettings("9600,n,8,1"); //波特率9600，无校验，8个数据位，1个停止位
+	m_Comm.SetInputMode(1); //1：表示以二进制方式检取数据
+	m_Comm.SetRThreshold(1); 
+	//参数1表示每当串口接收缓冲区中有多于或等于1个字符时将引发一个接收数据的OnComm事件
+	m_Comm.SetInputLen(0); //设置当前接收区数据长度为0
+	if( !m_Comm.GetPortOpen())
+		m_Comm.SetPortOpen(TRUE);//打开串口
+	else
+		AfxMessageBox("cannot open serial port");
+	m_Comm.GetInput();//先预读缓冲区以清除残留数据
+	//////////////////////////////////////////////////////////////////////////
+	}
 
 	showplatelist();
 	showbutton();
@@ -467,8 +451,8 @@ void CCar_module_dlgDlg::showmaclist()
 	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
 	{
 		m_maclist.ResetContent();
-		res=mysql_store_result(&mysql);//保存查询到的数据到result
-		while(column=mysql_fetch_row(res))//获取具体的数据
+		res=mysql_store_result(&mysql);    //保存查询到的数据到result
+		while(column=mysql_fetch_row(res)) //获取具体的数据
 		{
 			if(column)
 			{
@@ -484,7 +468,6 @@ void CCar_module_dlgDlg::showmaclist()
 	else
 	{
 		AfxMessageBox("数据库连接失败");
-		//return ;
 	}
 
 	mysql_close(&mysql);
@@ -525,15 +508,14 @@ void CCar_module_dlgDlg::showplatelist()
 
 	CString str="select plate from t_carinfo where mac=";
 	str=str+tmp;
-	//AfxMessageBox(str);
 	
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
 	
 	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
 	{
 		m_platelist.ResetContent();
-		res=mysql_store_result(&mysql);//保存查询到的数据到result
-		while(column=mysql_fetch_row(res))//获取具体的数据
+		res=mysql_store_result(&mysql);    //保存查询到的数据到result
+		while(column=mysql_fetch_row(res)) //获取具体的数据
 		{
 			if(column)
 			{
@@ -549,9 +531,48 @@ void CCar_module_dlgDlg::showplatelist()
 	else
 	{
 		AfxMessageBox("数据库连接失败");
-		//return ;
 	}
 	
 	mysql_close(&mysql);
 }
 
+
+void CCar_module_dlgDlg::Onabout() 
+{
+	// TODO: Add your command handler code here
+	about dlg;
+	dlg.DoModal();
+}
+
+BEGIN_EVENTSINK_MAP(CCar_module_dlgDlg, CDialog)
+    //{{AFX_EVENTSINK_MAP(CCar_module_dlgDlg)
+	ON_EVENT(CCar_module_dlgDlg, IDC_MSCOMM1, 1 /* OnComm */, OnOnCommMscomm1, VTS_NONE)
+	//}}AFX_EVENTSINK_MAP
+END_EVENTSINK_MAP()
+
+void CCar_module_dlgDlg::OnOnCommMscomm1() 
+{
+	// TODO: Add your control notification handler code here
+	VARIANT variant_inp;
+    COleSafeArray safearray_inp;
+    LONG len,k;
+    BYTE rxdata[2048];
+    CString strtemp;
+
+	CString datestr;
+    if(m_Comm.GetCommEvent()==2)
+    {
+        variant_inp=m_Comm.GetInput();
+        safearray_inp=variant_inp;
+        len=safearray_inp.GetOneDimSize();
+        for(k=0;k<len;k++)
+            safearray_inp.GetElement(&k,rxdata+k);
+        for(k=0;k<len;k++)
+        {
+            BYTE bt=*(char*)(rxdata+k);
+            strtemp.Format("%c",bt);
+            datestr+=strtemp;
+        }
+    }
+	m_entry.SetWindowText(datestr);
+}

@@ -7,7 +7,25 @@
 </h3>
 <h3>Command Lines</h3>
 Creating command line "rc.exe /l 0x804 /fo"Debug/car_module_dlg.res" /d "_DEBUG" /d "_AFXDLL" "D:\c\car\car_module_dlg\car_module_dlg.rc"" 
-Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP92C7.tmp" with contents
+Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP9719.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/car_module_dlg.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\c\car\car_module_dlg\about.cpp"
+"D:\c\car\car_module_dlg\car_module.cpp"
+"D:\c\car\car_module_dlg\car_module_dlg.cpp"
+"D:\c\car\car_module_dlg\car_module_dlgDlg.cpp"
+"D:\c\car\car_module_dlg\management.cpp"
+"D:\c\car\car_module_dlg\md5.cpp"
+"D:\c\car\car_module_dlg\mscomm.cpp"
+]
+Creating command line "cl.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP9719.tmp" 
+Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP971A.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/car_module_dlg.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\c\car\car_module_dlg\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP971A.tmp" 
+Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP971B.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/car_module_dlg.pdb" /debug /machine:I386 /out:"Debug/car_module_dlg.exe" /pdbtype:sept 
 .\Debug\about.obj
@@ -16,13 +34,28 @@ Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP92C7.tmp" with 
 .\Debug\car_module_dlgDlg.obj
 .\Debug\management.obj
 .\Debug\md5.obj
+.\Debug\mscomm.obj
 .\Debug\StdAfx.obj
 .\Debug\car_module_dlg.res
 ]
-Creating command line "link.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP92C7.tmp"
+Creating command line "link.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP971B.tmp"
 <h3>Output Window</h3>
 Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+about.cpp
+car_module.cpp
+car_module_dlg.cpp
+car_module_dlgDlg.cpp
+management.cpp
+md5.cpp
+mscomm.cpp
+Generating Code...
 Linking...
+Creating command line "bscmake.exe /nologo /o"Debug/car_module_dlg.bsc"  .\Debug\StdAfx.sbr .\Debug\about.sbr .\Debug\car_module.sbr .\Debug\car_module_dlg.sbr .\Debug\car_module_dlgDlg.sbr .\Debug\management.sbr .\Debug\md5.sbr .\Debug\mscomm.sbr"
+Creating browse info file...
+<h3>Output Window</h3>
 
 
 

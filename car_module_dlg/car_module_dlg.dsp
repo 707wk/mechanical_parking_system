@@ -118,6 +118,10 @@ SOURCE=.\md5.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\mscomm.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
@@ -152,6 +156,10 @@ SOURCE=.\management.h
 # Begin Source File
 
 SOURCE=.\md5.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\mscomm.h
 # End Source File
 # Begin Source File
 
@@ -200,3 +208,12 @@ SOURCE=.\ReadMe.txt
 # End Source File
 # End Target
 # End Project
+# Section car_module_dlg : {648A5600-2C6E-101B-82B6-000000000014}
+# 	2:21:DefaultSinkHeaderFile:mscomm.h
+# 	2:16:DefaultSinkClass:CMSComm
+# End Section
+# Section car_module_dlg : {E6E17E90-DF38-11CF-8E74-00A0C90F26F8}
+# 	2:5:Class:CMSComm
+# 	2:10:HeaderFile:mscomm.h
+# 	2:8:ImplFile:mscomm.cpp
+# End Section

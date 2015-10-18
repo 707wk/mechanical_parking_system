@@ -59,12 +59,14 @@ private:
 	int mac;                           //车库模块地址
 	int sumcar;                        //总存车量
 	int spendcar;                      //已存车量
+	int compotr;                       //端口号
 	int condition;                     //状态
 	int rows;                          //行
 	int cols;                          //列
 	double speed_rows;                 //行速度
 	double speed_cols;                 //列速度
 	vector <speed_location> map_queue; //位置列表
+	int status;
 	MYSQL mysql;                       //mysql数据库
 	MYSQL_RES *res;                    //查询结果集
 	MYSQL_ROW column;                  //数据行的列
@@ -79,10 +81,13 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	int readdate(int mac);             //从mysql读取车库信息
 
+	int getstatus();                   //获取状态
 	int judgeposition(int num);        //获取空闲状态
 	                                   //0:空闲
 	                                   //1:占用
 	                                   //2:入口
+	void setcompotr(int num);          //设置端口号
+	int getcompotr();                  //获取端口号
 	int getid(int num);                //获取id
 	int getcond(int num);              //获取状态
 	int combine(int id,int idle);      //合并id和空闲状态

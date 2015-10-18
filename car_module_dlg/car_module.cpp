@@ -51,6 +51,7 @@ car_module::car_module()
 	this->sumcar=0;
 	this->spendcar=0;
 	this->condition=0;
+	this->compotr=0;
 	this->rows=0;
 	this->cols=0;
 	this->speed_rows=0;
@@ -69,70 +70,8 @@ car_module::~car_module()
 	mysql_close(&mysql);
 }
 
-/*int car_module::checkfist()
-{
-	return this->mac;
-}*/
-
-/*int car_module::readdate()
-{
-	FILE* fpin;
-	fpin=fopen("date.txt","r");
-	if(fpin==NULL)
-	{
-		printf("can not open date.txt\n");
-		return 1;
-	}
-	fscanf(fpin,"%d\n",&mac);
-	fscanf(fpin,"%d%d\n",&rows,&cols);
-	fscanf(fpin,"%lf%lf\n",&speed_rows,&speed_cols);
-	sumcar=rows*cols;
-	spendcar=0;
-	for(int i=0;i<rows*cols;i++)
-	{
-		speed_location tmp;
-		tmp.id=i;
-		tmp.idle=0;
-		fscanf(fpin,"%d",&tmp.id);
-		if(!feof(fpin))
-		{
-			tmp.idle=judgeposition(tmp.id);
-			tmp.id=getid(tmp.id)-1;
-		}
-
-		if(tmp.idle==2)sumcar--;
-		if(tmp.idle==1)spendcar++;
-
-		//////////////////////////////////////////////////////////////////////////
-		//突然发现不需要用到rows值计算时间
-		//难怪一直找不到问题出在哪
-		//////////////////////////////////////////////////////////////////////////
-		//突然发现横纵轴速度算反了
-		tmp.time=(tmp.id/cols)/speed_cols+(tmp.id%cols)/speed_rows;
-		//////////////////////////////////////////////////////////////////////////
-		map_queue.push_back(tmp);
-	}
-	fclose(fpin);
-
-	if(rows*cols)
-	{
-		countqueue();
-	}
-
-	return 0;
-}*/
-
 int car_module::readdate(int mac)
 {
-	//this->mac=-1;
-/*
-	mysql_init(&mysql);
-	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
-	{
-		AfxMessageBox("数据库无法连接!");
-		return -1;
-	}
-*/
 	CString str;
 	str.Format("select * from t_garageinfo where mac=%d",mac);
 
@@ -151,6 +90,20 @@ int car_module::readdate(int mac)
 			speed_cols=atof(column[6]);
 			sumcar=0;//atoi(column[7]);
 			spendcar=0;//atoi(column[8]);
+			//compotr=atoi(column[11]);
+
+			//////////////////////////////////////////////////////////////////////////
+			compotr=0;
+			if(column[11])
+				compotr=atoi(column[11]);
+			//////////////////////////////////////////////////////////////////////////
+			
+			//////////////////////////////////////////////////////////////////////////
+			status=0;
+			if(column[10])
+				status=atoi(column[10]);
+			//////////////////////////////////////////////////////////////////////////
+
 			if(column[9]==NULL)return -1;
 			string tmpstr=column[9];
 
@@ -224,25 +177,10 @@ int car_module::readdate(int mac)
 	return -1;
 }
 
-/*int car_module::savedatetomysql()
+int car_module::getstatus()
 {
-	FILE* fpout;
-	fpout=fopen("date.txt","w");
-	if(fpout==NULL)
-	{
-		printf("can not open date.txt\n");
-		return 1;
-	}
-	fprintf(fpout,"%d\n",mac);
-	fprintf(fpout,"%d %d\n",rows,cols);
-	fprintf(fpout,"%.3lf %.3lf\n",speed_rows,speed_cols);
-	for(int i=0;i<rows*cols&&map_queue.size();i++)
-	{
-		fprintf(fpout,"%d ",combine(map_queue[i].id,map_queue[i].idle));
-	}
-	fclose(fpout);
-	return 0;
-}*/
+	return this->status;
+}
 
 int car_module::savedatetomysql(int mac)
 {
@@ -263,8 +201,8 @@ int car_module::savedatetomysql(int mac)
 	//CString str;卧槽这样都可以
 	str.Format("\
 UPDATE t_garageinfo set rows=%d,cols=%d,\
-speedrows=%f,speedcols=%f,sumcar=%d,spendcar=%d,map_queue='%s' where mac=%d",
-rows,cols,speed_rows,speed_cols,sumcar,spendcar,tmpstr.c_str(),mac);
+speedrows=%f,speedcols=%f,sumcar=%d,spendcar=%d,map_queue='%s',compotr=%d where mac=%d",
+rows,cols,speed_rows,speed_cols,sumcar,spendcar,tmpstr.c_str(),compotr,mac);
 	//////////////////////////////////////////////////////////////////////////
 
 	//AfxMessageBox(str);
@@ -288,6 +226,16 @@ int car_module::judgeposition(int num)
 	//用位移将数据分为两段，前端存状态
 	return (unsigned int)num>>(sizeof(int)*4);
 	//////////////////////////////////////////////////////////////////////////
+}
+
+void car_module::setcompotr(int num)
+{
+	this->compotr=num;
+}
+
+int car_module::getcompotr()
+{
+	return this->compotr;
 }
 
 int car_module::getid(int num)

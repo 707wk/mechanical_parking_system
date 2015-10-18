@@ -1,5 +1,8 @@
 // car_module_dlgDlg.h : header file
 //
+//{{AFX_INCLUDES()
+#include "mscomm.h"
+//}}AFX_INCLUDES
 
 #if !defined(AFX_CAR_MODULE_DLGDLG_H__29DD8818_DB6E_4FFC_B91B_A1E2A2B224D3__INCLUDED_)
 #define AFX_CAR_MODULE_DLGDLG_H__29DD8818_DB6E_4FFC_B91B_A1E2A2B224D3__INCLUDED_
@@ -23,6 +26,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCar_module_dlgDlg)
 	enum { IDD = IDD_CAR_MODULE_DLG_DIALOG };
+	CEdit	m_port;
+	CEdit	m_statustext;
 	CStatic	m_status;
 	CComboBox	m_platelist;
 	CEdit	m_entry;
@@ -41,6 +46,7 @@ public:
 	HICON m_online;
 	HICON m_offline;
 	int btnnum;
+	CMSComm	m_Comm;
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides
@@ -72,6 +78,9 @@ protected:
 	afx_msg void OnSelchangeCombo1();
 	afx_msg void OnButton5();
 	afx_msg void Onexit();
+	afx_msg void Onabout();
+	afx_msg void OnOnCommMscomm1();
+	DECLARE_EVENTSINK_MAP()
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

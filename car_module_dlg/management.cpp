@@ -117,8 +117,8 @@ int management::savecar(char* str)
 	cols=garage.getcols(index);
 
 	CString insertstr;
-	insertstr.Format("INSERT INTO t_carinfo (id,plate,mac,number,rows,cols) \
-VALUES('%s','%s',%d,%d,%d,%d)",md5str.c_str(),str,findmac,index,rows,cols);
+	insertstr.Format("INSERT INTO t_carinfo (id,plate,mac,number,rows,cols,start) \
+VALUES('%s','%s',%d,%d,%d,%d,now())",md5str.c_str(),str,findmac,index,rows,cols);
 
 	//AfxMessageBox(insertstr);
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
