@@ -3,7 +3,7 @@
  *PROJECT :NULL
  *AUTHOR  :707wk
  *CREATED :2015/9/23 11:04:33
- *TEXT    :NULL
+ *TEXT    :车库模块:只负责车库信息
  *EMAIL   :gtsoft_wk@foxmail.com
  *CODE    :https://github.com/707wk
  *LOGO    :
@@ -60,7 +60,8 @@ car_module::car_module()
 	mysql_init(&mysql);
 	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
 	{
-		AfxMessageBox("数据库无法连接!");
+		AfxMessageBox("车库模块:数据库无法连接!");
+		exit(1);
 		return ;
 	}
 }
@@ -533,31 +534,6 @@ int car_module::deletecar(int index)
 
 	return map_queue[index].id;
 }
-
-/*void car_module::putinfo()
-{
-	printf("mac=%d\n",mac);
-	printf("sumcar=%2d spendcar=%2d\n",sumcar,spendcar);
-	printf("rows=%2d cols=%2d\n",rows,cols);
-	printf("speed_rows=%.3lf speed_cols=%.3lf\n",speed_rows,speed_cols);
-
-	printf("\n");
-	for(int i=rows-1;i>=0;i--)
-	{
-		for(int j=0;j<cols;j++)
-		{
-			printf("%2d ",i*cols+j);
-		}
-		printf("\n");
-	}
-	printf("\n");
-
-	for(i=0;i<rows*cols;i++)
-	{
-		printf("rows=%2d cols=%2d id=%2d free=%2d time=%.3lf\n",getrows(map_queue[i].id),getcols(map_queue[i].id),map_queue[i].id,map_queue[i].idle,map_queue[i].time);
-	}
-	printf("\n");
-}*/
 
 int car_module::clear()
 {

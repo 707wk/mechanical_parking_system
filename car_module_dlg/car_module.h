@@ -3,7 +3,7 @@
  *PROJECT :NULL
  *AUTHOR  :707wk
  *CREATED :2015/9/23 11:04:13
- *TEXT    :NULL
+ *TEXT    :车库模块:只负责车库信息
  *EMAIL   :gtsoft_wk@foxmail.com
  *CODE    :https://github.com/707wk
  *LOGO    :

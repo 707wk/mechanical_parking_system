@@ -3,7 +3,7 @@
  *PROJECT :NULL
  *AUTHOR  :707wk
  *CREATED :2015/9/23 11:04:33
- *TEXT    :NULL
+ *TEXT    :存取车模块
  *EMAIL   :gtsoft_wk@foxmail.com
  *CODE    :https://github.com/707wk
  *LOGO    :
@@ -52,7 +52,7 @@ management::management()
 	mysql_init(&mysql);
 	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
 	{
-		AfxMessageBox("数据库无法连接!");
+		AfxMessageBox("存取车模块:数据库无法连接!");
 		return ;
 	}
 }
@@ -90,6 +90,16 @@ int management::getcols()
 }
 //////////////////////////////////////////////////////////////////////////
 
+/*////////////////////////////////////////////////////////////////////////
+time	timestamp
+plate	char
+id	int
+mac	int
+timestatus	int
+balancestatus	double
+money	double
+balance	double
+*////////////////////////////////////////////////////////////////////////
 int management::savecar(char* str)
 {
 	string md5str;
@@ -131,6 +141,23 @@ VALUES('%s','%s',%d,%d,%d,%d,now())",md5str.c_str(),str,findmac,index,rows,cols)
 		AfxMessageBox("插入失败:2");
 		return -1;
 	}
+
+	//////////////////////////////////////////////////////////////////////////
+	insertstr.Format("INSERT INTO t_history (time,plate,id,mac,timestatus) \
+		VALUES(now(),'%s','%s',%d,%d)",str,md5str.c_str(),findmac,1);
+	
+	//AfxMessageBox(insertstr);
+	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+	
+	if(mysql_query(&mysql,insertstr.GetBuffer(0))==NULL)
+	{
+	}
+	else
+	{
+		AfxMessageBox("插入失败:3");
+		return -1;
+	}
+	//////////////////////////////////////////////////////////////////////////
 	
 	return index;
 }
@@ -158,6 +185,8 @@ int management::deletecar(char* str)
 			findmac=atoi(column[2]);
 			index=atoi(column[3]);
 
+			double cost=countmoney(str);
+
 			car_module garage;
 			garage.readdate(findmac);
 			garage.deletecar(index);
@@ -175,6 +204,23 @@ int management::deletecar(char* str)
 				return -1;
 			}
 
+			//////////////////////////////////////////////////////////////////////////
+			insertstr.Format("INSERT INTO t_history (time,plate,id,mac,timestatus,balancestatus,money) \
+				VALUES(now(),'%s','%s',%d,%d,%d,%lf)",str,md5str.c_str(),findmac,2,2,cost);
+			
+			//AfxMessageBox(insertstr);
+			mysql_query(&mysql,"SET NAMES 'UTF-8'");
+			
+			if(mysql_query(&mysql,insertstr.GetBuffer(0))==NULL)
+			{
+			}
+			else
+			{
+				AfxMessageBox("插入失败:4");
+				return -1;
+			}
+			//////////////////////////////////////////////////////////////////////////
+
 			return index;
 		}
 		else
@@ -188,5 +234,72 @@ int management::deletecar(char* str)
 		AfxMessageBox("查找失败");
 		return -1;
 	}
+}
+
+double management::countmoney(char* str)
+{
+	time_t rawtime;
+	struct tm * timeinfo;
+	time(&rawtime);
+	timeinfo=localtime(&rawtime);
+
+	string md5str;
+	MD5 md5;
+	md5.update(str);
+	md5str=md5.toString();
+	md5.reset();
+
+	int year;
+	int month;
+	int day;
+	int hour;
+	int min;
+	int sec;
+
+/*////////////////////////////////////////////////////////////////////////
+	1900+timeinfo->tm_year,
+		1+timeinfo->tm_mon,
+		timeinfo->tm_mday,
+		timeinfo->tm_hour,
+		timeinfo->tm_min,
+		timeinfo->tm_sec;
+*/////////////////////////////////////////////////////////////////////////
+
+	CString selectstr;
+	selectstr.Format("select start from t_carinfo where id='%s'",md5str.c_str());
+
+	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+	
+	if(mysql_query(&mysql,selectstr.GetBuffer(0))==NULL)
+	{
+		res=mysql_store_result(&mysql);//保存查询到的数据到result
+		column=mysql_fetch_row(res);//获取具体的数据
+		if(column)
+		{
+			sscanf(column[0],"%d-%d-%d %d:%d:%d",&year,&month,&day,&hour,&min,&sec);
+			time_t t1;
+			struct tm timeptr1;
+			timeptr1.tm_mday=day ;
+			timeptr1.tm_mon=month-1;
+			timeptr1.tm_year=year-1900;
+			timeptr1.tm_sec=sec;
+			timeptr1.tm_min=min;
+			timeptr1.tm_hour=hour;
+			//timeptr1.tm_wday=0;
+			//timeptr1.tm_yday=0;
+			//timeptr1.tm_isdst=0;
+
+			t1=mktime(&timeptr1);
+
+			return ((difftime(rawtime,t1)-1)/60+1)*serverinfo.cost;
+		}
+	}
+	else
+	{
+		AfxMessageBox("插入失败:5");
+		return -1;
+	}
+
+	return -1;
 }
 

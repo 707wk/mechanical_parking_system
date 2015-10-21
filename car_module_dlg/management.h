@@ -3,7 +3,7 @@
  *PROJECT :NULL
  *AUTHOR  :707wk
  *CREATED :2015/9/23 11:04:13
- *TEXT    :NULL
+ *TEXT    :存取车模块
  *EMAIL   :gtsoft_wk@foxmail.com
  *CODE    :https://github.com/707wk
  *LOGO    :
@@ -84,6 +84,7 @@ public:
 	*/////////////////////////////////////////////////////////////////////////
 	int savecar(char* str);            //存车,未找到返回-1
 	int deletecar(char* str);          //取车,未找到返回-1
+	double countmoney(char* str);      //统计费用
 
 	//void AfxMessageBox(char* str);
 };
