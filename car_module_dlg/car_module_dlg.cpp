@@ -80,6 +80,15 @@ BOOL CCar_module_dlgApp::InitInstance()
 	Enable3dControlsStatic();	// Call this when linking to MFC statically
 #endif
 
+	HWND wnd;
+	wnd=::FindWindow(NULL,_T("car_module_dlg"));
+	if(wnd)
+	{
+		AfxMessageBox(_T("程序已运行"));
+		//SendMessage(wnd,WM_CLOSE,0,0);
+		return FALSE;
+	}
+
 	if(readserverset())return FALSE;
 
 	CCar_module_dlgDlg dlg;
