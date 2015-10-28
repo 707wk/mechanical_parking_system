@@ -107,13 +107,13 @@ BEGIN
     LTEXT           "纵向速度：",IDC_STATIC,19,171,41,8
     LTEXT           "层数:",IDC_STATIC,19,115,21,8
     LTEXT           "列数:",IDC_STATIC,19,133,21,8
-    LTEXT           "模块id:",IDC_STATIC,19,22,29,8
+    LTEXT           "模块名:",IDC_STATIC,19,22,29,8
     PUSHBUTTON      "删除",IDC_BUTTON5,18,316,50,18
     COMBOBOX        IDC_COMBO2,67,221,64,147,CBS_DROPDOWN | CBS_SORT | 
                     WS_VSCROLL | WS_TABSTOP
     LTEXT           "入口:",IDC_STATIC,19,271,21,8
     LTEXT           "当前状态:",IDC_STATIC,19,192,37,8
-    ICON            IDI_ICON4,IDC_status,67,186,21,21
+    ICON            IDI_ICON4,IDC_status,67,186,20,20
     EDITTEXT        IDC_EDIT1,98,190,33,12,ES_AUTOHSCROLL | ES_READONLY
     CONTROL         "",IDC_MSCOMM1,"{648A5600-2C6E-101B-82B6-000000000014}",
                     WS_TABSTOP,41,31,25,25

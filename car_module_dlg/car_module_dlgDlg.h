@@ -31,7 +31,7 @@ public:
 	CStatic	m_status;
 	CComboBox	m_platelist;
 	CEdit	m_entry;
-	CComboBox	m_maclist;
+	CComboBox	m_namelist;
 	CEdit	m_cols;
 	CEdit	m_rows;
 	CEdit	m_speedcols;
@@ -58,7 +58,7 @@ public:
 // Implementation
 protected:
 	void showplatelist();
-	void showmaclist();
+	void shownamelist();
 	void hidebutton();
 	void showbutton();
 	void upinfodate();

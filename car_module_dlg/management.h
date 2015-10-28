@@ -39,6 +39,7 @@
 #include "StdAfx.h"
 #include <iostream>
 #include <vector>
+#include <string>
 #include <algorithm>
 
 using namespace std;
@@ -46,7 +47,7 @@ using namespace std;
 class management
 {
 private:
-	int findmac;                       //临时mac
+	string findname;                   //临时name
 	int index;                         //临时序号
 	int rows;                          //临时横坐标
 	int cols;                          //临时纵坐标
@@ -58,8 +59,8 @@ public:
 	management();
 	~management();
 
-	void setfindmac(int mac);          //设置mac
-	int getmac();                      //返回mac
+	void setfindname(string name);     //设置name
+	string getname();                  //返回name
 	int getindex();                    //返回序号
 	int getrows();                     //返回rows
 	int getcols();                     //返回cols

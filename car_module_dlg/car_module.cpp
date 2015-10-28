@@ -47,7 +47,7 @@ extern struct serverset serverinfo;
 
 car_module::car_module()
 {
-	this->mac=-1;
+	//this->mac=-1;
 	this->sumcar=0;
 	this->spendcar=0;
 	this->condition=0;
@@ -71,10 +71,10 @@ car_module::~car_module()
 	mysql_close(&mysql);
 }
 
-int car_module::readdate(int mac)
+int car_module::readdate(string name)
 {
 	CString str;
-	str.Format("select * from t_garageinfo where mac=%d",mac);
+	str.Format("select * from t_garageinfo where name='%s'",name.c_str());
 
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
 
@@ -84,7 +84,7 @@ int car_module::readdate(int mac)
 		column=mysql_fetch_row(res);//获取具体的数据
 		if(column)
 		{
-			this->mac=mac;
+			this->name=name;
 			rows=atoi(column[3]);
 			cols=atoi(column[4]);
 			speed_rows=atof(column[5]);
@@ -183,9 +183,9 @@ int car_module::getstatus()
 	return this->status;
 }
 
-int car_module::savedatetomysql(int mac)
+int car_module::savedatetomysql(string name)
 {
-	this->mac=mac;
+	this->name=name;
 
 	string tmpstr;
 	CString str;
@@ -202,8 +202,8 @@ int car_module::savedatetomysql(int mac)
 	//CString str;卧槽这样都可以
 	str.Format("\
 UPDATE t_garageinfo set rows=%d,cols=%d,\
-speedrows=%f,speedcols=%f,sumcar=%d,spendcar=%d,map_queue='%s',compotr=%d where mac=%d",
-rows,cols,speed_rows,speed_cols,sumcar,spendcar,tmpstr.c_str(),compotr,mac);
+speedrows=%f,speedcols=%f,sumcar=%d,spendcar=%d,map_queue='%s',compotr=%d where name='%s'",
+rows,cols,speed_rows,speed_cols,sumcar,spendcar,tmpstr.c_str(),compotr,name.c_str());
 	//////////////////////////////////////////////////////////////////////////
 
 	//AfxMessageBox(str);
@@ -277,14 +277,14 @@ int car_module::combine(int id,int idle)
 
 /////////////////////////////////////////////////////////////////////////
 //这些怪自个作死写成这样,折叠看最好
-int car_module::getmac()
+string car_module::getname()
 {
-	return this->mac;
+	return this->name;
 }
 
-void car_module::setmac(int mac)
+void car_module::setname(string name)
 {
-	this->mac=mac;
+	this->name=name;
 }
 
 int car_module::getsumcar()
@@ -434,7 +434,7 @@ int car_module::savecar()
 
 	spendcar++;
 
-	savedatetomysql(this->mac);
+	savedatetomysql(this->name);
 
 	//////////////////////////////////////////////////////////////////////////
 	//最开始返回了内部下标,后来改成外部下标
@@ -454,7 +454,7 @@ int car_module::setentry(int index)
 	
 	//spendcar--;
 	
-	savedatetomysql(this->mac);
+	savedatetomysql(this->name);
 	
 	return map_queue[index].id;
 }
@@ -471,7 +471,7 @@ int car_module::cancelentry(int index)
 	
 	//spendcar--;
 	
-	savedatetomysql(this->mac);
+	savedatetomysql(this->name);
 	
 	return map_queue[index].id;
 }
@@ -498,9 +498,9 @@ int car_module::newgarage()
 	//AfxMessageBox(tmpstr.c_str());
 
 	str.Format("INSERT INTO t_garageinfo \
-(mac,rows,cols,speedrows,speedcols,sumcar,spendcar,map_queue) \
-VALUES(%d,%d,%d,%f,%f,%d,%d,'%s')",
-this->mac,this->rows,this->cols,this->speed_rows,this->speed_cols,0,0,tmpstr.c_str());
+(name,rows,cols,speedrows,speedcols,sumcar,spendcar,map_queue) \
+VALUES('%s',%d,%d,%f,%f,%d,%d,'%s')",
+this->name.c_str(),this->rows,this->cols,this->speed_rows,this->speed_cols,0,0,tmpstr.c_str());
 
 	//AfxMessageBox(str);
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
@@ -530,7 +530,7 @@ int car_module::deletecar(int index)
 
 	spendcar--;
 
-	savedatetomysql(this->mac);
+	savedatetomysql(this->name);
 
 	return map_queue[index].id;
 }
@@ -552,7 +552,7 @@ void car_module::deletedate()
 {
 	CString str;
 	//////////////////////////////////////////////////////////////////////////
-	str.Format("DELETE FROM t_garageinfo where mac=%d",mac);
+	str.Format("DELETE FROM t_garageinfo where name='%s'",name.c_str());
 	//////////////////////////////////////////////////////////////////////////
 	//AfxMessageBox(str);
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
@@ -567,7 +567,7 @@ void car_module::deletedate()
 	}
 	
 	//////////////////////////////////////////////////////////////////////////
-	str.Format("DELETE FROM t_carinfo where mac=%d",mac);
+	str.Format("DELETE FROM t_carinfo where name='%s'",name.c_str());
 	//////////////////////////////////////////////////////////////////////////
 	//AfxMessageBox(str);
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");

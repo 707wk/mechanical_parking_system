@@ -62,16 +62,16 @@ management::~management()
 	mysql_close(&mysql);
 }
 
-void management::setfindmac(int mac)
+void management::setfindname(string name)
 {
-	this->findmac=mac;
+	this->findname=name;
 }
 
 //////////////////////////////////////////////////////////////////////////
 //蛋蛋的忧伤
-int management::getmac()
+string management::getname()
 {
-	return this->findmac;
+	return this->findname;
 }
 
 int management::getindex()
@@ -116,7 +116,7 @@ int management::savecar(char* str)
 	if(column)return -1;
 
 	car_module garage;
-	garage.readdate(findmac);
+	garage.readdate(findname);
 	index=garage.savecar();
 	if(index==-1)
 	{
@@ -127,8 +127,8 @@ int management::savecar(char* str)
 	cols=garage.getcols(index);
 
 	CString insertstr;
-	insertstr.Format("INSERT INTO t_carinfo (id,plate,mac,number,rows,cols,start) \
-VALUES('%s','%s',%d,%d,%d,%d,now())",md5str.c_str(),str,findmac,index,rows,cols);
+	insertstr.Format("INSERT INTO t_carinfo (id,plate,name,number,rows,cols,start) \
+VALUES('%s','%s','%s',%d,%d,%d,now())",md5str.c_str(),str,findname.c_str(),index,rows,cols);
 
 	//AfxMessageBox(insertstr);
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
@@ -143,8 +143,8 @@ VALUES('%s','%s',%d,%d,%d,%d,now())",md5str.c_str(),str,findmac,index,rows,cols)
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	insertstr.Format("INSERT INTO t_history (time,plate,id,mac,timestatus) \
-		VALUES(now(),'%s','%s',%d,%d)",str,md5str.c_str(),findmac,1);
+	insertstr.Format("INSERT INTO t_history (time,plate,id,name,timestatus) \
+		VALUES(now(),'%s','%s','%s',%d)",str,md5str.c_str(),findname.c_str(),1);
 	
 	//AfxMessageBox(insertstr);
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
@@ -182,13 +182,13 @@ int management::deletecar(char* str)
 		column=mysql_fetch_row(res);//获取具体的数据
 		if(column)
 		{
-			findmac=atoi(column[2]);
+			findname=column[2];
 			index=atoi(column[3]);
 
 			double cost=countmoney(str);
 
 			car_module garage;
-			garage.readdate(findmac);
+			garage.readdate(findname);
 			garage.deletecar(index);
 
 			CString deletestr;
@@ -205,8 +205,8 @@ int management::deletecar(char* str)
 			}
 
 			//////////////////////////////////////////////////////////////////////////
-			insertstr.Format("INSERT INTO t_history (time,plate,id,mac,timestatus,balancestatus,money) \
-				VALUES(now(),'%s','%s',%d,%d,%d,%lf)",str,md5str.c_str(),findmac,2,2,cost);
+			insertstr.Format("INSERT INTO t_history (time,plate,id,name,timestatus,balancestatus,money) \
+				VALUES(now(),'%s','%s','%s',%d,%d,%lf)",str,md5str.c_str(),findname.c_str(),2,2,cost);
 			
 			//AfxMessageBox(insertstr);
 			mysql_query(&mysql,"SET NAMES 'UTF-8'");

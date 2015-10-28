@@ -57,7 +57,7 @@ void CCar_module_dlgDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_status, m_status);
 	DDX_Control(pDX, IDC_COMBO2, m_platelist);
 	DDX_Control(pDX, IDC_EDIT9, m_entry);
-	DDX_Control(pDX, IDC_COMBO1, m_maclist);
+	DDX_Control(pDX, IDC_COMBO1, m_namelist);
 	DDX_Control(pDX, IDC_EDIT7, m_cols);
 	DDX_Control(pDX, IDC_EDIT6, m_rows);
 	DDX_Control(pDX, IDC_EDIT5, m_speedcols);
@@ -99,7 +99,7 @@ BOOL CCar_module_dlgDlg::OnInitDialog()
 
 	ShowWindow(SW_MAXIMIZE);
 
-	showmaclist();
+	shownamelist();
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -165,8 +165,8 @@ void CCar_module_dlgDlg::OnButton1()
 {
 	// TODO: Add your control notification handler code here
 	CString str;
-	int nIndex = m_maclist.GetCurSel();
-	m_maclist.GetLBText( nIndex, str);
+	int nIndex = m_namelist.GetCurSel();
+	m_namelist.GetLBText( nIndex, str);
 	if(str=="")return ;
 
 	CString id;
@@ -174,7 +174,7 @@ void CCar_module_dlgDlg::OnButton1()
 	if(id=="")return ;
 
 	management mana;
-	mana.setfindmac(atoi(str.GetBuffer(0)));
+	mana.setfindname(str.GetBuffer(0));
 
 	int index=mana.savecar(id.GetBuffer(0));
 
@@ -185,7 +185,7 @@ void CCar_module_dlgDlg::OnButton1()
 		//下标与序号不对应
 		btn[sum-index].SetIcon(m_hicnno);
 		//////////////////////////////////////////////////////////////////////////
-		m_Comm.SetOutput(COleVariant("a"));//发送数据
+if(0)	m_Comm.SetOutput(COleVariant("a"));//发送数据
 	}
 	else
 	{
@@ -200,8 +200,8 @@ void CCar_module_dlgDlg::OnButton2()
 {
 	// TODO: Add your control notification handler code here
 	CString str;
-	int nIndex = m_maclist.GetCurSel();
-	m_maclist.GetLBText( nIndex, str);
+	int nIndex = m_namelist.GetCurSel();
+	m_namelist.GetLBText( nIndex, str);
 	if(str=="")return ;
 	
 	CString id;
@@ -209,20 +209,20 @@ void CCar_module_dlgDlg::OnButton2()
 	if(id=="")return ;
 	
 	management mana;
-	mana.setfindmac(atoi(str.GetBuffer(0)));
+	mana.setfindname(str.GetBuffer(0));
 	
 	int index=mana.deletecar(id.GetBuffer(0));
 
 	int sum=garage->getrows()*garage->getcols();
 
-	if(atoi(str.GetBuffer(0))==mana.getmac())
+	if(str.GetBuffer(0)==mana.getname())
 	if(index!=-1)
 	{
 		//////////////////////////////////////////////////////////////////////////
 		//下标与序号不对应
 		btn[sum-index].SetIcon(m_hicnok);
 		//////////////////////////////////////////////////////////////////////////
-		m_Comm.SetOutput(COleVariant("b"));//发送数据
+if(0)	m_Comm.SetOutput(COleVariant("b"));//发送数据
 	}
 	else
 	{
@@ -265,7 +265,7 @@ void CCar_module_dlgDlg::upinfodate()
 void CCar_module_dlgDlg::OnButton4() 
 {
 	// TODO: Add your control notification handler code here
-	showmaclist();
+	shownamelist();
 }
 
 //新增
@@ -275,10 +275,10 @@ void CCar_module_dlgDlg::OnButton3()
 	hidebutton();
 
 	CString str;
-	m_maclist.GetWindowText(str);
+	m_namelist.GetWindowText(str);
 	if(str=="")return ;
 
-	garage->setmac(atoi(str.GetBuffer(0)));
+	garage->setname(str.GetBuffer(0));
 
 	m_rows.GetWindowText(str);
 	garage->setrows(atoi(str.GetBuffer(0)));
@@ -306,7 +306,7 @@ void CCar_module_dlgDlg::OnButton3()
 		garage->setentry(index);
 	}
 
-	showmaclist();
+	shownamelist();
 	btnnum=0;
 }
 
@@ -390,10 +390,10 @@ void CCar_module_dlgDlg::OnSelchangeCombo1()
 	
 	hidebutton();
 	CString str;
-	int nIndex = m_maclist.GetCurSel();
-	m_maclist.GetLBText( nIndex, str);
+	int nIndex = m_namelist.GetCurSel();
+	m_namelist.GetLBText( nIndex, str);
 	
-	if(garage->readdate(atoi(str.GetBuffer(0))))return ;
+	if(garage->readdate(str.GetBuffer(0)))return ;
 	btnnum=garage->getrows()*garage->getcols();
 
 	if(garage->getstatus())
@@ -432,7 +432,7 @@ void CCar_module_dlgDlg::OnSelchangeCombo1()
 	upinfodate();
 }
 
-void CCar_module_dlgDlg::showmaclist()
+void CCar_module_dlgDlg::shownamelist()
 {
 	MYSQL_RES *res;     //查询结果集
 	MYSQL_ROW column;   //数据行的列
@@ -440,23 +440,23 @@ void CCar_module_dlgDlg::showmaclist()
 	mysql_init(&mysql);
 	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
 	{
-		MessageBox("数据库无法连接!");
+		MessageBox("1数据库无法连接!");
 		return ;
 	}
 
-	CString str="select mac from t_garageinfo";
+	CString str="select name from t_garageinfo";
 
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
 
 	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
 	{
-		m_maclist.ResetContent();
+		m_namelist.ResetContent();
 		res=mysql_store_result(&mysql);    //保存查询到的数据到result
 		while(column=mysql_fetch_row(res)) //获取具体的数据
 		{
 			if(column)
 			{
-				m_maclist.AddString(column[0]);
+				m_namelist.AddString(column[0]);
 			}
 			else
 			{
@@ -467,7 +467,7 @@ void CCar_module_dlgDlg::showmaclist()
 	}
 	else
 	{
-		AfxMessageBox("数据库连接失败");
+		AfxMessageBox("2数据库连接失败");
 	}
 
 	mysql_close(&mysql);
@@ -477,15 +477,15 @@ void CCar_module_dlgDlg::OnButton5()
 {
 	// TODO: Add your control notification handler code here
 	CString str;
-	m_maclist.GetWindowText(str);
+	m_namelist.GetWindowText(str);
 	if(str=="")return ;
 
-	garage->readdate(atoi(str.GetBuffer(0)));
+	garage->readdate(str.GetBuffer(0));
 
 	garage->deletedate();
 	hidebutton();
 	
-	showmaclist();
+	shownamelist();
 	btnnum=0;
 }
 
@@ -503,11 +503,11 @@ void CCar_module_dlgDlg::showplatelist()
 	}
 	
 	CString tmp;
-	int nIndex = m_maclist.GetCurSel();
-	m_maclist.GetLBText( nIndex, tmp);
+	int nIndex = m_namelist.GetCurSel();
+	m_namelist.GetLBText( nIndex, tmp);
 
-	CString str="select plate from t_carinfo where mac=";
-	str=str+tmp;
+	CString str;
+	str.Format("select plate from t_carinfo where name='%s'",tmp.GetBuffer(0));
 	
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
 	
