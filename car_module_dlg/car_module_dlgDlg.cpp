@@ -45,6 +45,7 @@ CCar_module_dlgDlg::CCar_module_dlgDlg(CWnd* pParent /*=NULL*/)
 	//////////////////////////////////////////////////////////////////////////
 	//蛋蛋啊,创建一个就没事了
 	garage=new car_module;
+	readflage=0;
 	//////////////////////////////////////////////////////////////////////////
 }
 
@@ -185,7 +186,10 @@ void CCar_module_dlgDlg::OnButton1()
 		//下标与序号不对应
 		btn[sum-index].SetIcon(m_hicnno);
 		//////////////////////////////////////////////////////////////////////////
-if(0)	m_Comm.SetOutput(COleVariant("a"));//发送数据
+		//if(0)	
+		m_Comm.SetOutput(COleVariant("a123"));//发送数据
+		readflage=0;
+		MessageBox(datastr);
 	}
 	else
 	{
@@ -406,7 +410,8 @@ void CCar_module_dlgDlg::OnSelchangeCombo1()
 		m_status.SetIcon(m_offline);
 		m_statustext.SetWindowText("离线");
 	}
-	if(0){
+	//if(0)
+	{
 	//////////////////////////////////////////////////////////////////////////
 	if(m_Comm.GetPortOpen())
 		m_Comm.SetPortOpen(FALSE);
@@ -422,8 +427,9 @@ void CCar_module_dlgDlg::OnSelchangeCombo1()
 	if( !m_Comm.GetPortOpen())
 		m_Comm.SetPortOpen(TRUE);//打开串口
 	else
-		AfxMessageBox("cannot open serial port");
+		m_Comm.SetPortOpen(FALSE);
 	m_Comm.GetInput();//先预读缓冲区以清除残留数据
+	m_Comm.SetOutput(COleVariant("shit"));//发送数据
 	//////////////////////////////////////////////////////////////////////////
 	}
 
@@ -573,6 +579,9 @@ void CCar_module_dlgDlg::OnOnCommMscomm1()
             strtemp.Format("%c",bt);
             datestr+=strtemp;
         }
+		m_entry.SetWindowText(datestr);
+		if(datestr!="")
+		strcpy(datastr,datestr.GetBuffer(0));
+		readflage=1;
     }
-	m_entry.SetWindowText(datestr);
 }

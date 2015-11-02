@@ -6,7 +6,7 @@
 --------------------Configuration: car_module_dlg - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP689E.tmp" with contents
+Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP9B69.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/car_module_dlg.pdb" /debug /machine:I386 /out:"Debug/car_module_dlg.exe" /pdbtype:sept 
 .\Debug\about.obj
@@ -19,7 +19,7 @@ Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP689E.tmp" with 
 .\Debug\StdAfx.obj
 .\Debug\car_module_dlg.res
 ]
-Creating command line "link.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP689E.tmp"
+Creating command line "link.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP9B69.tmp"
 <h3>Output Window</h3>
 Linking...
 Creating command line "bscmake.exe /nologo /o"Debug/car_module_dlg.bsc"  .\Debug\StdAfx.sbr .\Debug\about.sbr .\Debug\car_module.sbr .\Debug\car_module_dlg.sbr .\Debug\car_module_dlgDlg.sbr .\Debug\management.sbr .\Debug\md5.sbr .\Debug\mscomm.sbr"

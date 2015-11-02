@@ -39,6 +39,8 @@ public:
 	CEdit	m_finish;
 	CEdit	m_sum;
 	car_module* garage;
+	int readflage;
+	char datastr[100];
 	CButton* btn;
 	HICON m_hicnok;
 	HICON m_hicnno;
