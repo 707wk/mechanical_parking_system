@@ -367,7 +367,7 @@ int car_module::getcols(int location)
 	//忘了行列怎么算了,还好改过来了
 	//shit,这边也忘了改了
 	//shit,又忘了-1
-	return (location-(location-1)/cols);
+	return (location-(location-1)/cols*cols);
 	//////////////////////////////////////////////////////////////////////////
 }
 
@@ -498,9 +498,9 @@ int car_module::newgarage()
 	//AfxMessageBox(tmpstr.c_str());
 
 	str.Format("INSERT INTO t_garageinfo \
-(name,rows,cols,speedrows,speedcols,sumcar,spendcar,map_queue) \
-VALUES('%s',%d,%d,%f,%f,%d,%d,'%s')",
-this->name.c_str(),this->rows,this->cols,this->speed_rows,this->speed_cols,0,0,tmpstr.c_str());
+(name,rows,cols,speedrows,speedcols,sumcar,spendcar,map_queue,compotr) \
+VALUES('%s',%d,%d,%f,%f,%d,%d,'%s',%d)",
+this->name.c_str(),this->rows,this->cols,this->speed_rows,this->speed_cols,0,0,tmpstr.c_str(),this->compotr);
 
 	//AfxMessageBox(str);
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");

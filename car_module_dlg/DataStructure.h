@@ -16,6 +16,7 @@ struct serverset
 	char database[100];
 	int  port;
 	double cost;
+	int mscomm;
 };
 
 struct userdata

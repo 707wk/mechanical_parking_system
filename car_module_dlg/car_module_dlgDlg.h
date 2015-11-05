@@ -38,9 +38,7 @@ public:
 	CEdit	m_speedrows;
 	CEdit	m_finish;
 	CEdit	m_sum;
-	car_module* garage;
-	int readflage;
-	char datastr[100];
+	
 	CButton* btn;
 	HICON m_hicnok;
 	HICON m_hicnno;
@@ -50,7 +48,8 @@ public:
 	int btnnum;
 	CMSComm	m_Comm;
 	//}}AFX_DATA
-
+	car_module* garage;
+	char datastr[100];
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CCar_module_dlgDlg)
 	protected:
@@ -82,6 +81,8 @@ protected:
 	afx_msg void Onexit();
 	afx_msg void Onabout();
 	afx_msg void OnOnCommMscomm1();
+	afx_msg void OnMenuitem32771();
+	afx_msg void OnButton6();
 	DECLARE_EVENTSINK_MAP()
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

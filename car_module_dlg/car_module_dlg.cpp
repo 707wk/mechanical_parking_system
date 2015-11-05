@@ -42,8 +42,8 @@ int readserverset()
 		return -1;
 	}
 	
-	fscanf(fp,"server=%s\nusername=%s\npwd=%s\ndatabase=%s\nport=%d\ncost=%lf",
-		serverinfo.ip,serverinfo.name,serverinfo.password,serverinfo.database,&serverinfo.port,&serverinfo.cost);
+	fscanf(fp,"server=%s\nusername=%s\npwd=%s\ndatabase=%s\nport=%d\ncost=%lf\nmscomm=%d",
+		serverinfo.ip,serverinfo.name,serverinfo.password,serverinfo.database,&serverinfo.port,&serverinfo.cost,&serverinfo.mscomm);
 	
 	return 0;
 }

@@ -57,7 +57,7 @@ struct speed_location
 class car_module
 {
 private:
-	//int mac;                           //车库模块地址
+	//int mac;                         //车库模块地址
 	string name;                       //车库名
 	int sumcar;                        //总存车量
 	int spendcar;                      //已存车量
@@ -78,10 +78,10 @@ public:
 	~car_module();
 	//////////////////////////////////////////////////////////////////////////
 	//函数重载挺蛋疼的
-	//int checkfist();                   //检测是否初始化
-	//int readdate();                    //从文件读取数据
+	//int checkfist();                 //检测是否初始化
+	//int readdate();                  //从文件读取数据
 	//////////////////////////////////////////////////////////////////////////
-	int readdate(string name);             //从mysql读取车库信息
+	int readdate(string name);         //从mysql读取车库信息
 
 	int getstatus();                   //获取状态
 	int judgeposition(int num);        //获取空闲状态
@@ -93,8 +93,8 @@ public:
 	int getid(int num);                //获取id
 	int getcond(int num);              //获取状态
 	int combine(int id,int idle);      //合并id和空闲状态
-	string getname();                      //获取模块地址
-	void setname(string name);              //设置模块地址
+	string getname();                  //获取模块地址
+	void setname(string name);         //设置模块地址
 	int getsumcar();                   //获取总量
 	int getspendcar();                 //获取已存车量
 	int getcondition();                //获取当前状态
@@ -132,7 +132,7 @@ public:
 	int savecar();                     //存车,未找到返回-1
 	int deletecar(int index);          //取车,未找到返回-1
 	//int savedatetomysql();           //保存数据到文件
-	int savedatetomysql(string name);      //保存数据到mysql
+	int savedatetomysql(string name);  //保存数据到mysql
 	int clear();                       //清空库存数据[已废弃]
 	void deletedate();                 //删除模块
 
@@ -147,6 +147,6 @@ public:
 	int newgarage();                   //创建队列
 	int switchid(int index);           //外部坐标转换为内部坐标
 
-	//void putinfo();                    //输出信息[终端用]
+	//void putinfo();                  //输出信息[终端用]
 };
 #endif

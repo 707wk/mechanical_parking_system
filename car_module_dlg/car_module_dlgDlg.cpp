@@ -9,6 +9,7 @@
 #include "car_module.h"
 #include "management.h"
 #include "md5.h"
+#include "ControlCode.h"
 
 #include <iostream>
 #include <vector>
@@ -45,7 +46,6 @@ CCar_module_dlgDlg::CCar_module_dlgDlg(CWnd* pParent /*=NULL*/)
 	//////////////////////////////////////////////////////////////////////////
 	//蛋蛋啊,创建一个就没事了
 	garage=new car_module;
-	readflage=0;
 	//////////////////////////////////////////////////////////////////////////
 }
 
@@ -81,6 +81,8 @@ BEGIN_MESSAGE_MAP(CCar_module_dlgDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON5, OnButton5)
 	ON_COMMAND(ID_MENUITEM32772, Onexit)
 	ON_COMMAND(ID_MENUITEM32773, Onabout)
+	ON_COMMAND(ID_MENUITEM32771, OnMenuitem32771)
+	ON_BN_CLICKED(IDC_BUTTON6, OnButton6)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -157,6 +159,11 @@ void CCar_module_dlgDlg::Onexit()
 void CCar_module_dlgDlg::OnCancel() 
 {
 	// TODO: Add extra cleanup here
+	//////////////////////////////////////////////////////////////////////////
+	//关闭串口
+	if(m_Comm.GetPortOpen())
+		m_Comm.SetPortOpen(FALSE);
+	//////////////////////////////////////////////////////////////////////////
 	delete garage;
 	CDialog::OnCancel();
 }
@@ -187,9 +194,21 @@ void CCar_module_dlgDlg::OnButton1()
 		btn[sum-index].SetIcon(m_hicnno);
 		//////////////////////////////////////////////////////////////////////////
 		//if(0)	
-		m_Comm.SetOutput(COleVariant("a123"));//发送数据
-		readflage=0;
-		MessageBox(datastr);
+		strcpy(datastr,"12345");
+		datastr[0]=SAVECAR;
+		datastr[1]=garage->getcompotr();
+		datastr[2]=garage->getrows(index);
+		datastr[3]=garage->getcols(index);
+
+		char checknum=0;
+		for(int i=0;i<4;i++)
+		{
+			checknum+=datastr[i];
+		}
+		datastr[4]=checknum;
+		
+		m_Comm.SetOutput(COleVariant(datastr));//发送数据
+
 	}
 	else
 	{
@@ -410,28 +429,6 @@ void CCar_module_dlgDlg::OnSelchangeCombo1()
 		m_status.SetIcon(m_offline);
 		m_statustext.SetWindowText("离线");
 	}
-	//if(0)
-	{
-	//////////////////////////////////////////////////////////////////////////
-	if(m_Comm.GetPortOpen())
-		m_Comm.SetPortOpen(FALSE);
-	
-	m_Comm.SetCommPort(garage->getcompotr()); //选择com1，可根据具体情况更改
-	m_Comm.SetInBufferSize(1024); //设置输入缓冲区的大小，Bytes
-	m_Comm.SetOutBufferSize(1024); //设置输入缓冲区的大小，Bytes//
-	m_Comm.SetSettings("9600,n,8,1"); //波特率9600，无校验，8个数据位，1个停止位
-	m_Comm.SetInputMode(1); //1：表示以二进制方式检取数据
-	m_Comm.SetRThreshold(1); 
-	//参数1表示每当串口接收缓冲区中有多于或等于1个字符时将引发一个接收数据的OnComm事件
-	m_Comm.SetInputLen(0); //设置当前接收区数据长度为0
-	if( !m_Comm.GetPortOpen())
-		m_Comm.SetPortOpen(TRUE);//打开串口
-	else
-		m_Comm.SetPortOpen(FALSE);
-	m_Comm.GetInput();//先预读缓冲区以清除残留数据
-	m_Comm.SetOutput(COleVariant("shit"));//发送数据
-	//////////////////////////////////////////////////////////////////////////
-	}
 
 	showplatelist();
 	showbutton();
@@ -563,9 +560,8 @@ void CCar_module_dlgDlg::OnOnCommMscomm1()
     COleSafeArray safearray_inp;
     LONG len,k;
     BYTE rxdata[2048];
-    CString strtemp;
 
-	CString datestr;
+	char recstr[100];
     if(m_Comm.GetCommEvent()==2)
     {
         variant_inp=m_Comm.GetInput();
@@ -576,12 +572,48 @@ void CCar_module_dlgDlg::OnOnCommMscomm1()
         for(k=0;k<len;k++)
         {
             BYTE bt=*(char*)(rxdata+k);
-            strtemp.Format("%c",bt);
-            datestr+=strtemp;
+			recstr[k]=bt;
         }
-		m_entry.SetWindowText(datestr);
-		if(datestr!="")
-		strcpy(datastr,datestr.GetBuffer(0));
-		readflage=1;
+		recstr[k]='\0';
+		
+		CString qew;
+		qew.Format("send %d:%d:%d:%d:%d\r\nrecv %d:%d:%d:%d:%d",datastr[0],datastr[1],datastr[2],datastr[3],datastr[4],
+			recstr[0],recstr[1],recstr[2],recstr[3],recstr[4]);
+		m_entry.SetWindowText(qew);
+
+		if(strcmp(recstr,datastr)!=0)
+		{
+			MessageBox("收发数据不一致");
+			m_Comm.SetOutput(COleVariant(datastr));//发送数据
+		}
     }
+}
+
+void CCar_module_dlgDlg::OnMenuitem32771() 
+{
+	// TODO: Add your command handler code here
+	ShellExecute(NULL,TEXT("OPEN"),"map.xls",NULL,NULL,SW_SHOWNORMAL);
+}
+
+void CCar_module_dlgDlg::OnButton6() 
+{
+	// TODO: Add your control notification handler code here
+	//////////////////////////////////////////////////////////////////////////
+	//if(m_Comm.GetPortOpen())
+	//	m_Comm.SetPortOpen(FALSE);
+	
+	m_Comm.SetCommPort(serverinfo.mscomm); //选择com1，可根据具体情况更改
+	m_Comm.SetInBufferSize(1024);          //设置输入缓冲区的大小，Bytes
+	m_Comm.SetOutBufferSize(1024);         //设置输入缓冲区的大小，Bytes//
+	m_Comm.SetSettings("9600,n,8,1");      //波特率9600，无校验，8个数据位，1个停止位
+	m_Comm.SetInputMode(1);                //1：表示以二进制方式检取数据
+	m_Comm.SetRThreshold(1);               //参数1表示每当串口接收缓冲区中有多于或等于1个字符时将引发一个接收数据的OnComm事件
+	m_Comm.SetInputLen(0);                 //设置当前接收区数据长度为0
+	if( !m_Comm.GetPortOpen())
+		m_Comm.SetPortOpen(TRUE);          //打开串口
+	else
+		m_Comm.SetPortOpen(FALSE);
+	m_Comm.GetInput();                     //先预读缓冲区以清除残留数据
+	//m_Comm.SetOutput(COleVariant("ok")); //发送数据
+	//////////////////////////////////////////////////////////////////////////
 }
