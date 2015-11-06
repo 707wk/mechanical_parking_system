@@ -41,8 +41,11 @@ CCar_module_dlgDlg::CCar_module_dlgDlg(CWnd* pParent /*=NULL*/)
 	m_hicncar=AfxGetApp()->LoadIcon(IDI_ICON1);
 	m_online =AfxGetApp()->LoadIcon(IDI_ICON4);
 	m_offline=AfxGetApp()->LoadIcon(IDI_ICON5);
+	m_stop=(HICON)LoadImage(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDI_ICON6),IMAGE_ICON,72,72,LR_DEFAULTCOLOR);
+	m_reset=(HICON)LoadImage(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDI_ICON7),IMAGE_ICON,32,32,LR_DEFAULTCOLOR);
 	btnnum=0;
 	btn=NULL;
+	lockflage=0;
 	//////////////////////////////////////////////////////////////////////////
 	//蛋蛋啊,创建一个就没事了
 	garage=new car_module;
@@ -53,6 +56,9 @@ void CCar_module_dlgDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCar_module_dlgDlg)
+	DDX_Control(pDX, IDC_BUTTON6, m_startend);
+	DDX_Control(pDX, IDC_BUTTON8, m_resetbut);
+	DDX_Control(pDX, IDC_BUTTON7, m_stopbut);
 	DDX_Control(pDX, IDC_EDIT8, m_port);
 	DDX_Control(pDX, IDC_EDIT1, m_statustext);
 	DDX_Control(pDX, IDC_status, m_status);
@@ -83,6 +89,8 @@ BEGIN_MESSAGE_MAP(CCar_module_dlgDlg, CDialog)
 	ON_COMMAND(ID_MENUITEM32773, Onabout)
 	ON_COMMAND(ID_MENUITEM32771, OnMenuitem32771)
 	ON_BN_CLICKED(IDC_BUTTON6, OnButton6)
+	ON_BN_CLICKED(IDC_BUTTON7, OnButton7)
+	ON_BN_CLICKED(IDC_BUTTON8, OnButton8)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -99,6 +107,9 @@ BOOL CCar_module_dlgDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
 	// TODO: Add extra initialization here
+	m_stopbut.SetIcon(m_stop);
+	m_resetbut.SetIcon(m_reset);
+	m_entry.SetWindowText("设备未连接");
 
 	ShowWindow(SW_MAXIMIZE);
 
@@ -200,12 +211,12 @@ void CCar_module_dlgDlg::OnButton1()
 		datastr[2]=garage->getrows(index);
 		datastr[3]=garage->getcols(index);
 
-		char checknum=0;
+		int checknum=0;
 		for(int i=0;i<4;i++)
 		{
 			checknum+=datastr[i];
 		}
-		datastr[4]=checknum;
+		datastr[4]=checknum%CHECKMOD;
 		
 		m_Comm.SetOutput(COleVariant(datastr));//发送数据
 
@@ -245,7 +256,21 @@ void CCar_module_dlgDlg::OnButton2()
 		//下标与序号不对应
 		btn[sum-index].SetIcon(m_hicnok);
 		//////////////////////////////////////////////////////////////////////////
-if(0)	m_Comm.SetOutput(COleVariant("b"));//发送数据
+		//if(0)	
+		strcpy(datastr,"12345");
+		datastr[0]=DELETECAR;
+		datastr[1]=garage->getcompotr();
+		datastr[2]=garage->getrows(index);
+		datastr[3]=garage->getcols(index);
+
+		int checknum=0;
+		for(int i=0;i<4;i++)
+		{
+			checknum+=datastr[i];
+		}
+		datastr[4]=checknum%CHECKMOD;
+		
+		m_Comm.SetOutput(COleVariant(datastr));//发送数据
 	}
 	else
 	{
@@ -343,7 +368,7 @@ void CCar_module_dlgDlg::showbutton()
 
     btn = new CButton[cols*rows];  
     DWORD dwStyle = WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_ICON;//|WS_DISABLED;  
-	int startpoint[2]={220,15};           //起始点
+	int startpoint[2]={380,15};           //起始点
 	int gao=50;                           //间隔高
 	int kuan=50;                          //间隔宽
 	int num[2]={50,50};                   //长宽
@@ -556,6 +581,7 @@ END_EVENTSINK_MAP()
 void CCar_module_dlgDlg::OnOnCommMscomm1() 
 {
 	// TODO: Add your control notification handler code here
+	lockflage=1;
 	VARIANT variant_inp;
     COleSafeArray safearray_inp;
     LONG len,k;
@@ -584,9 +610,10 @@ void CCar_module_dlgDlg::OnOnCommMscomm1()
 		if(strcmp(recstr,datastr)!=0)
 		{
 			MessageBox("收发数据不一致");
-			m_Comm.SetOutput(COleVariant(datastr));//发送数据
+			//m_Comm.SetOutput(COleVariant(datastr));//发送数据
 		}
     }
+	lockflage=0;
 }
 
 void CCar_module_dlgDlg::OnMenuitem32771() 
@@ -599,21 +626,68 @@ void CCar_module_dlgDlg::OnButton6()
 {
 	// TODO: Add your control notification handler code here
 	//////////////////////////////////////////////////////////////////////////
-	//if(m_Comm.GetPortOpen())
-	//	m_Comm.SetPortOpen(FALSE);
+	static int link=0;
+	if(!link)
+	{
+		if(m_Comm.GetPortOpen())
+			m_Comm.SetPortOpen(FALSE);
 	
-	m_Comm.SetCommPort(serverinfo.mscomm); //选择com1，可根据具体情况更改
-	m_Comm.SetInBufferSize(1024);          //设置输入缓冲区的大小，Bytes
-	m_Comm.SetOutBufferSize(1024);         //设置输入缓冲区的大小，Bytes//
-	m_Comm.SetSettings("9600,n,8,1");      //波特率9600，无校验，8个数据位，1个停止位
-	m_Comm.SetInputMode(1);                //1：表示以二进制方式检取数据
-	m_Comm.SetRThreshold(1);               //参数1表示每当串口接收缓冲区中有多于或等于1个字符时将引发一个接收数据的OnComm事件
-	m_Comm.SetInputLen(0);                 //设置当前接收区数据长度为0
-	if( !m_Comm.GetPortOpen())
-		m_Comm.SetPortOpen(TRUE);          //打开串口
-	else
+		m_Comm.SetCommPort(serverinfo.mscomm); //选择com1，可根据具体情况更改
+		m_Comm.SetInBufferSize(1024);          //设置输入缓冲区的大小，Bytes
+		m_Comm.SetOutBufferSize(1024);         //设置输入缓冲区的大小，Bytes//
+		m_Comm.SetSettings("9600,n,8,1");      //波特率9600，无校验，8个数据位，1个停止位
+		m_Comm.SetInputMode(1);                //1：表示以二进制方式检取数据
+		m_Comm.SetRThreshold(1);               //参数1表示每当串口接收缓冲区中有多于或等于1个字符时将引发一个接收数据的OnComm事件
+		m_Comm.SetInputLen(0);                 //设置当前接收区数据长度为0
+		if( !m_Comm.GetPortOpen())
+			m_Comm.SetPortOpen(TRUE);          //打开串口
+		else
+			m_Comm.SetPortOpen(FALSE);
+		m_Comm.GetInput();                     //先预读缓冲区以清除残留数据
+		//m_Comm.SetOutput(COleVariant("ok")); //发送数据
+		//////////////////////////////////////////////////////////////////////////
+
+		m_startend.SetWindowText("断开设备");
+		link=1;
+	}
+	else if(link)
+	{
 		m_Comm.SetPortOpen(FALSE);
-	m_Comm.GetInput();                     //先预读缓冲区以清除残留数据
-	//m_Comm.SetOutput(COleVariant("ok")); //发送数据
-	//////////////////////////////////////////////////////////////////////////
+		m_startend.SetWindowText("连接设备");
+		link=0;
+	}
+}
+
+//紧急停止
+void CCar_module_dlgDlg::OnButton7() 
+{
+	// TODO: Add your control notification handler code here
+	strcpy(datastr,"10000");
+	datastr[0]=STOP;
+	
+	int checknum=0;
+	for(int i=0;i<4;i++)
+	{
+		checknum+=datastr[i];
+	}
+	datastr[4]=checknum%CHECKMOD;
+	
+	m_Comm.SetOutput(COleVariant(datastr));//发送数据
+}
+
+//复位
+void CCar_module_dlgDlg::OnButton8() 
+{
+	// TODO: Add your control notification handler code here
+	strcpy(datastr,"10000");
+	datastr[0]=RESET;
+	
+	int checknum=0;
+	for(int i=0;i<4;i++)
+	{
+		checknum+=datastr[i];
+	}
+	datastr[4]=checknum%CHECKMOD;
+	
+	m_Comm.SetOutput(COleVariant(datastr));//发送数据
 }

@@ -205,6 +205,14 @@ SOURCE=.\res\ok.ico
 
 SOURCE=.\res\online.ico
 # End Source File
+# Begin Source File
+
+SOURCE=.\res\reset.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\stop.ico
+# End Source File
 # End Group
 # Begin Source File
 

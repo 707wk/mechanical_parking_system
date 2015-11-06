@@ -26,6 +26,9 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCar_module_dlgDlg)
 	enum { IDD = IDD_CAR_MODULE_DLG_DIALOG };
+	CButton	m_startend;
+	CButton	m_resetbut;
+	CButton	m_stopbut;
 	CEdit	m_port;
 	CEdit	m_statustext;
 	CStatic	m_status;
@@ -38,18 +41,20 @@ public:
 	CEdit	m_speedrows;
 	CEdit	m_finish;
 	CEdit	m_sum;
-	
 	CButton* btn;
 	HICON m_hicnok;
 	HICON m_hicnno;
 	HICON m_hicncar;
 	HICON m_online;
 	HICON m_offline;
+	HICON m_stop;
+	HICON m_reset;
 	int btnnum;
 	CMSComm	m_Comm;
 	//}}AFX_DATA
 	car_module* garage;
 	char datastr[100];
+	int lockflage;
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CCar_module_dlgDlg)
 	protected:
@@ -83,6 +88,8 @@ protected:
 	afx_msg void OnOnCommMscomm1();
 	afx_msg void OnMenuitem32771();
 	afx_msg void OnButton6();
+	afx_msg void OnButton7();
+	afx_msg void OnButton8();
 	DECLARE_EVENTSINK_MAP()
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

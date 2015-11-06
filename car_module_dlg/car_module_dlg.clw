@@ -32,14 +32,14 @@ ImplementationFile=car_module_dlgDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=CCar_module_dlgDlg
+LastObject=IDC_EDIT9
 
 
 
 [DLG:IDD_CAR_MODULE_DLG_DIALOG]
 Type=1
 Class=CCar_module_dlgDlg
-ControlCount=33
+ControlCount=34
 Control1=IDC_COMBO1,combobox,1344340226
 Control2=IDC_BUTTON4,button,1342242816
 Control3=IDC_EDIT2,edit,1350631552
@@ -71,8 +71,9 @@ Control28=IDC_EDIT8,edit,1350639744
 Control29=IDC_STATIC,static,1342308352
 Control30=IDC_BUTTON6,button,1342242816
 Control31=IDC_STATIC,button,1342177287
-Control32=IDC_STATIC,button,1342177287
-Control33=IDC_STATIC,button,1342177287
+Control32=IDC_BUTTON7,button,1342242880
+Control33=IDC_BUTTON8,button,1342242880
+Control34=IDC_STATIC,button,1342177287
 
 [MNU:IDR_MENU1]
 Type=1
