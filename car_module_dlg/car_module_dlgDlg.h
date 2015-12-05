@@ -55,6 +55,7 @@ public:
 	car_module* garage;
 	char datastr[100];
 	int lockflage;
+	int link;
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CCar_module_dlgDlg)
 	protected:
@@ -68,6 +69,7 @@ protected:
 	void hidebutton();
 	void showbutton();
 	void upinfodate();
+	int senddata(char* str);
 	HICON m_hIcon;
 
 	// Generated message map functions

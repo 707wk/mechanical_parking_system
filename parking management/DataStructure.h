@@ -57,31 +57,6 @@ struct serverset
 	MYSQL  mysql;                      //mysql数据库
 };
 
-struct speed_location
-{
-	double time;                       //花费时间
-	int idle;                          //空闲状态
-		                               //0:空闲
-	                                   //1:占用
-	                                   //2:入口
-	int id;                            //编号
-};
-
-struct carbarninfo
-{
-	int    id;                         //车库编号
-	string name;                       //车库名
-	int    nowstatus;                  //现状态
-	int    oldstatus;                  //上一状态
-	int    sumtotal;                   //车库容量
-	int    spendtotal;                 //已存车辆数
-	int    rows;                       //行
-	int    cols;                       //列
-	double speedrows;                  //行速度
-	double speedcols;                  //列速度
-	vector <speed_location> map_queue; //位置列表
-};
-
 //用户设置
 //保留
 struct userdata

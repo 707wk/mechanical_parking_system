@@ -13,8 +13,8 @@ Class2=CParkingmanagementDlg
 
 ResourceCount=4
 Resource2=IDR_MAINFRAME
-Resource3=IDR_MENU1
-Resource4=IDD_PARKINGMANAGEMENT_DIALOG
+Resource3=IDD_PARKINGMANAGEMENT_DIALOG
+Resource4=IDR_MENU1
 
 [CLS:CParkingmanagementApp]
 Type=0

@@ -46,6 +46,7 @@ CCar_module_dlgDlg::CCar_module_dlgDlg(CWnd* pParent /*=NULL*/)
 	btnnum=0;
 	btn=NULL;
 	lockflage=0;
+	link=0;
 	//////////////////////////////////////////////////////////////////////////
 	//蛋蛋啊,创建一个就没事了
 	garage=new car_module;
@@ -183,6 +184,8 @@ void CCar_module_dlgDlg::OnCancel()
 void CCar_module_dlgDlg::OnButton1() 
 {
 	// TODO: Add your control notification handler code here
+	if(!link)return ;
+
 	CString str;
 	int nIndex = m_namelist.GetCurSel();
 	m_namelist.GetLBText( nIndex, str);
@@ -206,8 +209,8 @@ void CCar_module_dlgDlg::OnButton1()
 		//////////////////////////////////////////////////////////////////////////
 		//if(0)	
 		strcpy(datastr,"12345");
-		datastr[0]=SAVECAR;
-		datastr[1]=garage->getcompotr();
+		datastr[0]=garage->getcompotr();
+		datastr[1]=SAVECAR;
 		datastr[2]=garage->getrows(index);
 		datastr[3]=garage->getcols(index);
 
@@ -218,8 +221,8 @@ void CCar_module_dlgDlg::OnButton1()
 		}
 		datastr[4]=checknum%CHECKMOD;
 		
-		m_Comm.SetOutput(COleVariant(datastr));//发送数据
-
+		senddata(datastr);
+		//m_Comm.SetOutput(COleVariant(datastr));//发送数据
 	}
 	else
 	{
@@ -233,6 +236,8 @@ void CCar_module_dlgDlg::OnButton1()
 void CCar_module_dlgDlg::OnButton2() 
 {
 	// TODO: Add your control notification handler code here
+	if(!link)return ;
+
 	CString str;
 	int nIndex = m_namelist.GetCurSel();
 	m_namelist.GetLBText( nIndex, str);
@@ -258,8 +263,8 @@ void CCar_module_dlgDlg::OnButton2()
 		//////////////////////////////////////////////////////////////////////////
 		//if(0)	
 		strcpy(datastr,"12345");
-		datastr[0]=DELETECAR;
-		datastr[1]=garage->getcompotr();
+		datastr[0]=garage->getcompotr();
+		datastr[1]=DELETECAR;
 		datastr[2]=garage->getrows(index);
 		datastr[3]=garage->getcols(index);
 
@@ -270,7 +275,8 @@ void CCar_module_dlgDlg::OnButton2()
 		}
 		datastr[4]=checknum%CHECKMOD;
 		
-		m_Comm.SetOutput(COleVariant(datastr));//发送数据
+		senddata(datastr);
+		//m_Comm.SetOutput(COleVariant(datastr));//发送数据
 	}
 	else
 	{
@@ -605,13 +611,15 @@ void CCar_module_dlgDlg::OnOnCommMscomm1()
 		CString qew;
 		qew.Format("send %d:%d:%d:%d:%d\r\nrecv %d:%d:%d:%d:%d",datastr[0],datastr[1],datastr[2],datastr[3],datastr[4],
 			recstr[0],recstr[1],recstr[2],recstr[3],recstr[4]);
-		m_entry.SetWindowText(qew);
+		//m_entry.SetWindowText(qew);
 
-		if(strcmp(recstr,datastr)!=0)
+		if(recstr[0]!=datastr[4])
 		{
-			MessageBox("收发数据不一致");
+			qew+="\r\n数据不一致";
+			//MessageBox("收发数据不一致");
 			//m_Comm.SetOutput(COleVariant(datastr));//发送数据
 		}
+		m_entry.SetWindowText(qew);
     }
 	lockflage=0;
 }
@@ -626,27 +634,30 @@ void CCar_module_dlgDlg::OnButton6()
 {
 	// TODO: Add your control notification handler code here
 	//////////////////////////////////////////////////////////////////////////
-	static int link=0;
+	//static int link=0;
 	if(!link)
 	{
 		if(m_Comm.GetPortOpen())
 			m_Comm.SetPortOpen(FALSE);
-	
-		m_Comm.SetCommPort(serverinfo.mscomm); //选择com1，可根据具体情况更改
+		m_Comm.SetCommPort(serverinfo.mscomm); //选择com，可根据具体情况更改
 		m_Comm.SetInBufferSize(1024);          //设置输入缓冲区的大小，Bytes
 		m_Comm.SetOutBufferSize(1024);         //设置输入缓冲区的大小，Bytes//
-		m_Comm.SetSettings("9600,n,8,1");      //波特率9600，无校验，8个数据位，1个停止位
+		m_Comm.SetSettings("9600,m,8,1");      //波特率9600，无校验，8个数据位，1个停止位
 		m_Comm.SetInputMode(1);                //1：表示以二进制方式检取数据
 		m_Comm.SetRThreshold(1);               //参数1表示每当串口接收缓冲区中有多于或等于1个字符时将引发一个接收数据的OnComm事件
 		m_Comm.SetInputLen(0);                 //设置当前接收区数据长度为0
 		if( !m_Comm.GetPortOpen())
+		{
 			m_Comm.SetPortOpen(TRUE);          //打开串口
+		}
 		else
+		{
 			m_Comm.SetPortOpen(FALSE);
+		}
 		m_Comm.GetInput();                     //先预读缓冲区以清除残留数据
 		//m_Comm.SetOutput(COleVariant("ok")); //发送数据
 		//////////////////////////////////////////////////////////////////////////
-
+		m_entry.SetWindowText("");
 		m_startend.SetWindowText("断开设备");
 		link=1;
 	}
@@ -663,8 +674,9 @@ void CCar_module_dlgDlg::OnButton7()
 {
 	// TODO: Add your control notification handler code here
 	strcpy(datastr,"10000");
-	datastr[0]=STOP;
 	
+	datastr[0]=garage->getcompotr();
+	datastr[1]=STOP;
 	int checknum=0;
 	for(int i=0;i<4;i++)
 	{
@@ -672,7 +684,8 @@ void CCar_module_dlgDlg::OnButton7()
 	}
 	datastr[4]=checknum%CHECKMOD;
 	
-	m_Comm.SetOutput(COleVariant(datastr));//发送数据
+	senddata(datastr);
+	//m_Comm.SetOutput(COleVariant(datastr));//发送数据
 }
 
 //复位
@@ -680,8 +693,9 @@ void CCar_module_dlgDlg::OnButton8()
 {
 	// TODO: Add your control notification handler code here
 	strcpy(datastr,"10000");
-	datastr[0]=RESET;
 	
+	datastr[0]=garage->getcompotr();
+	datastr[1]=RESET;
 	int checknum=0;
 	for(int i=0;i<4;i++)
 	{
@@ -689,5 +703,16 @@ void CCar_module_dlgDlg::OnButton8()
 	}
 	datastr[4]=checknum%CHECKMOD;
 	
-	m_Comm.SetOutput(COleVariant(datastr));//发送数据
+	senddata(datastr);
+	//m_Comm.SetOutput(COleVariant(datastr));//发送数据
+}
+
+int CCar_module_dlgDlg::senddata(char* str)
+{
+	if(link)
+	{
+		m_Comm.SetOutput(COleVariant(str));//发送数据
+		return 0;
+	}
+	else return -1;
 }
