@@ -7,14 +7,18 @@ LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "parking management.h"
 
-ClassCount=2
+ClassCount=4
 Class1=CParkingmanagementApp
 Class2=CParkingmanagementDlg
 
-ResourceCount=4
-Resource2=IDR_MAINFRAME
-Resource3=IDD_PARKINGMANAGEMENT_DIALOG
-Resource4=IDR_MENU1
+ResourceCount=5
+Resource2=IDD_PARKINGMANAGEMENT_DIALOG
+Resource3=IDD_ABOUT
+Resource1=IDR_MAINFRAME
+Class3=showmapinfo
+Resource4=IDD_SHOWMAPINFO
+Class4=ABOUTSOFT
+Resource5=IDR_MENU1
 
 [CLS:CParkingmanagementApp]
 Type=0
@@ -29,14 +33,14 @@ ImplementationFile=parking managementDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=IDC_LIST2
+LastObject=ID_MENUITEM32773
 
 
 
 [DLG:IDD_PARKINGMANAGEMENT_DIALOG]
 Type=1
 Class=CParkingmanagementDlg
-ControlCount=11
+ControlCount=12
 Control1=IDC_LIST1,SysListView32,1350631709
 Control2=IDC_EDIT1,edit,1350631552
 Control3=IDC_STATIC,static,1342308352
@@ -48,10 +52,45 @@ Control8=IDC_EDIT2,edit,1350631552
 Control9=IDC_STATIC,static,1342308352
 Control10=IDC_EDIT3,edit,1350631552
 Control11=IDC_STATIC,button,1342177287
+Control12=IDC_BUTTON3,button,1342242816
 
 [MNU:IDR_MENU1]
 Type=1
-Class=?
+Class=CParkingmanagementDlg
 Command1=ID_MENUITEM32771
-CommandCount=1
+Command2=ID_MENUITEM32772
+Command3=ID_MENUITEM32773
+CommandCount=3
+
+[DLG:IDD_SHOWMAPINFO]
+Type=1
+Class=showmapinfo
+ControlCount=2
+Control1=IDC_EXPLORER1,{8856F961-340A-11D0-A96B-00C04FD705A2},1342242816
+Control2=IDC_BUTTON1,button,1342242816
+
+[CLS:showmapinfo]
+Type=0
+HeaderFile=showmapinfo.h
+ImplementationFile=showmapinfo.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=IDC_EXPLORER1
+VirtualFilter=dWC
+
+[DLG:IDD_ABOUT]
+Type=1
+Class=ABOUTSOFT
+ControlCount=2
+Control1=IDOK,button,1342242817
+Control2=IDC_STATIC,static,1342177294
+
+[CLS:ABOUTSOFT]
+Type=0
+HeaderFile=ABOUTSOFT.h
+ImplementationFile=ABOUTSOFT.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=ABOUTSOFT
+VirtualFilter=dWC
 

@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "parking management.h"
 #include "parking managementDlg.h"
+#include "showmapinfo.h"
+#include "ABOUTSOFT.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -38,6 +40,10 @@ BEGIN_MESSAGE_MAP(CParkingmanagementDlg, CDialog)
 	//{{AFX_MSG_MAP(CParkingmanagementDlg)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_COMMAND(ID_MENUITEM32772, OnMenuitem32772)
+	ON_BN_CLICKED(IDC_BUTTON3, OnButton3)
+	ON_COMMAND(ID_MENUITEM32771, OnMenuitem32771)
+	ON_COMMAND(ID_MENUITEM32773, OnMenuitem32773)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -110,7 +116,7 @@ void CParkingmanagementDlg::OnOK()
 {
 	// TODO: Add extra validation here
 	
-	CDialog::OnOK();
+	//CDialog::OnOK();
 }
 
 void CParkingmanagementDlg::OnCancel() 
@@ -118,4 +124,56 @@ void CParkingmanagementDlg::OnCancel()
 	// TODO: Add extra cleanup here
 	
 	CDialog::OnCancel();
+}
+
+//编辑地图
+void CParkingmanagementDlg::OnMenuitem32772() 
+{
+	// TODO: Add your command handler code here
+	CString path;
+	GetModuleFileName(NULL,path.GetBufferSetLength(MAX_PATH+1),MAX_PATH);
+	path.ReleaseBuffer();
+	int pos = path.ReverseFind('\\');
+	path = path.Left(pos);
+	path+="\\map\\map.tmx";
+	ShellExecute(NULL,TEXT("OPEN"),path,NULL,NULL,SW_SHOWNORMAL);
+}
+
+/*////////////////////////////////////////////////////////////////////////
+//开启一个线程
+struct threadInfo 
+{
+	UINT nMilliSecond ;
+	CProgressCtrl* pctrlProgress ;
+}Info;
+
+UINT Threadcheckupdate(LPVOID lpParam)
+{
+	showmapinfo dlg;
+	dlg.DoModal();
+	return 0;
+}
+*/////////////////////////////////////////////////////////////////////////
+//显示地图
+void CParkingmanagementDlg::OnButton3() 
+{
+	// TODO: Add your control notification handler code here
+	/*CWinThread* pThread ;
+	pThread=AfxBeginThread(Threadcheckupdate,&Info);*/
+	showmapinfo dlg;
+	dlg.DoModal();
+}
+
+void CParkingmanagementDlg::OnMenuitem32771() 
+{
+	// TODO: Add your command handler code here
+	OnCancel();
+}
+
+//about
+void CParkingmanagementDlg::OnMenuitem32773() 
+{
+	// TODO: Add your command handler code here
+	ABOUTSOFT dlg;
+	dlg.DoModal();
 }

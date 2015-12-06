@@ -43,6 +43,10 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	virtual void OnOK();
 	virtual void OnCancel();
+	afx_msg void OnMenuitem32772();
+	afx_msg void OnButton3();
+	afx_msg void OnMenuitem32771();
+	afx_msg void OnMenuitem32773();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

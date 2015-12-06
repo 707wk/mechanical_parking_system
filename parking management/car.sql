@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50612
 File Encoding         : 65001
 
-Date: 2015-12-05 21:54:59
+Date: 2015-12-06 10:54:53
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -44,6 +44,7 @@ CREATE TABLE `t_garageinfo` (
   `name` varchar(255) DEFAULT NULL COMMENT '车库名',
   `nowstatus` int(11) DEFAULT NULL COMMENT '现在状态',
   `oldstatus` int(11) DEFAULT NULL COMMENT '上一状态',
+  `command` varchar(255) DEFAULT NULL COMMENT '正在执行的命令',
   `sumcar` int(11) DEFAULT NULL COMMENT '容量',
   `spendcar` int(11) DEFAULT NULL COMMENT '已存车量',
   `map_rows` int(11) DEFAULT '-1' COMMENT '第几行',

@@ -66,8 +66,8 @@ LINK32=link.exe
 # PROP Output_Dir "Debug"
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ  /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Yu"stdafx.h" /FD /GZ   /c
+# ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x804 /d "_DEBUG" /d "_AFXDLL"
@@ -90,6 +90,14 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\ABOUTSOFT.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\md5.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=".\parking management.cpp"
 # End Source File
 # Begin Source File
@@ -102,8 +110,16 @@ SOURCE=".\parking managementDlg.cpp"
 # End Source File
 # Begin Source File
 
+SOURCE=.\showmapinfo.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\webbrowser2.cpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
@@ -112,6 +128,14 @@ SOURCE=.\StdAfx.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\ABOUTSOFT.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\md5.h
+# End Source File
 # Begin Source File
 
 SOURCE=".\parking management.h"
@@ -126,9 +150,21 @@ SOURCE=.\Resource.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\showmapinfo.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\webbrowser2.h
+# End Source File
 # End Group
+# Begin Source File
+
+SOURCE=.\res\myqq.bmp
+# End Source File
 # Begin Source File
 
 SOURCE=".\res\parking management.ico"
@@ -144,3 +180,12 @@ SOURCE=.\ReadMe.txt
 # End Source File
 # End Target
 # End Project
+# Section parking management : {D30C1661-CDAF-11D0-8A3E-00C04FC9E26E}
+# 	2:5:Class:CWebBrowser2
+# 	2:10:HeaderFile:webbrowser2.h
+# 	2:8:ImplFile:webbrowser2.cpp
+# End Section
+# Section parking management : {8856F961-340A-11D0-A96B-00C04FD705A2}
+# 	2:21:DefaultSinkHeaderFile:webbrowser2.h
+# 	2:16:DefaultSinkClass:CWebBrowser2
+# End Section

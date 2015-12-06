@@ -60,6 +60,7 @@ private:
 	string name;                       //车库名
 	int    nowstatus;                  //现状态
 	int    oldstatus;                  //上一状态
+	string command;                    //正在执行的命令
 	int    sumcar;                     //总存车量
 	int    spendcar;                   //已存车量
 	int    map_rows;                   //第几行
