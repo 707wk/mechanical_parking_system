@@ -97,6 +97,10 @@ int check()
 	if(mysql_num_rows(res)==0)
 	{
 		AfxMessageBox("未注册程序!\n请联系gtsoft_wk@foxmail.com注册");
+		FILE* fpout;
+		fpout=fopen("安装序列号.txt","w");
+		fprintf(fpout,"%s",md5str.c_str());
+		fclose(fpout);
 		exit(1);
 	}
 	CString strtime;
