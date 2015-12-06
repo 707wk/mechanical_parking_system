@@ -331,6 +331,7 @@ string MD5::bytesToHexString(const byte* input, size_t length) {
 	string str;
 	str.reserve(length << 1);
 	for (size_t i = 0; i < length; ++i) {
+		if(i%4==0&&i)str+="-";
 		int t = input[i];
 		int a = t / 16;
 		int b = t % 16;

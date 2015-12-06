@@ -9,6 +9,7 @@
 #include <objbase.h>
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -69,6 +70,7 @@ int check()
 	md5.update(str);
 	md5str=md5.toString();
 	md5.reset();
+	transform(md5str.begin(), md5str.end(), md5str.begin(), ::toupper);
 	//////////////////////////////////////////////////////////////////////////
 
 	string query;
