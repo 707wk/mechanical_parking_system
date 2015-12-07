@@ -6,10 +6,10 @@
 --------------------Configuration: parking management - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating command line "rc.exe /l 0x804 /fo"Debug/parking management.res" /d "_DEBUG" /d "_AFXDLL" "D:\c\car\parking management\parking management.rc"" 
-Creating temporary file "C:\Users\707wk\AppData\Local\Temp\RSP959A.tmp" with contents
+Creating temporary file "C:\Users\707wk\AppData\Local\Temp\RSPEF16.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/parking management.pdb" /debug /machine:I386 /out:"Debug/parking management.exe" /pdbtype:sept 
+".\Debug\ABOUTSOFT.obj"
 ".\Debug\md5.obj"
 ".\Debug\parking management.obj"
 ".\Debug\parking managementDlg.obj"
@@ -17,11 +17,9 @@ Creating temporary file "C:\Users\707wk\AppData\Local\Temp\RSP959A.tmp" with con
 ".\Debug\StdAfx.obj"
 ".\Debug\webbrowser2.obj"
 ".\Debug\parking management.res"
-".\Debug\ABOUTSOFT.obj"
 ]
-Creating command line "link.exe @C:\Users\707wk\AppData\Local\Temp\RSP959A.tmp"
+Creating command line "link.exe @C:\Users\707wk\AppData\Local\Temp\RSPEF16.tmp"
 <h3>Output Window</h3>
-Compiling resources...
 Linking...
 
 

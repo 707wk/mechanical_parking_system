@@ -139,7 +139,7 @@ void CParkingmanagementDlg::OnMenuitem32772()
 	ShellExecute(NULL,TEXT("OPEN"),path,NULL,NULL,SW_SHOWNORMAL);
 }
 
-/*////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 //开启一个线程
 struct threadInfo 
 {
@@ -147,21 +147,23 @@ struct threadInfo
 	CProgressCtrl* pctrlProgress ;
 }Info;
 
-UINT Threadcheckupdate(LPVOID lpParam)
+UINT Threadshowmap(LPVOID lpParam)
 {
-	showmapinfo dlg;
-	dlg.DoModal();
+	showmapinfo* dlg;
+	dlg=new showmapinfo;
+	dlg->DoModal();
+	delete dlg;
 	return 0;
 }
-*/////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 //显示地图
 void CParkingmanagementDlg::OnButton3() 
 {
 	// TODO: Add your control notification handler code here
-	/*CWinThread* pThread ;
-	pThread=AfxBeginThread(Threadcheckupdate,&Info);*/
-	showmapinfo dlg;
-	dlg.DoModal();
+	CWinThread* pThread ;
+	pThread=AfxBeginThread(Threadshowmap,&Info);
+	//showmapinfo dlg;
+	//dlg.DoModal();
 }
 
 void CParkingmanagementDlg::OnMenuitem32771() 

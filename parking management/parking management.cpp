@@ -5,6 +5,8 @@
 #include "parking management.h"
 #include "parking managementDlg.h"
 #include "md5.h"
+#include "DataStructure.h"
+#include "ControlCode.h"
 #include <stdio.h>
 #include <objbase.h>
 #include <string>
@@ -18,6 +20,10 @@ using namespace std;
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+
+MYSQL mysql;
+
+struct serverset serverinfo;
 
 /////////////////////////////////////////////////////////////////////////////
 // CParkingmanagementApp
@@ -55,11 +61,25 @@ int check()
 	const int MAX_BUFFER_LEN=500 ;
     char szBuffer[MAX_BUFFER_LEN];
     DWORD dwNameLen ;
+	OSVERSIONINFOEX ifo;
+	ifo.dwOSVersionInfoSize=sizeof(OSVERSIONINFOEX);
+	GetVersionEx((OSVERSIONINFO *)&ifo);
+	
+	DWORD a=ifo.dwBuildNumber;
+	DWORD b=ifo.dwMajorVersion;
+	DWORD c=ifo.dwMinorVersion;
+	DWORD d=ifo.dwOSVersionInfoSize;
+	DWORD e=ifo.dwPlatformId;
+	CString f=ifo.szCSDVersion;
+	
+	CString qwe;
+	qwe.Format("-%X%X%X%X%X",a,b,c,d,e);
     
     dwNameLen=MAX_BUFFER_LEN ;
     if(GetComputerName(szBuffer,&dwNameLen))
 		str=szBuffer;
-    str+="707wk";
+    str+="parking management";
+	str+=f;
     dwNameLen=MAX_BUFFER_LEN ;
     if(GetUserName(szBuffer,&dwNameLen))
 		str+=szBuffer;
@@ -72,6 +92,7 @@ int check()
 	md5.reset();
 	transform(md5str.begin(), md5str.end(), md5str.begin(), ::toupper);
 	//////////////////////////////////////////////////////////////////////////
+	md5str+=qwe;
 
 	string query;
 	query = "select state from md5 where md5key='";
@@ -99,6 +120,9 @@ int check()
 	if(mysql_num_rows(res)==0)
 	{
 		AfxMessageBox("未注册程序!\n请联系gtsoft_wk@foxmail.com注册");
+		query="INSERT INTO md5 (md5key) VALUES('";
+		query=query+md5str+"')";
+		mysql_real_query(&check,query.c_str(),(UINT)query.size());
 		FILE* fpout;
 		fpout=fopen("安装序列号.txt","w");
 		fprintf(fpout,"%s",md5str.c_str());
@@ -107,23 +131,48 @@ int check()
 	}
 	CString strtime;
 	strtime.Format("UPDATE md5 SET lasttime=now() WHERE md5key='%s'",md5str.c_str());
+	//状态:0:未注册 1:激活 2:停用
 	switch(atoi(column[0]))
 	{
-	case 1:
-		AfxMessageBox("账号已到期!\n请联系gtsoft_wk@foxmail.com激活");
+	case 0:
+		AfxMessageBox("未激活!\n请联系gtsoft_wk@foxmail.com激活");
 		exit(1);
 		break;
-	case 2:
+	case 1:
 		//最后登录日期
 		mysql_query(&check,strtime.GetBuffer(0));
 		break;
+	case 2:
+		AfxMessageBox("账号已停用!\n请联系gtsoft_wk@foxmail.com启用");
+		exit(1);
+		break;
 	default:
-		AfxMessageBox("未知错误!\n请联系gtsoft_wk@foxmail.com");
+		AfxMessageBox("未知错误!\n请联系gtsoft_wk@foxmail.com修复");
 		exit(1);
 		break;
 	}
 
 	return 0;
+}
+
+void readserverset()
+{
+	FILE* fp=fopen("serverSet.ini","r");
+	if(fp==NULL)
+	{
+		printf("未找到配置文件!");
+		exit(1);
+	}
+	
+	fscanf(fp,"server=%s\nusername=%s\npwd=%s\ndatabase=%s\nport=%d\ncost=%lf\nmscomm=%d",
+		serverinfo.ip,serverinfo.name,serverinfo.password,serverinfo.database,&serverinfo.port,&serverinfo.cost,&serverinfo.mscomm);
+	
+	mysql_init(&mysql);
+	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
+	{
+		AfxMessageBox("link:本地数据库无法连接!");
+		exit(1);
+	}
 }
 
 BOOL CParkingmanagementApp::InitInstance()
@@ -151,6 +200,9 @@ BOOL CParkingmanagementApp::InitInstance()
 	//////////////////////////////////////////////////////////////////////////
 	//这写的,把自己恶心到了
 	check();
+	//////////////////////////////////////////////////////////////////////////
+	//读取配置文件
+	readserverset();
 	//////////////////////////////////////////////////////////////////////////
 
 	CParkingmanagementDlg dlg;
