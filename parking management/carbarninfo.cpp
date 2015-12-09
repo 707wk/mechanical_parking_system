@@ -3,7 +3,7 @@
  *PROJECT :NULL
  *AUTHOR  :707wk
  *CREATED :2015/12/5 19:48:09
- *TEXT    :车库模块:只负责车库信息
+ *TEXT    :车库模块:负责车库信息
  *EMAIL   :gtsoft_wk@foxmail.com
  *CODE    :https://github.com/707wk
  *LOGO    :
@@ -38,16 +38,18 @@
 
 #include <iostream>
 #include <vector>
-#include <algorithm>
+#include <string>
 #include <sstream>
+#include <algorithm>
+#include <queue>
 
 using namespace std;
 
-extern struct serverset serverinfo;
+extern MYSQL mysql;
 
 carbarninfo::carbarninfo()
 {
-	this->id=0;
+	this->carbarnid=0;
 	this->nowstatus=-1;
 	this->oldstatus=-1;
 	this->sumcar=0;
@@ -56,68 +58,51 @@ carbarninfo::carbarninfo()
 	this->cols=0;
 	this->speed_rows=0;
 	this->speed_cols=0;
-
-	/*mysql_init(&mysql);
-	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
-	{
-		AfxMessageBox("车库模块:数据库无法连接!");
-		exit(1);
-		return ;
-	}*/
 }
 
 carbarninfo::~carbarninfo()
 {
-	//mysql_close(&mysql);
 	map_queue.clear();
 	map_queue.swap( (std::vector <speed_location>)(map_queue));
 }
 
-int carbarninfo::readdate(string name)
+int carbarninfo::readdate(int carbarnid)
 {
+	MYSQL_RES *res;                    //查询结果集
+	MYSQL_ROW column;                  //数据行的列
 	CString str;
-	str.Format("select * from t_garageinfo where name='%s'",name.c_str());
-
+	str.Format("select name,nowstatus,oldstatus,command,spendtime,rows,cols,speedrows,speedcols,map_queue from t_garageinfo where carbarnid='%d'",carbarnid);
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
 
 	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
 	{
 		res=mysql_store_result(&mysql);//保存查询到的数据到result
 		column=mysql_fetch_row(res);//获取具体的数据
+		
 		if(column)
 		{
-			this->name=name;
-			rows=atoi(column[3]);
-			cols=atoi(column[4]);
-			speed_rows=atof(column[5]);
-			speed_cols=atof(column[6]);
-			sumcar=0;//atoi(column[7]);
-			spendcar=0;//atoi(column[8]);
-			//compotr=atoi(column[11]);
-
 			//////////////////////////////////////////////////////////////////////////
-			compotr=0;
-			if(column[11])
-				compotr=atoi(column[11]);
+			//忘保存编号了...
+			this->carbarnid=carbarnid;
 			//////////////////////////////////////////////////////////////////////////
-			
-			//////////////////////////////////////////////////////////////////////////
-			status=0;
-			if(column[10])
-				status=atoi(column[10]);
-			//////////////////////////////////////////////////////////////////////////
+			this->name=column[0];
+			this->nowstatus=atoi(column[1]);
+			this->oldstatus=atoi(column[2]);
+			this->command.push(column[3]);
+			this->spendtime=atoi(column[4]);
+			this->sumcar=0;
+			this->spendcar=0;
+			this->rows=atoi(column[5]);
+			this->cols=atoi(column[6]);
+			this->speed_rows=atof(column[7]);
+			this->speed_cols=atof(column[8]);
 
 			if(column[9]==NULL)return -1;
 			string tmpstr=column[9];
 
 			if(rows<0)return -1;
 			if(cols<0)return -1;
-/*
-			CString tmp;
-			tmp=column[3];
-			tmp=tmp+":"+column[4];
-			AfxMessageBox(tmp);
-*/
+
 			stringstream stream;
 			stream<<tmpstr;
 			for(int i=0;i<rows*cols;i++)
@@ -135,7 +120,7 @@ int carbarninfo::readdate(string name)
 					//////////////////////////////////////////////////////////////////////////
 				}
 				
-				if(tmp.idle==2)sumcar--;
+				if(tmp.idle!=2)sumcar++;
 				if(tmp.idle==1)spendcar++;
 				
 				//////////////////////////////////////////////////////////////////////////
@@ -154,7 +139,7 @@ int carbarninfo::readdate(string name)
 
 			//////////////////////////////////////////////////////////////////////////
 			//排序函数忘加了
-			if(rows*cols)
+			if(rows&&cols)
 			{
 				countqueue();
 			}
@@ -176,19 +161,11 @@ int carbarninfo::readdate(string name)
 		AfxMessageBox("数据库连接失败");
 		return -1;
 	}
-
 	return -1;
 }
 
-int carbarninfo::getstatus()
+int carbarninfo::savedatetomysql()
 {
-	return this->status;
-}
-
-int carbarninfo::savedatetomysql(string name)
-{
-	this->name=name;
-
 	string tmpstr;
 	CString str;
 
@@ -203,9 +180,8 @@ int carbarninfo::savedatetomysql(string name)
 	//把速度用%d输出造成程序崩溃了
 	//CString str;卧槽这样都可以
 	str.Format("\
-UPDATE t_garageinfo set rows=%d,cols=%d,\
-speedrows=%f,speedcols=%f,sumcar=%d,spendcar=%d,map_queue='%s',compotr=%d where name='%s'",
-rows,cols,speed_rows,speed_cols,sumcar,spendcar,tmpstr.c_str(),compotr,name.c_str());
+UPDATE t_garageinfo set name='%s',nowstatus=%d,oldstatus=%d,command='%s',spendtime=%d,speedrows=%f,speedcols=%f,map_queue='%s' where carbarnid='%d'",
+name.c_str(),nowstatus,oldstatus,command.front().c_str(),spendtime,speed_rows,speed_cols,tmpstr.c_str(),carbarnid);
 	//////////////////////////////////////////////////////////////////////////
 
 	//AfxMessageBox(str);
@@ -231,41 +207,12 @@ int carbarninfo::judgeposition(int num)
 	//////////////////////////////////////////////////////////////////////////
 }
 
-void carbarninfo::setcompotr(int num)
-{
-	this->compotr=num;
-}
-
-int carbarninfo::getcompotr()
-{
-	return this->compotr;
-}
-
 int carbarninfo::getid(int num)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//用位移将数据分为两段，后段存id
 	return ((unsigned int)num<<(sizeof(int)*4)) >>(sizeof(int)*4);
 	//////////////////////////////////////////////////////////////////////////
-}
-
-int carbarninfo::getcond(int num)
-{
-	int index=switchid(num);
-	//AfxMessageBox("1");
-	if(index<0)return -1;
-	//AfxMessageBox("2");
-	if(index>=map_queue.size())return -1;
-	//AfxMessageBox("3");
-	//for(int i=0;i<map_queue.size();i++)
-	//{
-		//////////////////////////////////////////////////////////////////////////
-		//shict,为什么我没把序号和下标改过来,费了这么久时间
-		//if(map_queue[i].id==num)
-	return this->map_queue[index].idle;
-		//////////////////////////////////////////////////////////////////////////
-	//}
-	//return -1;
 }
 
 int carbarninfo::combine(int id,int idle)
@@ -278,7 +225,17 @@ int carbarninfo::combine(int id,int idle)
 }
 
 /////////////////////////////////////////////////////////////////////////
-//这些怪自个作死写成这样,折叠看最好
+//求折叠~~~
+int carbarninfo::getcarbarnid()
+{
+	return this->carbarnid;
+}
+
+void carbarninfo::setcarbarnid(int carbarnid)
+{
+	this->carbarnid=carbarnid;
+}
+
 string carbarninfo::getname()
 {
 	return this->name;
@@ -287,6 +244,56 @@ string carbarninfo::getname()
 void carbarninfo::setname(string name)
 {
 	this->name=name;
+}
+
+int carbarninfo::getnowstatus()
+{
+	return this->nowstatus;
+}
+
+void carbarninfo::setnowstatus(int status)
+{
+	this->oldstatus=this->nowstatus;
+	this->nowstatus=status;
+	if(this->nowstatus!=this->oldstatus)
+	{
+		spendtime=0;
+		if(!command.empty())
+			command.pop();
+	}
+}
+
+int carbarninfo::getoldstatus()
+{
+	return oldstatus;
+}
+
+void carbarninfo::setoldstatus(int status)
+{
+	this->oldstatus=status;
+}
+
+string carbarninfo::getcommand()
+{
+	if(command.empty())
+		return "";
+	return command.front();
+}
+
+void carbarninfo::addcommand(string command)
+{
+	this->command.push(command);
+	//spendtime=0;
+}
+
+int carbarninfo::getspendtime()
+{
+	return spendtime;
+}
+
+void carbarninfo::accspendtime()
+{
+	spendtime++;
 }
 
 int carbarninfo::getsumcar()
@@ -302,16 +309,6 @@ int carbarninfo::getsumcar()
 int carbarninfo::getspendcar()
 {
 	return this->spendcar;
-}
-
-int carbarninfo::getcondition()
-{
-	return this->condition;
-}
-
-void carbarninfo::setconditopn(int num)
-{
-	this->condition=num;
 }
 
 int carbarninfo::getrows()
@@ -436,7 +433,7 @@ int carbarninfo::savecar()
 
 	spendcar++;
 
-	savedatetomysql(this->name);
+	savedatetomysql();
 
 	//////////////////////////////////////////////////////////////////////////
 	//最开始返回了内部下标,后来改成外部下标
@@ -456,7 +453,7 @@ int carbarninfo::setentry(int index)
 	
 	//spendcar--;
 	
-	savedatetomysql(this->name);
+	savedatetomysql();
 	
 	return map_queue[index].id;
 }
@@ -473,7 +470,7 @@ int carbarninfo::cancelentry(int index)
 	
 	//spendcar--;
 	
-	savedatetomysql(this->name);
+	savedatetomysql();
 	
 	return map_queue[index].id;
 }
@@ -500,9 +497,9 @@ int carbarninfo::newgarage()
 	//AfxMessageBox(tmpstr.c_str());
 
 	str.Format("INSERT INTO t_garageinfo \
-(name,rows,cols,speedrows,speedcols,sumcar,spendcar,map_queue,compotr) \
-VALUES('%s',%d,%d,%f,%f,%d,%d,'%s',%d)",
-this->name.c_str(),this->rows,this->cols,this->speed_rows,this->speed_cols,0,0,tmpstr.c_str(),this->compotr);
+(carbarnid,name,rows,cols,speedrows,speedcols,sumcar,spendcar,map_queue,compotr) \
+VALUES(%d,'%s',%d,%d,%f,%f,%d,%d,'%s')",
+this->carbarnid,this->name.c_str(),this->rows,this->cols,this->speed_rows,this->speed_cols,0,0,tmpstr.c_str());
 
 	//AfxMessageBox(str);
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
@@ -532,7 +529,7 @@ int carbarninfo::deletecar(int index)
 
 	spendcar--;
 
-	savedatetomysql(this->name);
+	savedatetomysql();
 
 	return map_queue[index].id;
 }
@@ -545,8 +542,6 @@ int carbarninfo::clear()
 	rows=0;
 	cols=0;
 
-	//savedatetomysql(this->mac);
-	//readdate();
 	return 0;
 }
 
@@ -554,7 +549,7 @@ void carbarninfo::deletedate()
 {
 	CString str;
 	//////////////////////////////////////////////////////////////////////////
-	str.Format("DELETE FROM t_garageinfo where name='%s'",name.c_str());
+	str.Format("DELETE FROM t_garageinfo where carbarnid='%d'",carbarnid);
 	//////////////////////////////////////////////////////////////////////////
 	//AfxMessageBox(str);
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");
@@ -569,7 +564,7 @@ void carbarninfo::deletedate()
 	}
 	
 	//////////////////////////////////////////////////////////////////////////
-	str.Format("DELETE FROM t_carinfo where name='%s'",name.c_str());
+	str.Format("DELETE FROM t_carinfo where carbarnid='%d'",carbarnid);
 	//////////////////////////////////////////////////////////////////////////
 	//AfxMessageBox(str);
 	mysql_query(&mysql,"SET NAMES 'UTF-8'");

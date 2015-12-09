@@ -61,15 +61,6 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDR_MAINFRAME           ICON    DISCARDABLE     "res\\parking management.ico"
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // Dialog
 //
 
@@ -84,17 +75,26 @@ BEGIN
     CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | 
                     LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SORTASCENDING | 
                     LVS_AUTOARRANGE | WS_BORDER | WS_TABSTOP,13,20,474,236
-    EDITTEXT        IDC_EDIT1,535,61,90,14,ES_AUTOHSCROLL
-    LTEXT           "车牌:",IDC_STATIC,508,64,21,8
-    PUSHBUTTON      "存车",IDC_BUTTON1,508,83,50,14
-    PUSHBUTTON      "取车",IDC_BUTTON2,575,84,50,14
-    GROUPBOX        "存/取车",IDC_STATIC,493,7,142,99
+    EDITTEXT        IDC_EDIT1,535,81,90,14,ES_AUTOHSCROLL
+    LTEXT           "车牌:",IDC_STATIC,508,84,21,8
+    PUSHBUTTON      "存车",IDC_BUTTON1,508,103,50,14
+    PUSHBUTTON      "取车",IDC_BUTTON2,575,104,50,14
+    GROUPBOX        "存/取车",IDC_STATIC,493,7,142,121
     LTEXT           "剩余车位:",IDC_STATIC,508,41,37,8
     EDITTEXT        IDC_EDIT2,550,38,75,14,ES_AUTOHSCROLL
     LTEXT           "总车位:",IDC_STATIC,508,23,29,8
     EDITTEXT        IDC_EDIT3,550,20,75,14,ES_AUTOHSCROLL
     GROUPBOX        "车库列表",IDC_STATIC,7,7,487,255
-    PUSHBUTTON      "显示地图",IDC_BUTTON3,508,113,50,14
+    PUSHBUTTON      "显示地图",IDC_BUTTON3,575,177,50,28
+    PUSHBUTTON      "连接设备",IDC_BUTTON4,575,131,50,42
+    EDITTEXT        IDC_EDIT4,525,134,40,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "状态:",IDC_STATIC,500,137,21,8
+    CONTROL         "",IDC_MSCOMM1,"{648A5600-2C6E-101B-82B6-000000000014}",
+                    WS_TABSTOP,499,153,25,25
+    EDITTEXT        IDC_EDIT5,501,212,130,47,ES_MULTILINE | ES_AUTOVSCROLL | 
+                    ES_AUTOHSCROLL | WS_VSCROLL
+    EDITTEXT        IDC_EDIT6,535,62,90,14,ES_AUTOHSCROLL
+    LTEXT           "卡号:",IDC_STATIC,508,65,21,8
 END
 
 IDD_SHOWMAPINFO DIALOG DISCARDABLE  0, 0, 457, 241
@@ -142,15 +142,15 @@ BEGIN
         BLOCK "080404b0"
         BEGIN
             VALUE "Comments", "\0"
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "parking management Microsoft 基础类应用程序\0"
+            VALUE "CompanyName", "湖南师范大学\0"
+            VALUE "FileDescription", "演示程序\0"
             VALUE "FileVersion", "1, 0, 0, 1\0"
             VALUE "InternalName", "parking management\0"
-            VALUE "LegalCopyright", "版权所有 (C) 2015\0"
+            VALUE "LegalCopyright", "Copyright@ 2015 湖南师范大学\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "parking management.EXE\0"
+            VALUE "OriginalFilename", "\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "parking management 应用程序\0"
+            VALUE "ProductName", "立体车库演示程序v1.0\0"
             VALUE "ProductVersion", "1, 0, 0, 1\0"
             VALUE "SpecialBuild", "\0"
         END
@@ -241,6 +241,18 @@ BEGIN
     0
 END
 
+IDD_PARKINGMANAGEMENT_DIALOG DLGINIT
+BEGIN
+    IDC_MSCOMM1, 0x376, 102, 0
+0x0013, 0x0000, 0x0043, 0x006f, 0x0070, 0x0079, 0x0072, 0x0069, 0x0067, 
+0x0068, 0x0074, 0x0020, 0x0028, 0x0063, 0x0029, 0x0020, 0x0031, 0x0039, 
+0x0039, 0x0034, 0x0020, 0x4321, 0x1234, 0x0008, 0x0000, 0x03ed, 0x0000, 
+0x03ed, 0x0000, 0x5601, 0x648a, 0x0000, 0x0006, 0x0000, 0x0001, 0x0400, 
+0x0000, 0x0200, 0x0000, 0x2580, 0x0000, 0x0000, 0x0008, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x003f, 0x0000, 0x0001, 0x0000, 
+    0
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -248,6 +260,15 @@ END
 //
 
 IDB_BITMAP1             BITMAP  DISCARDABLE     "res\\myqq.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON1               ICON    DISCARDABLE     "res\\parking management.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

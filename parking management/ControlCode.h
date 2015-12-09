@@ -97,9 +97,10 @@
 //控制码
 #define SAVECAR     0x01            //存车
 #define DELETECAR   0x02            //取车
-#define GETSTATE    0x03            //读取模块状态
-#define STOP        0x04            //紧急停止
-#define RESET       0x05            //复位
+#define GETLOCATION 0x03            //获取机械臂位置
+#define GETSTATE    0x04            //读取模块状态
+#define STOP        0x05            //紧急停止
+#define RESET       0x06            //复位
 
 //状态码
 #define STATEFREE   0x00            //空闲

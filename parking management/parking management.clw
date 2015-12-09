@@ -12,11 +12,11 @@ Class1=CParkingmanagementApp
 Class2=CParkingmanagementDlg
 
 ResourceCount=5
-Resource2=IDD_PARKINGMANAGEMENT_DIALOG
-Resource3=IDD_ABOUT
+Resource2=IDD_ABOUT
+Resource3=IDD_SHOWMAPINFO
 Resource1=IDR_MAINFRAME
 Class3=showmapinfo
-Resource4=IDD_SHOWMAPINFO
+Resource4=IDD_PARKINGMANAGEMENT_DIALOG
 Class4=ABOUTSOFT
 Resource5=IDR_MENU1
 
@@ -33,14 +33,14 @@ ImplementationFile=parking managementDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=ID_MENUITEM32773
+LastObject=CParkingmanagementDlg
 
 
 
 [DLG:IDD_PARKINGMANAGEMENT_DIALOG]
 Type=1
 Class=CParkingmanagementDlg
-ControlCount=12
+ControlCount=19
 Control1=IDC_LIST1,SysListView32,1350631709
 Control2=IDC_EDIT1,edit,1350631552
 Control3=IDC_STATIC,static,1342308352
@@ -53,6 +53,13 @@ Control9=IDC_STATIC,static,1342308352
 Control10=IDC_EDIT3,edit,1350631552
 Control11=IDC_STATIC,button,1342177287
 Control12=IDC_BUTTON3,button,1342242816
+Control13=IDC_BUTTON4,button,1342242816
+Control14=IDC_EDIT4,edit,1350633600
+Control15=IDC_STATIC,static,1342308352
+Control16=IDC_MSCOMM1,{648A5600-2C6E-101B-82B6-000000000014},1342242816
+Control17=IDC_EDIT5,edit,1352728772
+Control18=IDC_EDIT6,edit,1350631552
+Control19=IDC_STATIC,static,1342308352
 
 [MNU:IDR_MENU1]
 Type=1

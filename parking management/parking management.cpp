@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "parking management.h"
 #include "parking managementDlg.h"
+#include "carbarninfo.h"
 #include "md5.h"
 #include "DataStructure.h"
 #include "ControlCode.h"
@@ -24,6 +25,10 @@ static char THIS_FILE[] = __FILE__;
 MYSQL mysql;
 
 struct serverset serverinfo;
+
+carbarninfo* (carbarn[30]);
+
+CParkingmanagementDlg *maindlg;
 
 /////////////////////////////////////////////////////////////////////////////
 // CParkingmanagementApp
@@ -164,8 +169,9 @@ void readserverset()
 		exit(1);
 	}
 	
-	fscanf(fp,"server=%s\nusername=%s\npwd=%s\ndatabase=%s\nport=%d\ncost=%lf\nmscomm=%d",
-		serverinfo.ip,serverinfo.name,serverinfo.password,serverinfo.database,&serverinfo.port,&serverinfo.cost,&serverinfo.mscomm);
+	fscanf(fp,"server=%s\nusername=%s\npwd=%s\ndatabase=%s\nport=%d\ncost=%lf\nmscomm=%d\nmscommini=%s\nrefreshinterval=%d",
+		serverinfo.ip,serverinfo.name,serverinfo.password,serverinfo.database,
+		&serverinfo.port,&serverinfo.cost,&serverinfo.mscomm,serverinfo.mscommini,&serverinfo.refreshinterval);
 	
 	mysql_init(&mysql);
 	if(mysql_real_connect(&mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
@@ -205,9 +211,9 @@ BOOL CParkingmanagementApp::InitInstance()
 	readserverset();
 	//////////////////////////////////////////////////////////////////////////
 
-	CParkingmanagementDlg dlg;
-	m_pMainWnd = &dlg;
-	int nResponse = dlg.DoModal();
+	maindlg=new CParkingmanagementDlg;
+	m_pMainWnd = maindlg;
+	int nResponse = maindlg->DoModal();
 	if (nResponse == IDOK)
 	{
 		// TODO: Place code here to handle when the dialog is
@@ -219,7 +225,10 @@ BOOL CParkingmanagementApp::InitInstance()
 		//  dismissed with Cancel
 	}
 
+	delete maindlg;
+
 	// Since the dialog has been closed, return FALSE so that we exit the
 	//  application, rather than start the application's message pump.
 	return FALSE;
 }
+

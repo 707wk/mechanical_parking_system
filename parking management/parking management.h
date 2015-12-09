@@ -13,6 +13,7 @@
 #endif
 
 #include "resource.h"		// main symbols
+#include "parking managementDlg.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CParkingmanagementApp:
@@ -23,7 +24,6 @@ class CParkingmanagementApp : public CWinApp
 {
 public:
 	CParkingmanagementApp();
-
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CParkingmanagementApp)
@@ -38,6 +38,7 @@ public:
 		//    DO NOT EDIT what you see in these blocks of generated code !
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+protected:
 };
 
 

@@ -65,9 +65,10 @@ LINK32=link.exe
 # PROP Use_Debug_Libraries 1
 # PROP Output_Dir "Debug"
 # PROP Intermediate_Dir "Debug"
+# PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_AFXDLL" /FR /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x804 /d "_DEBUG" /d "_AFXDLL"
@@ -94,7 +95,15 @@ SOURCE=.\ABOUTSOFT.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\carbarninfo.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\md5.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\mscomm.cpp
 # End Source File
 # Begin Source File
 
@@ -134,6 +143,10 @@ SOURCE=.\ABOUTSOFT.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\carbarninfo.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\ControlCode.h
 # End Source File
 # Begin Source File
@@ -143,6 +156,14 @@ SOURCE=.\DataStructure.h
 # Begin Source File
 
 SOURCE=.\md5.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\mscomm.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\mysql\mysql.h
 # End Source File
 # Begin Source File
 
@@ -191,6 +212,15 @@ SOURCE=.\ReadMe.txt
 # Section parking management : {8856F961-340A-11D0-A96B-00C04FD705A2}
 # 	2:21:DefaultSinkHeaderFile:webbrowser2.h
 # 	2:16:DefaultSinkClass:CWebBrowser2
+# End Section
+# Section parking management : {648A5600-2C6E-101B-82B6-000000000014}
+# 	2:21:DefaultSinkHeaderFile:mscomm.h
+# 	2:16:DefaultSinkClass:CMSComm
+# End Section
+# Section parking management : {E6E17E90-DF38-11CF-8E74-00A0C90F26F8}
+# 	2:5:Class:CMSComm
+# 	2:10:HeaderFile:mscomm.h
+# 	2:8:ImplFile:mscomm.cpp
 # End Section
 # Section parking management : {D30C1661-CDAF-11D0-8A3E-00C04FC9E26E}
 # 	2:5:Class:CWebBrowser2

@@ -46,13 +46,15 @@ using namespace std;
 //系统设置
 struct serverset
 {
-	char   ip[20];                     //数据库ip
+	char   ip[100];                    //数据库ip
 	char   name[100];                  //数据库用户名
 	char   password[100];              //数据库密码
 	char   database[100];              //数据库名
 	int    port;                       //数据库端口
 	double cost;                       //费用(元/小时)(保留)
 	int    mscomm;                     //端口号
+	char   mscommini[100];             //连接参数
+	int    refreshinterval;            //刷新间隔
 
 	MYSQL  mysql;                      //mysql数据库
 };
