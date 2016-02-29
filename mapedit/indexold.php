@@ -2,9 +2,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>MapEdit for Parking Management</title>
+<title>MapEdit</title>
 <style>
-//table,table td,table th{border:1px solid #fff;border-collapse:collapse;}
+table,table td,table th{border:1px solid #fff;border-collapse:collapse;}
 td{
 	height:24px;
 	width:24px;
@@ -12,9 +12,6 @@ td{
 	font-size:10px;
 	color:#fff;
 	text-align:center;
-}
-table{
-	background-color:#000;
 }
 .wall {
 	background:url(wall.png)repeat;
@@ -52,7 +49,7 @@ table{
 </head>
 <body>
 <div id="Div0">
-<center><h3>MapEdit for Parking Management</h3></center>
+<h3>Map Editor</h3>
 <div id="Div1">
 <?php 
 $dbh=null;
@@ -92,7 +89,7 @@ function create(){
 				$value=$map[$i][$j]['value'];
 				$t=$map[$i][$j]['t'];
 			}
-			echo "<td class=\"{$class}\" onclick=\"edit({$i},{$j},{$t},'{$value}');\" onmousedown=\"this.style.opacity='0.5';\" onmousemove=\"this.style.opacity='1';\" onmouseup=\"this.style.opacity='1';\">{$value}</td>";	
+			echo "<td class=\"{$class}\" onclick=\"edit({$i},{$j},{$t},'{$value}')\">{$value}</td>";	
 		}
 		echo "</tr>";
 	}
@@ -119,7 +116,7 @@ create();
 </div>
 <div id="Div2">
 
-<form method="post" onsubmit="check();">
+<form method="post">
 Coordinate:(<input style="width:20px;" name="x" id="x"/>,<input style="width:20px;" name="y" id="y"/>)
 <br>
 Type:&nbsp;<select name="type" id="type">
@@ -131,33 +128,23 @@ Type:&nbsp;<select name="type" id="type">
 
 </select>
 <br>
-Value:<input name="value" id="value" ><br>
+Value:<input name="value" id="value"><br>
 <input type="hidden" name="do" value="yes"><br>
-<input type="submit" value=""  style="width:84px;height:40px;background-image: url(save.png)">
-</form><button onclick="location='?'" style="width:84px;height:40px;background-image: url(refresh.png)"></button>
+<input type="submit" value="Save"><br><br>
+</form><button onclick="location='?'">Refresh</button>
 </div>
 </div>
 <script>
-var xx = document.getElementById("x");
-var yy = document.getElementById("y");
-function check(){
-	if(xx.value==0||yy.value==0)
-	{
-		alert('最外层是墙，不可操作！');
-		return false;
-	}
-	return true;
-}
 function edit(x,y,t,v){
-
+	var xx = document.getElementById("x");
+	var yy = document.getElementById("y");
 	var value = document.getElementById("value");
 	var type = document.getElementById("type");	
-	
 	xx.value=x;
 	yy.value=y;
 	type.value=t;
 	value.value=v;
-
+	//alert(x+","+y);	
 }
 </script>
 </body>
