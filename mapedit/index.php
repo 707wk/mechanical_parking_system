@@ -5,13 +5,15 @@
 <title>MapEdit for Parking Management</title>
 <style>
 //table,table td,table th{border:1px solid #fff;border-collapse:collapse;}
+body {font-family: '微软雅黑';}
 td{
-	height:24px;
-	width:24px;
+	height:30px;
+	width:30px;
 	border:none;
 	font-size:10px;
 	color:#fff;
 	text-align:center;
+	border-radius: 2px;
 }
 table{
 	background-color:#000;
@@ -39,14 +41,19 @@ table{
 {
   float:left; width:auto; 
 }
-#Div1 
+#Div2
 {
   float:left; width:auto; 
+  width:190px;
 }
-#Div2 
+#Div1 
 {
   margin-left:20px;
-  width:300px;float:right;
+  
+  float:right;
+}
+h2{
+	text-align:center;
 }
 </style>
 </head>
@@ -99,6 +106,16 @@ function create(){
 	echo "</table>";
 
 }
+
+function init(){
+	global $dbh;
+	//var_dump( );
+	//exit();
+
+	$min=$dbh->query("SELECT min(x) as mx,min(y) as my FROM `map`")->fetch();
+	$dbh->exec("update map set x=x-$min[mx]+1,y=y-$min[my]+1");
+		
+}
 if(isset($_POST['do'])&&$_POST['y']!=""&&$_POST['x']!=""):
 	$x=$_POST['x'];
 	$y=$_POST['y'];
@@ -113,37 +130,49 @@ if(isset($_POST['do'])&&$_POST['y']!=""&&$_POST['x']!=""):
 	if($type==0)$dbh->exec("DELETE FROM `map` WHERE type=0");
 	
 endif;
+
+init();
 create();
 
 ?>
 </div>
 <div id="Div2">
-
-<form method="post" onsubmit="check();">
-Coordinate:(<input style="width:20px;" name="x" id="x"/>,<input style="width:20px;" name="y" id="y"/>)
-<br>
-Type:&nbsp;<select name="type" id="type">
+<hr>
+<form method="post" onsubmit="check();" id="fmapedit">
+Coordinate(<input style="width:20px;" name="x" id="x"/>,<input style="width:20px;" name="y" id="y"/>)
+<br><br>
+Type&nbsp;<select name="type" id="type">
 <option value="1">in</option>
 <option value="2">out</option>
 <option value="3">module</option>
 <option value="4">road</option>
 <option value="0">wall</option>
-
 </select>
-<br>
-Value:<input name="value" id="value" ><br>
-<input type="hidden" name="do" value="yes"><br>
-<input type="submit" value=""  style="width:84px;height:40px;background-image: url(save.png)">
-</form><button onclick="location='?'" style="width:84px;height:40px;background-image: url(refresh.png)"></button>
+<br><br>
+Value<input name="value" id="value" style="max-width:80px;"><br><br>
+<input type="hidden" name="do" value="yes">
+</form>
+<button onclick="dosubmit()"  style="width:84px;height:40px;background-image: url(save.png)"></button>
+<button onclick="location='?'" style="width:84px;height:40px;background-image: url(refresh.png)"></button>
 </div>
 </div>
 <script>
 var xx = document.getElementById("x");
 var yy = document.getElementById("y");
-function check(){
-	if(xx.value==0||yy.value==0)
+function dosubmit(){
+	if(xx.value==''||yy.value=='')
 	{
-		alert('最外层是墙，不可操作！');
+		alert('坐标错误');
+		return false;
+	}
+	//return true;
+	document.getElementById("fmapedit").submit();	
+}
+function check(){
+	//return true;
+	if(xx.value==null||yy.value==null)
+	{
+		alert('坐标错误');
 		return false;
 	}
 	return true;
