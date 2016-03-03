@@ -2,40 +2,39 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>MapEdit for Parking Management</title>
+<title>MapEdit</title>
 <style>
-//table,table td,table th{border:1px solid #fff;border-collapse:collapse;}
 body {font-family: '微软雅黑';}
 td{
-	height:30px;
-	width:30px;
+	height:22px;
+	width:22px;
 	border:none;
 	font-size:10px;
 	color:#fff;
 	text-align:center;
-	border-radius: 2px;
+	border-radius:1px;
+	
 }
 table{
 	background-color:#000;
 }
 .wall {
-	background:url(wall.png)repeat;
-	//background-color:#690;
+	background:url(img/wall.png)repeat;
 }
 .road{
-	background-color:#BDBBB3;
+	background-color:gainsboro;
 }
 .in{
-	background:url(in.png)repeat;
-	//background-color:#3E8ECA;
+	background-color:#b5e61d;
+	color:#000;
 }
 .out{
-	background:url(out.png)repeat;
-	//background-color:#f60;	
+	background-color:#99d9ea;	
+	color:#000;
 }
 .module{
-	background:url(module.png)repeat;
-	//background-color:#339;	
+	background-color:#b97a57;	
+	color:#000;
 }
 #Div0
 {
@@ -52,14 +51,99 @@ table{
   
   float:right;
 }
+.button {
+	display: inline-block;
+	zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+	*display: inline;
+	vertical-align: baseline;
+	margin: 0 2px;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	font: 14px/100% Arial, Helvetica, sans-serif;
+	padding: .5em 2em .55em;
+	text-shadow: 0 1px 1px rgba(0,0,0,.3);
+	-webkit-border-radius: .5em; 
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.button:hover {
+	text-decoration: none;
+}
+.button:active {
+	position: relative;
+	top: 1px;
+}
+.hg {margin:5px;width:80%;}
+
+.bigrounded {
+	-webkit-border-radius: 2em;
+	-moz-border-radius: 2em;
+	border-radius: 2em;
+}
+.medium {
+	font-size: 12px;
+	padding: .4em 1.5em .42em;
+}
+.small {
+	font-size: 11px;
+	padding: .2em 1em .275em;
+}
+.blue {
+	color: #d9eef7;
+	border: solid 1px #0076a3;
+	background: #0095cd;
+	background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+	background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#00adee', endColorstr='#0078a5');
+}
+.blue:hover {
+	background: #007ead;
+	background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+	background: -moz-linear-gradient(top,  #0095cc,  #00678e);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#0095cc', endColorstr='#00678e');
+}
+.blue:active {
+	color: #80bed6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#0078a5), to(#00adee));
+	background: -moz-linear-gradient(top,  #0078a5,  #00adee);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#0078a5', endColorstr='#00adee');
+}
+.orange {
+	color: #fef4e9;
+	border: solid 1px #da7c0c;
+	background: #f78d1d;
+	background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#f47a20));
+	background: -moz-linear-gradient(top,  #faa51a,  #f47a20);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20');
+}
+.orange:hover {
+	background: #f47c20;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f88e11), to(#f06015));
+	background: -moz-linear-gradient(top,  #f88e11,  #f06015);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f88e11', endColorstr='#f06015');
+}
+.orange:active {
+	color: #fcd3a5;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f47a20), to(#faa51a));
+	background: -moz-linear-gradient(top,  #f47a20,  #faa51a);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f47a20', endColorstr='#faa51a');
+}
+
+
 h2{
 	text-align:center;
 }
+
 </style>
 </head>
-<body>
+<body bgcolor=#BDBBB3>
 <div id="Div0">
-<center><h3>MapEdit for Parking Management</h3></center>
+<h2>MapEdit for Parking Management</h2>
 <div id="Div1">
 <?php 
 $dbh=null;
@@ -77,7 +161,6 @@ catch (PDOException $e)
 
 function create(){
 	global $dbh;
-
 	$arr=$dbh->query("select * from map ")->fetchAll();
 	//var_dump($arr);
 	$maxx=$maxy=0;
@@ -89,9 +172,8 @@ function create(){
 		if($a['x']>$maxx)$maxx=$a['x'];
 		if($a['y']>$maxy)$maxy=$a['y'];
 	}
-
+	echo '<table border="0" cellpadding="0" cellspacing="0">'."\n";
 	for($i=0;$i<=$maxx+1;$i++){
-		echo '<table border="0" cellpadding="0" cellspacing="0">';
 		for($j=0;$j<=$maxy+1;$j++){
 			$class="wall";$value="";$t="0";
 			if(!empty($map[$i][$j])){
@@ -99,7 +181,7 @@ function create(){
 				$value=$map[$i][$j]['value'];
 				$t=$map[$i][$j]['t'];
 			}
-			echo "<td class=\"{$class}\" onclick=\"edit({$i},{$j},{$t},'{$value}');\" onmousedown=\"this.style.opacity='0.5';\" onmousemove=\"this.style.opacity='1';\" onmouseup=\"this.style.opacity='1';\">{$value}</td>";	
+			echo "<td class=\"{$class}\" onclick=\"edit({$i},{$j},{$t},'{$value}');\" id=\"{$i}_{$j}\" onmousedown=\"this.style.opacity='0.5';\" onmousemove=\"this.style.opacity='1';\" onmouseup=\"this.style.opacity='1';\">{$value}</td>\n";	
 		}
 		echo "</tr>";
 	}
@@ -111,11 +193,11 @@ function init(){
 	global $dbh;
 	//var_dump( );
 	//exit();
-
+	
 	$min=$dbh->query("SELECT min(x) as mx,min(y) as my FROM `map`")->fetch();
 	$dbh->exec("update map set x=x-$min[mx]+1,y=y-$min[my]+1");
-		
 }
+
 if(isset($_POST['do'])&&$_POST['y']!=""&&$_POST['x']!=""):
 	$x=$_POST['x'];
 	$y=$_POST['y'];
@@ -138,9 +220,9 @@ create();
 </div>
 <div id="Div2">
 <hr>
-<form method="post" onsubmit="check();" id="fmapedit">
+<form method="post" id="fmapedit">
 Coordinate(<input style="width:20px;" name="x" id="x"/>,<input style="width:20px;" name="y" id="y"/>)
-<br><br>
+<br>
 Type&nbsp;<select name="type" id="type">
 <option value="1">in</option>
 <option value="2">out</option>
@@ -148,17 +230,38 @@ Type&nbsp;<select name="type" id="type">
 <option value="4">road</option>
 <option value="0">wall</option>
 </select>
-<br><br>
+<br>
 Value<input name="value" id="value" style="max-width:80px;"><br><br>
 <input type="hidden" name="do" value="yes">
 </form>
-<button onclick="dosubmit()"  style="width:84px;height:40px;background-image: url(save.png)"></button>
-<button onclick="location='?'" style="width:84px;height:40px;background-image: url(refresh.png)"></button>
+<a class="button orange" href="#" onclick="dosubmit()">Save</a>
+<a class="button blue" href="#" onclick="location='?'">Ref</a>
+<hr>
 </div>
 </div>
 <script>
 var xx = document.getElementById("x");
 var yy = document.getElementById("y");
+<?php
+	$zb=$dbh->query("select x,y,type from map ")->fetchAll();
+	echo "var info=(".json_encode($zb).");\n";
+?>
+	
+for (var i=0; i<info.length; i++){
+	if(info[i].type==4){
+		eval('var td = document.getElementById("'+info[i].x+'_'+info[i].y+'")');
+		var sum=0;
+		for (var j=0; j<info.length; j++){
+			if(info[j].x==info[i].x-1&&info[j].y==info[i].y)sum+=1;
+			if(info[j].x==parseInt(info[i].x)+1&&info[j].y==info[i].y)sum+=4;
+			if(info[j].y==info[i].y-1&info[j].x==info[i].x)sum+=8;
+			if(info[j].y==parseInt(info[i].y)+1&info[j].x==info[i].x)sum+=2;
+		}
+		td.style.background="url(img/road_"+sum+".png)repeat";
+		//break;
+		//alert(td.value);
+	}
+}
 function dosubmit(){
 	if(xx.value==''||yy.value=='')
 	{
@@ -168,20 +271,10 @@ function dosubmit(){
 	//return true;
 	document.getElementById("fmapedit").submit();	
 }
-function check(){
-	//return true;
-	if(xx.value==null||yy.value==null)
-	{
-		alert('坐标错误');
-		return false;
-	}
-	return true;
-}
-function edit(x,y,t,v){
 
+function edit(x,y,t,v){
 	var value = document.getElementById("value");
 	var type = document.getElementById("type");	
-	
 	xx.value=x;
 	yy.value=y;
 	type.value=t;
