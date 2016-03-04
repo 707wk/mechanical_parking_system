@@ -1,15 +1,36 @@
+<?php
+$dbh=null;
+try
+{
+	$dbh = new PDO("mysql:host=localhost;dbname=car","car","KnKsfyxX65dMVWKY",
+	array(PDO::ATTR_PERSISTENT => true)); 
+    $dbh->query("set names utf8");
+}
+catch (PDOException $e)
+{
+	echo 'Connection failed: ' . $e->getMessage();
+	die;
+}
+
+if(@$_GET['do']=="wipemap"){
+	$dbh->exec('delete from map where 1');
+	header("Location:index.php");
+	exit();
+}
+
+?>
 <!DOCTYPE HTML>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>MapEdit</title>
+<title>MapEdit for Parking Management</title>
 <style>
 body {font-family: '微软雅黑';}
 td{
 	height:22px;
 	width:22px;
 	border:none;
-	font-size:10px;
+	font-size:12px;
 	color:#fff;
 	text-align:center;
 	border-radius:1px;
@@ -43,7 +64,7 @@ table{
 #Div2
 {
   float:left; width:auto; 
-  width:190px;
+  width:185px;
 }
 #Div1 
 {
@@ -101,6 +122,28 @@ table{
 	background: -moz-linear-gradient(top,  #00adee,  #0078a5);
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#00adee', endColorstr='#0078a5');
 }
+.red {
+	color: #faddde;
+	border: solid 1px #980c10;
+	background: #d81b21;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ed1c24), to(#aa1317));
+	background: -moz-linear-gradient(top, #ed1c24, #aa1317);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ed1c24', endColorstr='#aa1317');
+}
+
+.red:hover {
+	background: #b61318;
+	background: -webkit-gradient(linear, left top, left bottom, from(#c9151b), to(#a11115));
+	background: -moz-linear-gradient(top, #c9151b, #a11115);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#c9151b', endColorstr='#a11115');
+}
+
+.red:active {
+	color: #de898c;
+	background: -webkit-gradient(linear, left top, left bottom, from(#aa1317), to(#ed1c24));
+	background: -moz-linear-gradient(top, #aa1317, #ed1c24);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#aa1317', endColorstr='#ed1c24');
+}
 .blue:hover {
 	background: #007ead;
 	background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
@@ -139,25 +182,74 @@ h2{
 	text-align:center;
 }
 
+.valuetext {
+	max-width:200px;
+	resize: none;
+    color:#333;
+    line-height:normal;
+    font-family:"Microsoft YaHei",Tahoma,Verdana,SimSun;
+    font-style:normal;
+    font-variant:normal;
+    font-size-adjust:none;
+    font-stretch:normal;
+    font-weight:normal;
+    margin-top:0px;
+    margin-bottom:0px;
+    margin-left:0px;
+    padding-top:4px;
+    padding-right:4px;
+    padding-bottom:4px;
+    padding-left:4px;
+    font-size:15px;
+    outline-width:medium;
+    outline-style:none;
+    outline-color:invert;
+    border-top-left-radius:3px;
+    border-top-right-radius:3px;
+    border-bottom-left-radius:3px;
+    border-bottom-right-radius:3px;
+    text-shadow:0px 1px 2px #fff;
+    background-attachment:scroll;
+    background-repeat:repeat-x;
+    background-position-x:left;
+    background-position-y:top;
+    background-size:auto;
+    background-origin:padding-box;
+    background-clip:border-box;
+    background-color:rgb(255,255,255);
+    margin-right:8px;
+    border-top-color:#ccc;
+    border-right-color:#ccc;
+    border-bottom-color:#ccc;
+    border-left-color:#ccc;
+    border-top-width:1px;
+    border-right-width:1px;
+    border-bottom-width:1px;
+    border-left-width:1px;
+    border-top-style:solid;
+    border-right-style:solid;
+    border-bottom-style:solid;
+    border-left-style:solid;
+}
+
+.valuetext:focus {
+     border: 1px solid #fafafa;
+    -webkit-box-shadow: 0px 0px 6px #007eff;
+     -moz-box-shadow: 0px 0px 5px #007eff;
+     box-shadow: 0px 0px 5px #007eff;   
+    
+}
+
 </style>
 </head>
 <body bgcolor=#BDBBB3>
 <div id="Div0">
-<h2>MapEdit for Parking Management</h2>
+<center>
+	<h2>MapEdit for Parking Management</h2>
+</center>
 <div id="Div1">
 <?php 
-$dbh=null;
-try
-{
-	$dbh = new PDO("mysql:host=localhost;dbname=car","car","KnKsfyxX65dMVWKY",
-	array(PDO::ATTR_PERSISTENT => true)); 
-    $dbh->query("set names utf8");
-}
-catch (PDOException $e)
-{
-	echo 'Connection failed: ' . $e->getMessage();
-	die;
-}
+
 
 function create(){
 	global $dbh;
@@ -172,7 +264,7 @@ function create(){
 		if($a['x']>$maxx)$maxx=$a['x'];
 		if($a['y']>$maxy)$maxy=$a['y'];
 	}
-	echo '<table border="0" cellpadding="0" cellspacing="0">'."\n";
+	echo '<table border="5" cellpadding="0" cellspacing="0">'."\n";
 	for($i=0;$i<=$maxx+1;$i++){
 		for($j=0;$j<=$maxy+1;$j++){
 			$class="wall";$value="";$t="0";
@@ -213,6 +305,7 @@ if(isset($_POST['do'])&&$_POST['y']!=""&&$_POST['x']!=""):
 	
 endif;
 
+
 init();
 create();
 
@@ -221,9 +314,10 @@ create();
 <div id="Div2">
 <hr>
 <form method="post" id="fmapedit">
-Coordinate(<input style="width:20px;" name="x" id="x"/>,<input style="width:20px;" name="y" id="y"/>)
+Coordinate:(<input style="width:20px;" name="x" id="x"/>,<input style="width:20px;" name="y" id="y"/>)
 <br>
-Type&nbsp;<select name="type" id="type">
+Type:
+<select size="5" name="type" id="type">
 <option value="1">in</option>
 <option value="2">out</option>
 <option value="3">module</option>
@@ -231,12 +325,15 @@ Type&nbsp;<select name="type" id="type">
 <option value="0">wall</option>
 </select>
 <br>
-Value<input name="value" id="value" style="max-width:80px;"><br><br>
+Value:<textarea name="value" id="value" placeholder="Value" maxlength="50" class="valuetext"></textarea><br><br>
 <input type="hidden" name="do" value="yes">
 </form>
+<div style="text-align:center;">
 <a class="button orange" href="#" onclick="dosubmit()">Save</a>
-<a class="button blue" href="#" onclick="location='?'">Ref</a>
+<a class="button blue" href="#" onclick="location='?'">Ref</a><br>
+<a class="button red" href="#" style="margin-top:5px;" onclick="wipe()">&nbsp;&nbsp;&nbsp;&nbsp;Wipe the map&nbsp;&nbsp;&nbsp;&nbsp;</a>
 <hr>
+</div>
 </div>
 </div>
 <script>
@@ -246,7 +343,12 @@ var yy = document.getElementById("y");
 	$zb=$dbh->query("select x,y,type from map ")->fetchAll();
 	echo "var info=(".json_encode($zb).");\n";
 ?>
-	
+function wipe(){
+	if(confirm("确认要清空地图？")){
+		alert("Success! ");
+		location.href='?do=wipemap';
+	}
+}	
 for (var i=0; i<info.length; i++){
 	if(info[i].type==4){
 		eval('var td = document.getElementById("'+info[i].x+'_'+info[i].y+'")');
