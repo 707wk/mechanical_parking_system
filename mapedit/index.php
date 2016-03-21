@@ -1,13 +1,13 @@
 <?php
 /*************************************
- *CREATED :2016/3/14
+ *CREATED :2016/3/21
  *TEXT    :停车场地图管理系统
  *EMAIL   :dksx@qq.com
  *************************************/
 $dbh=null;
 try
 {
-	$dbh = new PDO("mysql:host=localhost;dbname=oldcar","oldcar","BbNMZrmAAdCWhmjz",
+	$dbh = new PDO("mysql:host=localhost;dbname=car","car","KnKsfyxX65dMVWKY",
 	array(PDO::ATTR_PERSISTENT => true)); 
     $dbh->query("set names utf8");
 }
@@ -19,21 +19,40 @@ catch (PDOException $e)
 
 switch(@$_GET['do']){
 	case "wipemap":
-	$dbh->exec('delete from map where 1');
+	$dbh->exec('delete from t_map where 1');
 	header("Location:index.php");
 	exit();
 	case 'getmkinfo':
-		if($dbh->query("select * from t_garageinfo where name=$_GET[mkid]")->rowCount()==0){
-			$dbh->exec("INSERT INTO `t_garageinfo` (`name`, `rows`, `cols`, `speedrows`, `speedcols`,  `map_queue`, `compotr`) VALUES
-('$_GET[mkid]', 5, 4, 2.000, 1.100, '131073 2 65539 4 65541 65542 65543 8 65545 65546 65547 12 65549 65550 15 16 65553 18 19 20 ', 3);");
-		}
-		$result=$dbh->query("select * from t_garageinfo where name=$_GET[mkid]")->fetch();
+		$result=$dbh->query("select * from t_garageinfo where id=$_GET[mkid]")->fetch();
 		echo json_encode($result);
 		exit();
+		
+	case 'getcrkinfo':
+	if($dbh->query("select * from t_map where x=$_GET[x] and y=$_GET[y]")->rowCount()==0){
+		$dbh->exec("INSERT INTO `t_map`( `x`, `y`, `type`, `type_id`) VALUES ($_GET[x] ,$_GET[y] ,$_GET[type] ,0)");
+	}
+	$result=$dbh->query("select * from t_map where x=$_GET[x] and y=$_GET[y]")->fetch();
+	echo json_encode($result);
+	exit();	
+	
 	case 'setmkinfo':
 		//mkname  map_queue rows cols speedrows speedcols state
-		$dbh->exec("update t_garageinfo set  map_queue='$_GET[map_queue]', rows='$_GET[rows]', cols='$_GET[cols]', speedrows='$_GET[speedrows]', speedcols='$_GET[speedcols]',compotr='$_GET[compotr]' where name=$_GET[mkid]");
+		if($dbh->query("select * from t_map where x=$_GET[x] and y=$_GET[y]")->rowCount()==0)
+			$dbh->exec("INSERT INTO `t_map`(`x`, `y`, `type`, `type_id`) VALUES ($_GET[x],$_GET[y],3,$_GET[compotr])");
+		else $dbh->exec("UPDATE `t_map` SET `type_id`='$_GET[compotr]',value='',type=3 WHERE x=$_GET[x] and y=$_GET[y]");
+		
+		if($dbh->query("select * from t_garageinfo where id=$_GET[compotr]")->rowCount()==0){
+			$dbh->exec("INSERT INTO `t_garageinfo`(`id`, `name`, `rows`, `cols`, `speedrows`, `speedcols`, `map_queue`) VALUES ('$_GET[compotr]','$_GET[mkid]','$_GET[rows]','$_GET[cols]','$_GET[speedrows]','$_GET[speedcols]','$_GET[map_queue]')  ");
+		}
+		else {
+			$dbh->exec("update t_garageinfo set name='$_GET[mkid]', map_queue='$_GET[map_queue]', rows='$_GET[rows]', cols='$_GET[cols]', speedrows='$_GET[speedrows]', speedcols='$_GET[speedcols]',id='$_GET[compotr]' where id=$_GET[compotr]");
+		}
 		exit('更新成功！');
+		
+	case 'setcrkinfo':
+			if($dbh->exec("UPDATE `t_map` SET `type`=$_GET[type],`type_id`='$_GET[type_id]',`value`='$_GET[value]' WHERE   x=$_GET[x] and y=$_GET[y]"))
+				exit('保存成功！');
+			exit('保存失败！');
 		
 }
 
@@ -42,13 +61,13 @@ if(isset($_POST['do'])&&$_POST['y']!=""&&$_POST['x']!=""):
 	$y=$_POST['y'];
 	$value=$_POST['value'];
 	$type=$_POST['type'];
-	if($dbh->query("select id from map where x=$x and y=$y")->fetch()){
-		$dbh->exec("update map set type=$type,value='$value' where x=$x and y=$y");
+	if($dbh->query("select id from t_map where x=$x and y=$y")->fetch()){
+		$dbh->exec("update t_map set type=$type,type_id='0',value='' where x=$x and y=$y");
 	}
 	else {
-		$dbh->exec("INSERT INTO `map`(`x`, `y`, `type`, `value`) VALUES ($x,$y,$type,'$value')");
+		$dbh->exec("INSERT INTO `t_map`(`x`, `y`, `type`, `type_id`,`value`) VALUES ($x,$y,$type,'0','')");
 	}
-	if($type==0)$dbh->exec("DELETE FROM `map` WHERE type=0");
+	if($type==0)$dbh->exec("DELETE FROM `t_map` WHERE type=0");
 		header("Location:index.php");
 	exit();
 endif;
@@ -67,7 +86,7 @@ body {
 	font-family: '微软雅黑';
 	background-color: #f5f5f5;
 }
-input {
+input ,select{
 	background-color: #f5f5f5;
 }
 td{
@@ -167,14 +186,14 @@ h3{
 
 function create(){
 	global $dbh;
-	$arr=$dbh->query("select * from map ")->fetchAll();
+	$arr=$dbh->query("select * from t_map ")->fetchAll();
 	//var_dump($arr);
 	$maxx=$maxy=0;
 	$map;
 	foreach($arr as $a){
 		$type=$a['type'];
 		$type=array(0=>'wall','mk_in','out','module','road');
-		$map[$a['x']][$a['y']]=array('t'=>$a['type'],'type'=>$type[$a['type']],'value'=>$a['value']);		
+		$map[$a['x']][$a['y']]=array('t'=>$a['type'],'type'=>$type[$a['type']],'value'=>$a['type_id']?$a['type_id']:'');		
 		if($a['x']>$maxx)$maxx=$a['x'];
 		if($a['y']>$maxy)$maxy=$a['y'];
 	}
@@ -199,8 +218,8 @@ function init(){
 	global $dbh;
 	//var_dump( );
 	//exit();
-	$min=$dbh->query("SELECT min(x) as mx,min(y) as my FROM `map`")->fetch();
-	$dbh->exec("update map set x=x-$min[mx]+1,y=y-$min[my]+1");
+	$min=$dbh->query("SELECT min(x) as mx,min(y) as my FROM `t_map`")->fetch();
+	$dbh->exec("update t_map set x=x-$min[mx]+1,y=y-$min[my]+1");
 }
 
 
@@ -211,23 +230,55 @@ echo '</div>';
 //require_once 'left.php';
 ?>
 <div id="Div2"> 
-<div class="modal" id="bjmkdhk" >
-<div class="modal-dialog "  style="display: inline-block; width: 450px;;margin-left:30%;margin-top:50px;">
+
+
+<div class="modal" id="bjcrkdhk" data-backdrop="static" >
+<div class="modal-dialog "  style="display: inline-block; width: 350px;;margin-left:30%;margin-top:50px;">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+			<h4 class="modal-title">编辑出入口信息</h4>
+		</div>
+		<div class="modal-body" style="height:120px;">
+				<div class="form-group" style="">
+					<label class="col-sm-6 control-label">编号</label>
+					<div class="col-sm-6">
+					<input type="text" class="form-control" id="crkbh" placeholder="">
+					</div>
+					<label class="col-sm-6 control-label">名称</label>
+					<div class="col-sm-6">
+					<input type="text" class="form-control" id="crkbz" placeholder="">
+					</div>
+				</div>
+		</div>
+		<div class="modal-footer">
+			<center>
+				<button type="button" class="btn btn-success" data-dismiss="modal" onclick="setcrk()">保存</button>　
+				<button type="button" class="btn btn-default" data-dismiss="modal">放弃修改</button>　
+			</center>
+		</div>
+	</div>
+</div>
+</div>
+
+
+<div class="modal" id="bjmkdhk" data-backdrop="static" >
+<div class="modal-dialog "  style="display: inline-block;width:auto;margin-left:23%;margin-right:23%;margin-top:50px;">
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
 			<h4 class="modal-title">编辑模块信息</h4>
 		</div>
-		<div class="modal-body" style="height:320px;">
-			<div class="col-sm-7 ">
+		<div class="modal-body" style="height:auto;max-height:768px;min-height:360px;">
+			<div class="col-sm-5 ">
 				<div class="form-group" style="">
+					<label class="col-sm-6 control-label">模块编号</label>
+					<div class="col-sm-6">
+					<input type="text" class="form-control" id="compotr" placeholder="">
+					</div>
 					<label class="col-sm-6 control-label">模块名称</label>
 					<div class="col-sm-6">
 					<input type="text" class="form-control" id="mkname" placeholder="">
-					</div>
-					<label class="col-sm-6 control-label">编号号码</label>
-					<div class="col-sm-6">
-					<input type="text" class="form-control" id="compotr" placeholder="">
 					</div>
 					<label class="col-sm-6 control-label">模块层数</label>
 					<div class="col-sm-6">
@@ -249,19 +300,18 @@ echo '</div>';
 					<div class="col-sm-6">
 					<textarea type="text" class="form-control" id="instr" placeholder="入口编号"></textarea>
 					</div>
-				</div>
-			</div>
-			<div class="col-sm-5 ">
-				<div id="modulestate" style="font-size:32px;letter-spacing:1px;">
+					<center>
+					<button type="button" class="btn btn-success" style="margin-top:20px;" data-dismiss="modal" onclick="dosave()">保存模块信息</button>&nbsp;&nbsp;
+					<button type="button" class="btn btn-default" style="margin-top:20px;" data-dismiss="modal">放弃修改</button>　
+					</center>	
 				</div>
 				
 			</div>
-		</div>
-		<div class="modal-footer">
-			<center>
-				<button type="button" class="btn btn-success" data-dismiss="modal" onclick="dosave()">保存模块信息</button>　
-				<button type="button" class="btn btn-default" data-dismiss="modal">放弃修改</button>　
-			</center>
+			<div class="col-sm-7 ">
+				<div id="modulestate" style="font-size:28px;letter-spacing:1px;">
+				</div>
+				
+			</div>
 		</div>
 	</div>
 </div>
@@ -271,22 +321,24 @@ echo '</div>';
 &nbsp;X=<input style="width:20px;border:0;" name="x" id="x" value=0 readonly />,Y=<input style="width:20px;border:0;" name="y" id="y" value=0  readonly />
 <br>
 <select style="overflow-y:hidden;width:100px;" class="selectpicker" size="5" name="type" id="type" class="form-control">
-<option value="1">车库入口</option>
-<option value="2">车库出口</option>
-<option value="3">车库模块</option>
+<option value="1">入口</option>
+<option value="2">出口</option>
 <option value="4">道路</option>
 <option value="0">墙壁</option>
+<option value="3">车库模块</option>
 </select>
-<br>
+<!--
 <span class="round" id="suggest-align">
-        <input name="value" class="input_key " id="value" placeholder="值"><br>
+-->
+        <input name="value"  type="hidden" class="input_key " id="value" placeholder="值"><br>
+		<!--
         <span title="编辑模块" class="delquery" id="bjmk" style="display: none;"  ><span class="glyphicon glyphicon-edit"></span></span>
 </span>
-
+-->
 <input type="hidden" name="do" value="yes">
 </form>
-<div style="text-align:center;">
-<a class="btn btn-sm btn-primary" href="#" onclick="dosubmit()">保存</a>
+<div style="text-align:center;margin-top:6px;">
+<a class="btn btn-sm btn-primary" href="#" onclick="dosubmit()" ><span id="execcmd">编辑</span></a>
 <a class="btn btn-sm btn-success" href="#" onclick="location='?'">刷新</a><br>
 <a class="btn btn-sm btn-danger" href="#" style="margin-top:4px;width:96%;" onclick="wipe()">清空地图</a>
 
@@ -295,7 +347,7 @@ echo '</div>';
 var xx = document.getElementById("x");
 var yy = document.getElementById("y");
 <?php
-	$zb=$dbh->query("select x,y,type from map ")->fetchAll();
+	$zb=$dbh->query("select x,y,type from t_map ")->fetchAll();
 	echo "var info=(".json_encode($zb).");\n";
 ?>
 
@@ -315,29 +367,74 @@ for (var i=0; i<info.length; i++){
 			if(info[j].y==info[i].y-1&info[j].x==info[i].x)sum+=8;
 			if(info[j].y==parseInt(info[i].y)+1&info[j].x==info[i].x)sum+=2;
 		}
+		// if(sum==1||sum==4)sum=5;
+		// if(sum==2||sum==8)sum=10;
+		// if(sum==0)sum=15;
 		td.style.background="url(img/road_"+sum+".png)repeat";
 		//break;
 		//alert(td.value);
 	}
 }
 function dosubmit(){
-	if(xx.value==''||yy.value=='')
+	if((xx.value==0&&yy.value==0)||xx.value==''||yy.value=='')
 	{
 		alert('坐标错误');
 		return false;
 	}
-	//return true;
-	document.getElementById("fmapedit").submit();	
+	switch(type.value){
+	case '1':case '2':dplcrkbj(type.value);//
+		break;
+	case '3':dplmkbj();
+		break;	
+	default: document.getElementById("fmapedit").submit();
+	}
 }
 
-$("#bjmk").hide();
+
 $("#type").click(function(){ 
-	if(type.value==3)$("#bjmk").show();
-	else $("#bjmk").hide();
+	switch(type.value){
+		case '3':
+		$("#bjmk").show();
+		$('#execcmd').html('编辑');
+			break;
+		case '4':case '0':
+			$('#execcmd').html('添加');
+			break;
+		default:$('#execcmd').html('编辑');
+		}
 });
 var arr=new Array();
 arr[0]=0;
-$("#bjmk").click(function(){ 
+function dplcrkbj(type){
+	$.ajax({
+		type:"GET",url:"index.php",
+		data:{do:"getcrkinfo",x:$('#x').val(),y:$('#y').val(),type:type},
+		success:function(data){
+		var x=JSON.parse(data); 
+		//alert(data);
+		$('#crkbh').val(x.type_id);
+		$('#crkbz').val(x.value);
+		
+	}});
+	$("#bjcrkdhk").modal("toggle");
+	
+}
+
+function setcrk(){
+	$.ajax({
+		type:"GET",url:"index.php",
+		data:{do:"setcrkinfo",x:$('#x').val(),y:$('#y').val(),type:$("#type").val(),type_id:$('#crkbh').val(),value:$('#crkbz').val()},
+		success:function(data){
+		//var x=JSON.parse(data); 
+		alert(data);
+		location.reload();
+		
+	}});
+	//$("#bjcrkdhk").modal("toggle");
+	
+}
+
+function dplmkbj(){ 
 	$.ajax({
 		type:"GET",url:"index.php",
 		data:{do:"getmkinfo",mkid:$('#value').val()},
@@ -348,16 +445,19 @@ $("#bjmk").click(function(){
 		
 		var free=0;
 		var instr="";
-		for(var i=0;i<cars.length;i++){
+		for(var i=0;i<x.rows*x.cols;i++){
+			arr[i+1]=0;
+		}
+		
+		for(var i=0;i<x.rows*x.cols;i++){
 			//String(cars[i]>>16)//状态
 			//cars[i]&65535 编号
-			if(cars[i]!='')
-			arr[cars[i]&0x0000FFFF]=cars[i]>>16;
+			if(cars[i]!='')arr[cars[i]&0x0000FFFF]=cars[i]>>16;
 			if(cars[i]>>16==2)instr+=String(cars[i]&0x0000FFFF)+' ';
 			if(cars[i]>>16==1)free++;
 		}
 		
-		var ii=cars.length;
+		var ii=x.rows*x.cols;
 		for(var i=0;i<x.rows;i++){
 			for(var j=0;j<x.cols;j++){
 				t+='<span class="glyphicon '+(arr[ii]==0?"glyphicon-ok-circle":(arr[ii]==1?"glyphicon-ban-circle":"glyphicon-log-in"))+'"></span>';
@@ -374,15 +474,19 @@ $("#bjmk").click(function(){
 		$('#speedrows').val(x.speedrows);
 		$('#speedcols').val(x.speedcols);
 		$('#instr').val(instr);    
-		$('#compotr').val(x.compotr);    
+		$('#compotr').val(x.id);    
 	}});
-	$("#bjmkdhk").modal("toggle");
+	//$("#bjmkdhk").modal({backdrop:'static', keyboard: false});
+	$("#bjmkdhk").modal("toggle"); 
+}
 
-});
 function dosave(){ 
 	//alert(1);
 	var inarr=$('#instr').val().split(' ');
-	for(var i=1;i<arr.length;i++)if(arr[i]==2)arr[i]=0;
+	for(var i=1;i<arr.length;i++){
+		if(arr[i]==2)arr[i]=0;
+		if(arr[i]<0||arr[i]>2)arr[i]=0;
+	}
 	for(var i=0;i<inarr.length;i++)	
 		arr[inarr[i]]=2;
 	var map_queue="";
@@ -391,8 +495,9 @@ function dosave(){
 	$.ajax({
 	type:"GET",url:"index.php",
 	data:{do:"setmkinfo",
+	x:$('#x').val(),
+	y:$('#y').val(),
 	mkid:$('#mkname').val(),
-	mkname:$('#mkname').val(),
 	map_queue:map_queue,
 	rows:$('#rows').val(),
 	cols:$('#cols').val(),
@@ -405,6 +510,7 @@ function dosave(){
 	success:function(data){
 		//var zt=JSON.parse(data);
 		alert(data);
+		location.reload();
 	}});
 
 	//alert(map_queue);
@@ -418,9 +524,18 @@ function edit(x,y,t,v){
 	yy.value=y;
 	type.value=t;
 	value.value=v;
-	if(type.value==3)$("#bjmk").show();
-	else $("#bjmk").hide();
-}
+	$("#bjmk").hide();
+	switch(type.value){
+		case '3':
+		$("#bjmk").show();
+		$('#execcmd').html('编辑');
+			break;
+		case '4':case '0':
+			$('#execcmd').html('添加');
+			break;
+		default:$('#execcmd').html('编辑');
+		}
+	}
 </script>
 	
 </div>

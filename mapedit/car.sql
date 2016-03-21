@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50612
 File Encoding         : 65001
 
-Date: 2016-03-18 19:53:11
+Date: 2016-03-21 17:53:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -74,6 +74,8 @@ CREATE TABLE `t_garageinfo` (
 -- ----------------------------
 -- Records of t_garageinfo
 -- ----------------------------
+INSERT INTO `t_garageinfo` VALUES ('1', '232', null, null, null, null, null, '-1', '-1', '3', '2', '3.000', '4.000', '1 2 131075 ');
+INSERT INTO `t_garageinfo` VALUES ('2', '34we', null, null, null, null, null, '-1', '-1', '3', '2', '3.000', '4.000', '131073 ');
 
 -- ----------------------------
 -- Table structure for `t_history`
@@ -127,55 +129,31 @@ CREATE TABLE `t_map` (
   `y` int(11) NOT NULL,
   `type` int(11) NOT NULL,
   `type_id` int(11) NOT NULL,
+  `value` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=185 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=197 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_map
 -- ----------------------------
-INSERT INTO `t_map` VALUES ('172', '1', '1', '4', '0');
-INSERT INTO `t_map` VALUES ('173', '2', '1', '4', '0');
-INSERT INTO `t_map` VALUES ('174', '3', '1', '3', '12');
-INSERT INTO `t_map` VALUES ('175', '2', '2', '4', '0');
-INSERT INTO `t_map` VALUES ('176', '2', '3', '4', '0');
-INSERT INTO `t_map` VALUES ('177', '2', '4', '4', '0');
-INSERT INTO `t_map` VALUES ('178', '2', '5', '4', '0');
-INSERT INTO `t_map` VALUES ('179', '2', '6', '4', '0');
-INSERT INTO `t_map` VALUES ('180', '2', '7', '4', '0');
-INSERT INTO `t_map` VALUES ('181', '2', '8', '4', '0');
-INSERT INTO `t_map` VALUES ('182', '2', '9', '4', '0');
-INSERT INTO `t_map` VALUES ('183', '3', '3', '3', '2');
-INSERT INTO `t_map` VALUES ('184', '1', '2', '4', '0');
-
--- ----------------------------
--- Table structure for `t_passageway`
--- ----------------------------
-DROP TABLE IF EXISTS `t_passageway`;
-CREATE TABLE `t_passageway` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` int(11) NOT NULL,
-  `value` varchar(50) NOT NULL,
-  `x` int(11) DEFAULT NULL,
-  `y` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=185 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of t_passageway
--- ----------------------------
-INSERT INTO `t_passageway` VALUES ('172', '4', '', null, null);
-INSERT INTO `t_passageway` VALUES ('173', '4', '', null, null);
-INSERT INTO `t_passageway` VALUES ('174', '3', '12', null, null);
-INSERT INTO `t_passageway` VALUES ('175', '4', '', null, null);
-INSERT INTO `t_passageway` VALUES ('176', '4', '', null, null);
-INSERT INTO `t_passageway` VALUES ('177', '4', '', null, null);
-INSERT INTO `t_passageway` VALUES ('178', '4', '', null, null);
-INSERT INTO `t_passageway` VALUES ('179', '4', '', null, null);
-INSERT INTO `t_passageway` VALUES ('180', '4', '', null, null);
-INSERT INTO `t_passageway` VALUES ('181', '4', '', null, null);
-INSERT INTO `t_passageway` VALUES ('182', '4', '', null, null);
-INSERT INTO `t_passageway` VALUES ('183', '3', '2', null, null);
-INSERT INTO `t_passageway` VALUES ('184', '4', '', null, null);
+INSERT INTO `t_map` VALUES ('172', '2', '1', '4', '0', null);
+INSERT INTO `t_map` VALUES ('173', '3', '1', '4', '0', null);
+INSERT INTO `t_map` VALUES ('175', '3', '2', '4', '0', null);
+INSERT INTO `t_map` VALUES ('176', '3', '3', '4', '0', null);
+INSERT INTO `t_map` VALUES ('177', '3', '4', '4', '0', null);
+INSERT INTO `t_map` VALUES ('178', '3', '5', '4', '0', null);
+INSERT INTO `t_map` VALUES ('179', '3', '6', '4', '0', null);
+INSERT INTO `t_map` VALUES ('180', '3', '7', '4', '0', null);
+INSERT INTO `t_map` VALUES ('181', '3', '8', '4', '0', null);
+INSERT INTO `t_map` VALUES ('182', '3', '9', '4', '0', null);
+INSERT INTO `t_map` VALUES ('184', '2', '2', '4', '0', null);
+INSERT INTO `t_map` VALUES ('186', '4', '7', '2', '3', '12');
+INSERT INTO `t_map` VALUES ('187', '2', '8', '1', '4', '123q');
+INSERT INTO `t_map` VALUES ('188', '3', '10', '4', '0', '');
+INSERT INTO `t_map` VALUES ('190', '2', '10', '4', '0', '');
+INSERT INTO `t_map` VALUES ('191', '1', '10', '4', '0', '');
+INSERT INTO `t_map` VALUES ('192', '1', '11', '4', '0', '');
+INSERT INTO `t_map` VALUES ('196', '2', '4', '3', '2', null);
 
 -- ----------------------------
 -- Table structure for `t_reservation`
