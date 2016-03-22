@@ -1,0 +1,42 @@
+// parking management system.odl : type library source for parking management system.exe
+
+// This file will be processed by the MIDL compiler to produce the
+// type library (parking management system.tlb).
+
+[ uuid(5ED5EEC4-C99D-4851-BE28-910AFBCF9FD7), version(1.0) ]
+library Parkingmanagementsystem
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+
+	//  Primary dispatch interface for CParkingmanagementsystemDoc
+	
+	[ uuid(B304C1C1-CD84-4CEA-8B16-F89EC840F8AD) ]
+	dispinterface IParkingmanagementsystem
+	{
+		properties:
+			// NOTE - ClassWizard will maintain property information here.
+			//    Use extreme caution when editing this section.
+			//{{AFX_ODL_PROP(CParkingmanagementsystemDlgAutoProxy)
+			//}}AFX_ODL_PROP
+			
+		methods:
+			// NOTE - ClassWizard will maintain method information here.
+			//    Use extreme caution when editing this section.
+			//{{AFX_ODL_METHOD(CParkingmanagementsystemDlgAutoProxy)
+			//}}AFX_ODL_METHOD
+
+	};
+
+	//  Class information for CParkingmanagementsystemDoc
+	
+	[ uuid(FE3A4693-8122-4837-B9D2-93BA87450BCD) ]
+	coclass Parkingmanagementsystem
+	{
+		[default] dispinterface IParkingmanagementsystem;
+	};
+
+	//{{AFX_APPEND_ODL}}
+	//}}AFX_APPEND_ODL}}
+};
