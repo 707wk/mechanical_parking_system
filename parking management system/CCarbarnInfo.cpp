@@ -1,5 +1,5 @@
 /**************************************
- *FILE    :D:\c\car\parking management\carbarninfo.cpp
+ *FILE    :D:\c\car\parking management\CCarbarnInfo.cpp
  *PROJECT :NULL
  *AUTHOR  :707wk
  *CREATED :2015/12/5 19:48:09
@@ -31,9 +31,8 @@
       #####      ;###        ###      #        
         ##       ####        ####              
 ***************************************/
-
 #include "StdAfx.h"
-#include "carbarninfo.h"
+#include "CCarbarnInfo.h"
 #include "DataStructure.h"
 
 #include <iostream>
@@ -45,9 +44,9 @@
 
 using namespace std;
 
-extern MYSQL mysql;
+extern struct serverset serverinfo;
 
-carbarninfo::carbarninfo()
+CCarbarnInfo::CCarbarnInfo()
 {
 	this->carbarnid=0;
 	this->nowstatus=-1;
@@ -60,23 +59,23 @@ carbarninfo::carbarninfo()
 	this->speed_cols=0;
 }
 
-carbarninfo::~carbarninfo()
+CCarbarnInfo::~CCarbarnInfo()
 {
 	map_queue.clear();
 	map_queue.swap( (std::vector <speed_location>)(map_queue));
 }
 
-int carbarninfo::readdate(int carbarnid)
+int CCarbarnInfo::readdate(int carbarnid)
 {
 	MYSQL_RES *res;                    //查询结果集
 	MYSQL_ROW column;                  //数据行的列
 	CString str;
 	str.Format("select name,nowstatus,oldstatus,command,spendtime,rows,cols,speedrows,speedcols,map_queue from t_garageinfo where carbarnid='%d'",carbarnid);
-	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 
-	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
+	if(mysql_query(&serverinfo.mysql,str.GetBuffer(0))==NULL)
 	{
-		res=mysql_store_result(&mysql);//保存查询到的数据到result
+		res=mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
 		column=mysql_fetch_row(res);//获取具体的数据
 		
 		if(column)
@@ -164,7 +163,7 @@ int carbarninfo::readdate(int carbarnid)
 	return -1;
 }
 
-int carbarninfo::savedatetomysql()
+int CCarbarnInfo::savedatetomysql()
 {
 	string tmpstr;
 	CString str;
@@ -185,9 +184,9 @@ name.c_str(),nowstatus,oldstatus,command.front().c_str(),spendtime,speed_rows,sp
 	//////////////////////////////////////////////////////////////////////////
 
 	//AfxMessageBox(str);
-	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 	
-	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
+	if(mysql_query(&serverinfo.mysql,str.GetBuffer(0))==NULL)
 	{
 	}
 	else
@@ -199,7 +198,7 @@ name.c_str(),nowstatus,oldstatus,command.front().c_str(),spendtime,speed_rows,sp
 	return 0;
 }
 
-int carbarninfo::judgeposition(int num)
+int CCarbarnInfo::judgeposition(int num)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//用位移将数据分为两段，前端存状态
@@ -207,7 +206,7 @@ int carbarninfo::judgeposition(int num)
 	//////////////////////////////////////////////////////////////////////////
 }
 
-int carbarninfo::getid(int num)
+int CCarbarnInfo::getid(int num)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//用位移将数据分为两段，后段存id
@@ -215,7 +214,7 @@ int carbarninfo::getid(int num)
 	//////////////////////////////////////////////////////////////////////////
 }
 
-int carbarninfo::combine(int id,int idle)
+int CCarbarnInfo::combine(int id,int idle)
 {
 	/////////////////////////////////////////////////////////////////////////
 	//真是个悲伤的故事,id少加了个1,然后每保存一次数值就往后移动一位,还好改过来了
@@ -226,32 +225,32 @@ int carbarninfo::combine(int id,int idle)
 
 /////////////////////////////////////////////////////////////////////////
 //求折叠~~~
-int carbarninfo::getcarbarnid()
+int CCarbarnInfo::getcarbarnid()
 {
 	return this->carbarnid;
 }
 
-void carbarninfo::setcarbarnid(int carbarnid)
+void CCarbarnInfo::setcarbarnid(int carbarnid)
 {
 	this->carbarnid=carbarnid;
 }
 
-string carbarninfo::getname()
+string CCarbarnInfo::getname()
 {
 	return this->name;
 }
 
-void carbarninfo::setname(string name)
+void CCarbarnInfo::setname(string name)
 {
 	this->name=name;
 }
 
-int carbarninfo::getnowstatus()
+int CCarbarnInfo::getnowstatus()
 {
 	return this->nowstatus;
 }
 
-void carbarninfo::setnowstatus(int status)
+void CCarbarnInfo::setnowstatus(int status)
 {
 	this->oldstatus=this->nowstatus;
 	this->nowstatus=status;
@@ -263,47 +262,47 @@ void carbarninfo::setnowstatus(int status)
 	}
 }
 
-int carbarninfo::getoldstatus()
+int CCarbarnInfo::getoldstatus()
 {
 	return oldstatus;
 }
 
-void carbarninfo::setoldstatus(int status)
+void CCarbarnInfo::setoldstatus(int status)
 {
 	this->oldstatus=status;
 }
 
-string carbarninfo::getcommand()
+string CCarbarnInfo::getcommand()
 {
 	if(command.empty())
 		return "";
 	return command.front();
 }
 
-void carbarninfo::addcommand(string command)
+void CCarbarnInfo::addcommand(string command)
 {
 	this->command.push(command);
 	//spendtime=0;
 }
 
-void carbarninfo::erasecommand()
+void CCarbarnInfo::popcommand()
 {
 	if(command.empty())
 		return ;
-	command.erase(command.begin);
+	command.pop();
 }
 
-int carbarninfo::getspendtime()
+int CCarbarnInfo::getspendtime()
 {
 	return spendtime;
 }
 
-void carbarninfo::accspendtime()
+void CCarbarnInfo::accspendtime()
 {
 	spendtime++;
 }
 
-int carbarninfo::getsumcar()
+int CCarbarnInfo::getsumcar()
 {
 	sumcar=0;
 	for(int i=0;i<map_queue.size();i++)
@@ -313,52 +312,52 @@ int carbarninfo::getsumcar()
 	return sumcar;
 }
 
-int carbarninfo::getspendcar()
+int CCarbarnInfo::getspendcar()
 {
 	return this->spendcar;
 }
 
-int carbarninfo::getrows()
+int CCarbarnInfo::getrows()
 {
 	return this->rows;
 }
 
-void carbarninfo::setrows(int rows)
+void CCarbarnInfo::setrows(int rows)
 {
 	this->rows=rows;
 }
 
-int carbarninfo::getcols()
+int CCarbarnInfo::getcols()
 {
 	return this->cols;
 }
 
-void carbarninfo::setcols(int cols)
+void CCarbarnInfo::setcols(int cols)
 {
 	this->cols=cols;
 }
 
-double carbarninfo::getspeedrows()
+double CCarbarnInfo::getspeedrows()
 {
 	return this->speed_rows;
 }
 
-void carbarninfo::setspeedrows(double rows)
+void CCarbarnInfo::setspeedrows(double rows)
 {
 	this->speed_rows=rows;
 }
 
-double carbarninfo::getspeedcols()
+double CCarbarnInfo::getspeedcols()
 {
 	return this->speed_cols;
 }
 
-void carbarninfo::setspeedcols(double cols)
+void CCarbarnInfo::setspeedcols(double cols)
 {
 	this->speed_cols=cols;
 }
 
-int carbarninfo::getrows(int location)
+int CCarbarnInfo::getrows(int location)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//返回值有±1误差,改好了
@@ -367,7 +366,7 @@ int carbarninfo::getrows(int location)
 }
 /////////////////////////////////////////////////////////////////////////
 
-int carbarninfo::getcols(int location)
+int CCarbarnInfo::getcols(int location)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//忘了行列怎么算了,还好改过来了
@@ -385,7 +384,7 @@ bool compare(speed_location a,speed_location b)
 	//////////////////////////////////////////////////////////////////////////
 }
 
-int carbarninfo::countqueue()
+int CCarbarnInfo::countqueue()
 {
 	//////////////////////////////////////////////////////////////////////////
 	//按花费时间从小到大排序
@@ -394,7 +393,7 @@ int carbarninfo::countqueue()
 	return 0;
 }
 
-int carbarninfo::findemptycarport()
+int CCarbarnInfo::findemptycarport()
 {
 	//////////////////////////////////////////////////////////////////////////
 	//查找空余车位
@@ -409,7 +408,7 @@ int carbarninfo::findemptycarport()
 	//////////////////////////////////////////////////////////////////////////
 }
 
-int carbarninfo::switchid(int index)
+int CCarbarnInfo::switchid(int index)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//使下标与id对应
@@ -432,7 +431,7 @@ int carbarninfo::switchid(int index)
 	return -1;
 }
 
-int carbarninfo::savecar()
+int CCarbarnInfo::savecar()
 {
 	int index=findemptycarport();
 	if(index==-1)return index;
@@ -448,7 +447,7 @@ int carbarninfo::savecar()
 	//////////////////////////////////////////////////////////////////////////
 }
 
-int carbarninfo::setentry(int index)
+int CCarbarnInfo::setentry(int index)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//坐标转换
@@ -465,7 +464,7 @@ int carbarninfo::setentry(int index)
 	return map_queue[index].id;
 }
 
-int carbarninfo::cancelentry(int index)
+int CCarbarnInfo::cancelentry(int index)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//坐标转换
@@ -482,7 +481,7 @@ int carbarninfo::cancelentry(int index)
 	return map_queue[index].id;
 }
 
-int carbarninfo::newgarage()
+int CCarbarnInfo::newgarage()
 {
 	string tmpstr;
 	CString str;
@@ -509,9 +508,9 @@ VALUES(%d,'%s',%d,%d,%f,%f,%d,%d,'%s')",
 this->carbarnid,this->name.c_str(),this->rows,this->cols,this->speed_rows,this->speed_cols,0,0,tmpstr.c_str());
 
 	//AfxMessageBox(str);
-	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 	
-	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
+	if(mysql_query(&serverinfo.mysql,str.GetBuffer(0))==NULL)
 	{
 	}
 	else
@@ -523,7 +522,7 @@ this->carbarnid,this->name.c_str(),this->rows,this->cols,this->speed_rows,this->
 	return 0;
 }
 
-int carbarninfo::deletecar(int index)
+int CCarbarnInfo::deletecar(int index)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//坐标转换
@@ -541,7 +540,7 @@ int carbarninfo::deletecar(int index)
 	return map_queue[index].id;
 }
 
-int carbarninfo::clear()
+int CCarbarnInfo::clear()
 {
 	map_queue.clear();
 	map_queue.swap( (std::vector <speed_location>)(map_queue));
@@ -552,16 +551,16 @@ int carbarninfo::clear()
 	return 0;
 }
 
-void carbarninfo::deletedate()
+void CCarbarnInfo::deletedate()
 {
 	CString str;
 	//////////////////////////////////////////////////////////////////////////
 	str.Format("DELETE FROM t_garageinfo where carbarnid='%d'",carbarnid);
 	//////////////////////////////////////////////////////////////////////////
 	//AfxMessageBox(str);
-	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 	
-	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
+	if(mysql_query(&serverinfo.mysql,str.GetBuffer(0))==NULL)
 	{
 	}
 	else
@@ -574,9 +573,9 @@ void carbarninfo::deletedate()
 	str.Format("DELETE FROM t_carinfo where carbarnid='%d'",carbarnid);
 	//////////////////////////////////////////////////////////////////////////
 	//AfxMessageBox(str);
-	mysql_query(&mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 	
-	if(mysql_query(&mysql,str.GetBuffer(0))==NULL)
+	if(mysql_query(&serverinfo.mysql,str.GetBuffer(0))==NULL)
 	{
 	}
 	else
@@ -585,3 +584,4 @@ void carbarninfo::deletedate()
 		return ;
 	}
 }
+

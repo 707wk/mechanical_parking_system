@@ -1,12 +1,11 @@
 /**************************************
- *FILE    :D:\c\car\parking management\DataStructure.h
- *PROJECT :NULL
- *AUTHOR  :707wk
- *CREATED :2015/12/4 21:12:25
- *TEXT    :结构头文件
- *EMAIL   :gtsoft_wk@foxmail.com
- *CODE    :https://github.com/707wk
- *LOGO    :
+ *FILE          :C:\Users\707wk\Desktop\CWayFinding.h
+ *AUTHOR        :707wk
+ *ORGANIZATION  :GT-Soft Studio
+ *LAST-MODIFIED :2016/3/26 下午 10:49:16
+ *TARGET        :C/C++
+ *EMAIL         :gtsoft_wk@foxmail.com
+ *LOGO          :
                #########                       
               ############                     
               #############                    
@@ -28,50 +27,52 @@
    #######        ######    #####     #####    
     ######        #####     #####     ####     
      #####        ####      #####     ###      
-      #####      ;###        ###      #        
+      #####       ###        ###      #        
         ##       ####        ####              
 ***************************************/
 
-#ifndef _DataStructure_h_
-#define _DataStructure_h_
+
+#if !defined(_CWAYFINDING_)
+#define _CWAYFINDING_
 
 #include "StdAfx.h"
-#include <string>
 #include <iostream>
 #include <vector>
+#include <string>
 #include <algorithm>
+#include <queue>
 
 using namespace std;
 
-//系统设置
-struct serverset
+//地图数组
+struct maptype
 {
-	char   ip[100];                    //数据库ip
-	char   name[100];                  //数据库用户名
-	char   password[100];              //数据库密码
-	char   database[100];              //数据库名
-	int    port;                       //数据库端口
-	double cost;                       //费用(元/小时)(保留)
-	int    mscomm;                     //端口号
-	char   mscommini[100];             //连接参数
-	int    refreshinterval;            //刷新间隔
-
-	MYSQL  mysql;                      //mysql数据库
+	int type;                          //类型
+	int id;                            //编号
+	int flage;                         //是否已经过
 };
 
-//用户设置
-//保留
-struct userdata
+//地图路径
+struct mapway
 {
-	char name[100];
-	int jurisdiction;                  //权限
+	int x;                             //横坐标
+	int y;                             //纵坐标
 };
 
-//车库模块id查找表
-struct idLUT
+class CWayFinding
 {
-	int id;                            //车库id
-	int index;                         //在队列中的位置
-};
+private:
+	int map_x;                         //地图行
+	int map_y;                         //地图列
+	struct maptype** maplocation;      //地图记录
 
+public:
+	CWayFinding();
+	~CWayFinding();
+
+	void initmap();                    //初始地图数组
+	int nearestcarport(struct mapway start); //查找最近车库
+	int nearestexit(struct mapway start);    //查找最近出口
+};
 #endif
+

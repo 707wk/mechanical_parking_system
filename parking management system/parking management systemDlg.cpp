@@ -5,6 +5,8 @@
 #include "parking management system.h"
 #include "parking management systemDlg.h"
 #include "DlgProxy.h"
+#include "CCarbarnInfo.h"
+#include "CWayFinding.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -120,8 +122,8 @@ void CParkingmanagementsystemDlg::OnClose()
 
 void CParkingmanagementsystemDlg::OnOK() 
 {
-	if (CanExit())
-		CDialog::OnOK();
+	//if (CanExit())
+	//	CDialog::OnOK();
 }
 
 void CParkingmanagementsystemDlg::OnCancel() 

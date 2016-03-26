@@ -65,9 +65,10 @@ LINK32=link.exe
 # PROP Use_Debug_Libraries 1
 # PROP Output_Dir "Debug"
 # PROP Intermediate_Dir "Debug"
+# PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ  /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Yu"stdafx.h" /FD /GZ   /c
+# ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x804 /d "_DEBUG" /d "_AFXDLL"
@@ -77,7 +78,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 libmysql.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 
 !ENDIF 
 
@@ -90,7 +91,19 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\CCarbarnInfo.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CWayFinding.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\md5.cpp
 # End Source File
 # Begin Source File
 
@@ -119,7 +132,31 @@ SOURCE=.\StdAfx.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\CCarbarnInfo.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ControlCode.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CWayFinding.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DataStructure.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\md5.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\mysql\mysql.h
 # End Source File
 # Begin Source File
 
@@ -157,6 +194,10 @@ SOURCE=".\parking management system.reg"
 # Begin Source File
 
 SOURCE=.\ReadMe.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\libmysql.lib
 # End Source File
 # End Target
 # End Project

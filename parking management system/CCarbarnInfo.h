@@ -1,5 +1,5 @@
 /**************************************
- *FILE    :D:\c\car\parking management\carbarninfo.h
+ *FILE    :D:\c\car\parking management\CCarbarnInfo.h
  *PROJECT :NULL
  *AUTHOR  :707wk
  *CREATED :2015/12/5 19:48:19
@@ -32,8 +32,8 @@
         ##       ####        ####              
 ***************************************/
 
-#if !defined(_CARBARNINFO_)
-#define _CARBARNINFO_
+#if !defined(_CCARBARNINFO_)
+#define _CCARBARNINFO_
 
 #include "StdAfx.h"
 #include <iostream>
@@ -44,6 +44,7 @@
 
 using namespace std;
 
+//车位信息
 struct speed_location
 {
 	double time;                       //花费时间
@@ -54,16 +55,15 @@ struct speed_location
 	int    id;                         //编号
 };
 
-class carbarninfo
+class CCarbarnInfo
 {
 private:
 	int    carbarnid;                  //车库编号
 	string name;                       //车库名
 	int    nowstatus;                  //现状态
 	int    oldstatus;                  //上一状态
-	queue<string> command;             //正在执行的命令
-	/*
-	1.入队：如q.push(x):将x元素接到队列的末端；
+	queue<string> command;             //命令队列
+	/*1.入队：如q.push(x):将x元素接到队列的末端；
 	2.出队：如q.pop() 弹出队列的第一个元素，并不会返回元素的值；
 	3,访问队首元素：如q.front()
 	4,访问队尾元素，如q.back();
@@ -81,8 +81,8 @@ private:
 	vector <speed_location> map_queue; //位置列表
 
 public:
-	carbarninfo();
-	~carbarninfo();
+	CCarbarnInfo();
+	~CCarbarnInfo();
 	//////////////////////////////////////////////////////////////////////////
 	//函数重载挺蛋疼的
 	//int checkfist();                 //检测是否初始化
@@ -105,7 +105,7 @@ public:
 	void   setoldstatus(int status);   //设置上一状态
 	string getcommand();               //获取命令
 	void   addcommand(string command); //设置命令
-	void   erasecommand();             //删除命令
+	void   popcommand();               //删除命令
 	int    getspendtime();             //获取花费时间
 	void   accspendtime();             //累加时间
 	int    getsumcar();                //获取总量
@@ -145,7 +145,7 @@ public:
 	//int  savedatetomysql();          //保存数据到文件
 	int    savedatetomysql();          //保存数据到mysql
 	int    clear();                    //清空库存数据[已废弃]
-	void   deletedate();               //删除模块
+	void   deletedate();               //删除模块[已废弃,由web模块实现]
 
 	/*////////////////////////////////////////////////////////////////////////
 	增加 setentry(int index)［设置入口］ 
@@ -153,11 +153,12 @@ public:
 		 newgarage() ［创建车库］
 		 switchid() ［外部坐标转换为内部坐标］
 	*/////////////////////////////////////////////////////////////////////////
-	int    setentry(int index);        //设置入口
-	int    cancelentry(int index);     //取消入口
-	int    newgarage();                //新增模块
+	int    setentry(int index);        //设置入口[已废弃,由web模块实现]
+	int    cancelentry(int index);     //取消入口[已废弃,由web模块实现]
+	int    newgarage();                //新增模块[已废弃,由web模块实现]
 	int    switchid(int index);        //外部坐标转换为内部坐标
 
 	//void putinfo();                  //输出信息[终端用]
 };
 #endif
+

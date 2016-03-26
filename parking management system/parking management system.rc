@@ -1,4 +1,4 @@
-// Microsoft Visual C++ generated resource script.
+//Microsoft Developer Studio generated resource script.
 //
 #include "resource.h"
 
@@ -11,6 +11,15 @@
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (中国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -35,19 +44,18 @@ BEGIN
     "#define _AFX_NO_OLE_RESOURCES\r\n"
     "#define _AFX_NO_TRACKER_RESOURCES\r\n"
     "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
-	"\r\n"
-	"#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
-	"#ifdef _WIN32\r\n"
-	"LANGUAGE 4, 2\r\n"
-	"#pragma code_page(936)\r\n"
-	"#endif //_WIN32\r\n"
-	"#include ""res\\parking management system.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
-	"#include ""l.chs\\afxres.rc""  	// Standard components\r\n"
-	"#endif\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 4, 2\r\n"
+    "#pragma code_page(936)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\parking management system.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.chs\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
     "\0"
 END
 
-/////////////////////////////////////////////////////////////////////////////
 #endif    // APSTUDIO_INVOKED
 
 
@@ -60,36 +68,59 @@ END
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON    DISCARDABLE     "res\\parking management system.ico"
 
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
-#ifdef _WIN32
-LANGUAGE 4, 2
-#pragma code_page(936)
-#endif //_WIN32
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
 //
 
-IDD_PARKINGMANAGEMENTSYSTEM_DIALOG DIALOGEX  0, 0, 320, 200 
+IDD_PARKINGMANAGEMENTSYSTEM_DIALOG DIALOGEX 0, 0, 575, 339
 STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "parking management system"
+MENU IDR_MENU1
 FONT 9, "宋体"
 BEGIN
-    DEFPUSHBUTTON   "确定",IDOK,260,7,50,14
-    PUSHBUTTON      "取消",IDCANCEL,260,23,50,14
-	LTEXT           "TODO: 在这里设置对话控制。",IDC_STATIC,50,90,200,8
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | WS_BORDER | 
+                    WS_TABSTOP,12,17,383,190
+    GROUPBOX        "车库列表",IDC_STATIC,7,7,396,208
+    GROUPBOX        "故障信息",IDC_STATIC,7,210,396,122
+    CONTROL         "List2",IDC_LIST2,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | WS_BORDER | WS_TABSTOP,12,221,383,104
+    LTEXT           "总车位:",IDC_STATIC,435,32,29,8
+    LTEXT           "空闲车位:",IDC_STATIC,427,52,37,8
+    LTEXT           "ID:",IDC_STATIC,451,71,13,8
+    LTEXT           "车牌号:",IDC_STATIC,435,93,29,8
+    LTEXT           "状态:",IDC_STATIC,420,173,21,8
+    EDITTEXT        IDC_EDIT1,468,30,73,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_BORDER
+    EDITTEXT        IDC_EDIT2,468,50,73,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_BORDER
+    EDITTEXT        IDC_EDIT3,468,69,73,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT4,468,91,73,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT5,447,170,40,14,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "连接设备",IDC_BUTTON1,497,167,50,42
+    PUSHBUTTON      "存车",IDC_BUTTON2,420,131,50,19
+    PUSHBUTTON      "取车",IDC_BUTTON3,497,131,50,19
+    EDITTEXT        IDC_EDIT6,408,222,153,103,ES_MULTILINE | ES_AUTOVSCROLL | 
+                    ES_READONLY | WS_VSCROLL
+    GROUPBOX        "存/取车",IDC_STATIC,402,7,166,149
+    GROUPBOX        "",IDC_STATIC,402,151,166,64
+    GROUPBOX        "",IDC_STATIC,402,210,166,122
+    COMBOBOX        IDC_COMBO1,468,110,73,125,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "出/入口编号:",IDC_STATIC,415,112,49,8
 END
 
+
+#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
 //
 
-VS_VERSION_INFO     VERSIONINFO
-  FILEVERSION       1,0,0,1
-  PRODUCTVERSION    1,0,0,1
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -100,26 +131,29 @@ VS_VERSION_INFO     VERSIONINFO
  FILETYPE 0x1L
  FILESUBTYPE 0x0L
 BEGIN
-	BLOCK "StringFileInfo"
-	BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
         BLOCK "080404B0"
-		BEGIN 
-			VALUE "CompanyName",     "\0"
-			VALUE "FileDescription", "parking management system Microsoft 基础类应用程序\0"
-			VALUE "FileVersion",     "1, 0, 0, 1\0"
-			VALUE "InternalName",    "parking management system\0"
-			VALUE "LegalCopyright",  "版权所有 (C) 2016\0"
-			VALUE "LegalTrademarks", "\0"
-			VALUE "OriginalFilename","parking management system.EXE\0"
-			VALUE "ProductName",     "parking management system 应用程序\0"
-			VALUE "ProductVersion",  "1, 0, 0, 1\0"
-		END
-	END
-	BLOCK "VarFileInfo" 
-	BEGIN 
-		VALUE "Translation", 0x0804, 1200
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "parking management system Microsoft 基础类应用程序\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "parking management system\0"
+            VALUE "LegalCopyright", "版权所有 (C) 2016\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "parking management system.EXE\0"
+            VALUE "ProductName", "parking management system 应用程序\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
     END
 END
+
+#endif    // !_MAC
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -132,13 +166,38 @@ BEGIN
     IDD_PARKINGMANAGEMENTSYSTEM_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 313
+        RIGHTMARGIN, 568
         TOPMARGIN, 7
-        BOTTOMMARGIN,193 
+        BOTTOMMARGIN, 332
     END
 END
 #endif    // APSTUDIO_INVOKED
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU1 MENU DISCARDABLE 
+BEGIN
+    POPUP "文件"
+    BEGIN
+        MENUITEM "退出",                        ID_MENUITEM32771
+    END
+    POPUP "编辑"
+    BEGIN
+        MENUITEM "编辑信息",                    ID_MENUITEM32774
+    END
+    POPUP "帮助"
+    BEGIN
+        MENUITEM "关于",                        ID_MENUITEM32772
+    END
+    POPUP ""
+    BEGIN
+        MENUITEM "编辑",                        ID_MENUITEM32773
+    END
+END
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -146,13 +205,16 @@ END
 // String Table
 //
 
-
 STRINGTABLE DISCARDABLE 
 BEGIN
-	IDP_OLE_INIT_FAILED   	"OLE 程序初始化失败。请确认 OLE 库程序是正确的版本。"
-	IDP_SOCKETS_INIT_FAILED	"Windows 通信端口初始化失败。"
+    IDP_OLE_INIT_FAILED     "OLE 程序初始化失败。请确认 OLE 库程序是正确的版本。"
+    IDP_SOCKETS_INIT_FAILED "Windows 通信端口初始化失败。"
 END
-#endif
+
+#endif    // Chinese (中国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
 
 #ifndef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -169,8 +231,8 @@ END
 LANGUAGE 4, 2
 #pragma code_page(936)
 #endif //_WIN32
-#include "res\\parking management system.rc2"  // non-Microsoft Visual C++ edited resources
-#include "l.chs\\afxres.rc"  	// Standard components
+#include "res\parking management system.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.chs\afxres.rc"          // Standard components
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
