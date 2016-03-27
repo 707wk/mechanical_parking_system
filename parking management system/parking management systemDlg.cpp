@@ -69,6 +69,9 @@ BOOL CParkingmanagementsystemDlg::OnInitDialog()
 	
 	// TODO: Add extra initialization here
 	
+	CWayFinding asd;
+	asd.putinfo();
+	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 

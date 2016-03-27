@@ -6,10 +6,18 @@
 --------------------Configuration: parking management system - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\707wk\AppData\Local\Temp\RSP32FB.tmp" with contents
+Creating temporary file "C:\Users\707wk\AppData\Local\Temp\RSP1B04.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/parking management system.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\c\car\parking management system\parking management system.cpp"
+"D:\c\car\parking management system\parking management systemDlg.cpp"
+]
+Creating command line "cl.exe @C:\Users\707wk\AppData\Local\Temp\RSP1B04.tmp" 
+Creating temporary file "C:\Users\707wk\AppData\Local\Temp\RSP1B05.tmp" with contents
 [
 libmysql.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/parking management system.pdb" /debug /machine:I386 /out:"Debug/parking management system.exe" /pdbtype:sept 
 ".\Debug\CCarbarnInfo.obj"
+".\Debug\CWayFinding.obj"
 ".\Debug\DlgProxy.obj"
 ".\Debug\md5.obj"
 ".\Debug\parking management system.obj"
@@ -17,10 +25,17 @@ libmysql.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/parking man
 ".\Debug\StdAfx.obj"
 ".\Debug\parking management system.res"
 ".\libmysql.lib"
-".\Debug\CWayFinding.obj"
 ]
-Creating command line "link.exe @C:\Users\707wk\AppData\Local\Temp\RSP32FB.tmp"
+Creating command line "link.exe @C:\Users\707wk\AppData\Local\Temp\RSP1B05.tmp"
 <h3>Output Window</h3>
+Compiling...
+parking management system.cpp
+c:\program files (x86)\microsoft visual studio\vc98\include\utility(21) : warning C4786: 'std::reverse_iterator<std::deque<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::const_iterator,std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::basic_string<char,std::char_traits<char>,std::allocator<char> > const &,std::basic_string<char,std::char_traits<char>,std::allocator<char> > const *,int>' : identifier was truncated to '255' characters in the debug information
+c:\program files (x86)\microsoft visual studio\vc98\include\utility(21) : warning C4786: 'std::reverse_iterator<std::deque<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::iterator,std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::basic_string<char,std::char_traits<char>,std::allocator<char> > &,std::basic_string<char,std::char_traits<char>,std::allocator<char> > *,int>' : identifier was truncated to '255' characters in the debug information
+parking management systemDlg.cpp
+c:\program files (x86)\microsoft visual studio\vc98\include\utility(21) : warning C4786: 'std::reverse_iterator<std::deque<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::const_iterator,std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::basic_string<char,std::char_traits<char>,std::allocator<char> > const &,std::basic_string<char,std::char_traits<char>,std::allocator<char> > const *,int>' : identifier was truncated to '255' characters in the debug information
+c:\program files (x86)\microsoft visual studio\vc98\include\utility(21) : warning C4786: 'std::reverse_iterator<std::deque<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::iterator,std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::basic_string<char,std::char_traits<char>,std::allocator<char> > &,std::basic_string<char,std::char_traits<char>,std::allocator<char> > *,int>' : identifier was truncated to '255' characters in the debug information
+Generating Code...
 Linking...
 
 

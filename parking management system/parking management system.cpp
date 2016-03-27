@@ -6,6 +6,7 @@
 #include "parking management systemDlg.h"
 
 #include "CCarbarnInfo.h"
+#include "CWayFinding.h"
 #include "md5.h"
 #include "DataStructure.h"
 #include "ControlCode.h"
@@ -24,6 +25,10 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 struct serverset serverinfo;
+
+CCarbarnInfo* garage;
+
+int* idtoindex;
 
 /////////////////////////////////////////////////////////////////////////////
 // CParkingmanagementsystemApp

@@ -61,7 +61,6 @@ private:
 	int    carbarnid;                  //车库编号
 	string name;                       //车库名
 	int    nowstatus;                  //现状态
-	int    oldstatus;                  //上一状态
 	queue<string> command;             //命令队列
 	/*1.入队：如q.push(x):将x元素接到队列的末端；
 	2.出队：如q.pop() 弹出队列的第一个元素，并不会返回元素的值；

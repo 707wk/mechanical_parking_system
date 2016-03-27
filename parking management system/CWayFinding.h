@@ -48,6 +48,11 @@ using namespace std;
 struct maptype
 {
 	int type;                          //类型
+                                       //"0">墙壁
+                                       //"1">入口
+                                       //"2">出口
+                                       //"3">车库模块
+                                       //"4">道路
 	int id;                            //编号
 	int flage;                         //是否已经过
 };
@@ -73,6 +78,8 @@ public:
 	void initmap();                    //初始地图数组
 	int nearestcarport(struct mapway start); //查找最近车库
 	int nearestexit(struct mapway start);    //查找最近出口
+	void putinfo();                    //输出地图
+	void clearflage();                 //清空标志位
 };
 #endif
 

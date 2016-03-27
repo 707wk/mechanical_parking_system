@@ -50,7 +50,6 @@ CCarbarnInfo::CCarbarnInfo()
 {
 	this->carbarnid=0;
 	this->nowstatus=-1;
-	this->oldstatus=-1;
 	this->sumcar=0;
 	this->spendcar=0;
 	this->rows=0;
@@ -70,7 +69,7 @@ int CCarbarnInfo::readdate(int carbarnid)
 	MYSQL_RES *res;                    //查询结果集
 	MYSQL_ROW column;                  //数据行的列
 	CString str;
-	str.Format("select name,nowstatus,oldstatus,command,spendtime,rows,cols,speedrows,speedcols,map_queue from t_garageinfo where carbarnid='%d'",carbarnid);
+	str.Format("select name,nowstatus,command,spendtime,rows,cols,speedrows,speedcols,map_queue from t_garageinfo where carbarnid='%d'",carbarnid);
 	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 
 	if(mysql_query(&serverinfo.mysql,str.GetBuffer(0))==NULL)
@@ -86,7 +85,6 @@ int CCarbarnInfo::readdate(int carbarnid)
 			//////////////////////////////////////////////////////////////////////////
 			this->name=column[0];
 			this->nowstatus=atoi(column[1]);
-			this->oldstatus=atoi(column[2]);
 			this->command.push(column[3]);
 			this->spendtime=atoi(column[4]);
 			this->sumcar=0;
@@ -179,8 +177,8 @@ int CCarbarnInfo::savedatetomysql()
 	//把速度用%d输出造成程序崩溃了
 	//CString str;卧槽这样都可以
 	str.Format("\
-UPDATE t_garageinfo set name='%s',nowstatus=%d,oldstatus=%d,command='%s',spendtime=%d,speedrows=%f,speedcols=%f,map_queue='%s' where carbarnid='%d'",
-name.c_str(),nowstatus,oldstatus,command.front().c_str(),spendtime,speed_rows,speed_cols,tmpstr.c_str(),carbarnid);
+UPDATE t_garageinfo set name='%s',nowstatus=%d,command='%s',spendtime=%d,speedrows=%f,speedcols=%f,map_queue='%s' where carbarnid='%d'",
+name.c_str(),nowstatus,command.front().c_str(),spendtime,speed_rows,speed_cols,tmpstr.c_str(),carbarnid);
 	//////////////////////////////////////////////////////////////////////////
 
 	//AfxMessageBox(str);
@@ -252,24 +250,8 @@ int CCarbarnInfo::getnowstatus()
 
 void CCarbarnInfo::setnowstatus(int status)
 {
-	this->oldstatus=this->nowstatus;
 	this->nowstatus=status;
-	if(this->nowstatus!=this->oldstatus)
-	{
-		spendtime=0;
-		if(!command.empty())
-			command.pop();
-	}
-}
-
-int CCarbarnInfo::getoldstatus()
-{
-	return oldstatus;
-}
-
-void CCarbarnInfo::setoldstatus(int status)
-{
-	this->oldstatus=status;
+	spendtime=0;
 }
 
 string CCarbarnInfo::getcommand()

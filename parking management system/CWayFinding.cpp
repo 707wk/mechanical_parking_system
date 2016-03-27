@@ -32,6 +32,7 @@
 ***************************************/
 
 #include "StdAfx.h"
+#include "CCarbarnInfo.h"
 #include "CWayFinding.h"
 #include "DataStructure.h"
 
@@ -46,38 +47,15 @@ using namespace std;
 
 extern struct serverset serverinfo;
 
-/* double **data;
+extern CCarbarnInfo* garage;
 
-data = new double*[m]; //设置行 或直接double **data=new double*[m]; 一个指针指向一个指针数组。
-
-for(int j=0;j<m;j++)
-{
-data[j] = new double[n];        //这个指针数组的每个指针元素又指向一个数组。
-}
-
-for (int i=0;i<m;i++)
-
-{
-   for (int j=0;j<n;j++)
-   {
-    data[i][j]=i*n+j;//初始化数组元素
-   }
-
-}
-
-for (i=0;i<m;i++)
-{
- delete[] data[i]; //先撤销指针元素所指向的数组
-}                     
-delete[] data; */
+extern int* idtoindex;
 
 CWayFinding::CWayFinding()
 {
 	MYSQL_RES *res;                    //查询结果集
 	MYSQL_ROW column;                  //数据行的列
 	CString str;
-	
-	initmap();
 
 	//////////////////////////////////////////////////////////////////////////
 	str="select max(x) from t_map";
@@ -91,7 +69,7 @@ CWayFinding::CWayFinding()
 		
 		if(column)
 		{
-			map_x=atoi(column[0]);
+			map_x=atoi(column[0])+2;
 		}
 		else
 		{
@@ -118,7 +96,7 @@ CWayFinding::CWayFinding()
 		
 		if(column)
 		{
-			map_y=atoi(column[0]);
+			map_y=atoi(column[0])+2;
 		}
 		else
 		{
@@ -132,6 +110,14 @@ CWayFinding::CWayFinding()
 		exit(1) ;
 	}
 	//////////////////////////////////////////////////////////////////////////
+
+	maplocation = new struct maptype*[map_x];
+	for(int i=0;i<map_x;i++)
+	{
+		maplocation[i] = new struct maptype[map_y];
+	}
+
+	initmap();
 
 	//////////////////////////////////////////////////////////////////////////
 	str="select x,y,type,type_id from t_map";
@@ -164,15 +150,22 @@ CWayFinding::CWayFinding()
 
 CWayFinding::~CWayFinding()
 {
+	for (int i=0;i<map_x;i++)
+	{
+ 		delete[] maplocation[i];
+	}
+	delete[] maplocation;
 }
 
 void CWayFinding::initmap()
 {
-	for(int i=0;i<map_y;i++)
+	for(int i=0;i<map_x;i++)
 	{
-		for(int j=0;j<map_x;j++)
+		for(int j=0;j<map_y;j++)
 		{
-			maplocation[i][j].flage=0;
+			maplocation[i][j].type    =0;
+			maplocation[i][j].flage   =0;
+			maplocation[i][j].id      =0;
 		}
 	}
 }
@@ -180,11 +173,161 @@ void CWayFinding::initmap()
 int CWayFinding::nearestcarport(struct mapway start)
 {
 	queue<mapway> pathanalysis;        //寻路变量
+	pathanalysis.push(start);
+	clearflage();
+	
+	for(;pathanalysis.size()>0;)
+	{
+		struct mapway tmp;
+		int tmpx=pathanalysis.front().x;
+		int tmpy=pathanalysis.front().y;
+		int tmpid;
+		
+		if(maplocation[tmpx-1][tmpy].type==3)
+		{
+			tmpid=maplocation[tmpx-1][tmpy].id;
+			if(garage[idtoindex[tmpid]].getnowstatus()==0)
+				return tmpid;
+		}
+		if(maplocation[tmpx][tmpy+1].type==3)
+		{
+			tmpid=maplocation[tmpx][tmpy+1].id;
+			if(garage[idtoindex[tmpid]].getnowstatus()==0)
+				return tmpid;
+		}			
+		if(maplocation[tmpx+1][tmpy].type==3)
+		{
+			tmpid=maplocation[tmpx+1][tmpy].id;
+			if(garage[idtoindex[tmpid]].getnowstatus()==0)
+				return tmpid;
+		}
+		if(maplocation[tmpx][tmpy-1].type==3)
+		{
+			tmpid=maplocation[tmpx][tmpy-1].id;
+			if(garage[idtoindex[tmpid]].getnowstatus()==0)
+				return tmpid;
+		}
+
+		if(maplocation[tmpx-1][tmpy].type==4&&maplocation[tmpx-1][tmpy].flage==0)
+		{
+			tmp.x=tmpx-1;
+			tmp.y=tmpy;
+			pathanalysis.push(tmp);
+		}
+		if(maplocation[tmpx][tmpy+1].type==4&&maplocation[tmpx][tmpy+1].flage==0)
+		{
+			tmp.x=tmpx;
+			tmp.y=tmpy+1;
+			pathanalysis.push(tmp);
+		}
+		if(maplocation[tmpx+1][tmpy].type==4&&maplocation[tmpx+1][tmpy].flage==0)
+		{
+			tmp.x=tmpx+1;
+			tmp.y=tmpy;
+			pathanalysis.push(tmp);
+		}
+		if(maplocation[tmpx][tmpy-1].type==4&&maplocation[tmpx][tmpy-1].flage==0)
+		{
+			tmp.x=tmpx;
+			tmp.y=tmpy-1;
+			pathanalysis.push(tmp);
+		}
+
+		maplocation[tmpx][tmpy].flage=1;
+		pathanalysis.pop();
+	}
 	return -1;
 }
 
 int CWayFinding::nearestexit(struct mapway start)
 {
 	queue<mapway> pathanalysis;        //寻路变量
+	pathanalysis.push(start);
+	clearflage();
+	
+	AfxMessageBox("123");
+	for(;pathanalysis.size()>0;)
+	{
+		struct mapway tmp;
+		int tmpx=pathanalysis.front().x;
+		int tmpy=pathanalysis.front().y;
+		int tmpid;
+		
+		if(maplocation[tmpx-1][tmpy].type==2)
+		{
+			return tmpid;
+		}
+		if(maplocation[tmpx][tmpy+1].type==2)
+		{
+			return tmpid;
+		}			
+		if(maplocation[tmpx+1][tmpy].type==2)
+		{
+			return tmpid;
+		}
+		if(maplocation[tmpx][tmpy-1].type==2)
+		{
+			return tmpid;
+		}
+		CString str;
+		str.Format("%d:%d",tmpx,tmpy);
+AfxMessageBox(str);
+		if(maplocation[tmpx-1][tmpy].type==4&&maplocation[tmpx-1][tmpy].flage==0)
+		{
+			tmp.x=tmpx-1;
+			tmp.y=tmpy;
+			pathanalysis.push(tmp);
+		}
+		if(maplocation[tmpx][tmpy+1].type==4&&maplocation[tmpx][tmpy+1].flage==0)
+		{
+			tmp.x=tmpx;
+			tmp.y=tmpy+1;
+			pathanalysis.push(tmp);
+		}
+		if(maplocation[tmpx+1][tmpy].type==4&&maplocation[tmpx+1][tmpy].flage==0)
+		{
+			tmp.x=tmpx+1;
+			tmp.y=tmpy;
+			pathanalysis.push(tmp);
+		}
+		if(maplocation[tmpx][tmpy-1].type==4&&maplocation[tmpx][tmpy-1].flage==0)
+		{
+			tmp.x=tmpx;
+			tmp.y=tmpy-1;
+			pathanalysis.push(tmp);
+		}
+
+		maplocation[tmpx][tmpy].flage=1;
+		pathanalysis.pop();
+	}
 	return -1;
+}
+
+void CWayFinding::putinfo()
+{
+	FILE* fp;
+	struct mapway tmp;
+	fp=fopen("map.txt","w");
+
+	for(int i=0;i<map_x;i++)
+	{
+		for(int j=0;j<map_y;j++)
+		{
+			fprintf(fp,"%3d:%d",maplocation[i][j].type,maplocation[i][j].id);
+		}
+		fprintf(fp,"\n");
+	}
+	fclose(fp);
+	return ;
+}
+
+void CWayFinding::clearflage()
+{
+	for(int i=0;i<map_x;i++)
+	{
+		for(int j=0;j<map_y;j++)
+		{
+			maplocation[i][j].flage=0;
+		}
+	}
 }
