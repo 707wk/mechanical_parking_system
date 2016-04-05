@@ -108,6 +108,7 @@
 #define STATEDELETE 0x02            //取车
 #define STATESTOP   0x03            //停止
 #define STATERSET   0x04            //复位
+#define BUSY        0x05            //运行中
 #define OFFLINE     0xff            //离线
 
 //校验码

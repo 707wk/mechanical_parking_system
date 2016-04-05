@@ -107,6 +107,10 @@ SOURCE=.\md5.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\mscomm.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=".\parking management system.cpp"
 # End Source File
 # Begin Source File
@@ -125,6 +129,10 @@ SOURCE=".\parking management systemDlg.cpp"
 
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\ThreadFuniction.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -156,6 +164,10 @@ SOURCE=.\md5.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\mscomm.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\mysql\mysql.h
 # End Source File
 # Begin Source File
@@ -173,6 +185,10 @@ SOURCE=.\Resource.h
 # Begin Source File
 
 SOURCE=.\StdAfx.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ThreadFuniction.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
@@ -201,3 +217,12 @@ SOURCE=.\libmysql.lib
 # End Source File
 # End Target
 # End Project
+# Section parking management system : {E6E17E90-DF38-11CF-8E74-00A0C90F26F8}
+# 	2:5:Class:CMSComm
+# 	2:10:HeaderFile:mscomm.h
+# 	2:8:ImplFile:mscomm.cpp
+# End Section
+# Section parking management system : {648A5600-2C6E-101B-82B6-000000000014}
+# 	2:21:DefaultSinkHeaderFile:mscomm.h
+# 	2:16:DefaultSinkClass:CMSComm
+# End Section

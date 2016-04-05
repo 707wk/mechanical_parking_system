@@ -35,6 +35,7 @@
 #include "CCarbarnInfo.h"
 #include "CWayFinding.h"
 #include "DataStructure.h"
+#include "ControlCode.h"
 
 #include <iostream>
 #include <vector>
@@ -170,15 +171,46 @@ void CWayFinding::initmap()
 	}
 }
 
-int CWayFinding::nearestcarport(struct mapway start)
+int CWayFinding::nearestcarport(int id)
 {
 	queue<mapway> pathanalysis;        //寻路变量
-	pathanalysis.push(start);
+	MYSQL_RES *res;                    //查询结果集
+	MYSQL_ROW column;                  //数据行的列
+	CString str;
+	struct mapway tmp;
+
+	//////////////////////////////////////////////////////////////////////////
+	str.Format("select x,y from t_map where type_id=%d and type=1",id);
+	
+	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+
+	if(mysql_query(&serverinfo.mysql,str.GetBuffer(0))==NULL)
+	{
+		res=mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
+		column=mysql_fetch_row(res);//获取具体的数据
+		
+		if(column)
+		{
+			tmp.x=atoi(column[0]);
+			tmp.y=atoi(column[1]);
+		}
+		else
+		{
+			AfxMessageBox("map:未找到数据");
+			exit(1) ;
+		}
+	}
+	else
+	{
+		AfxMessageBox("数据库连接失败");
+		exit(1) ;
+	}
+	
+	pathanalysis.push(tmp);
 	clearflage();
 	
 	for(;pathanalysis.size()>0;)
 	{
-		struct mapway tmp;
 		int tmpx=pathanalysis.front().x;
 		int tmpy=pathanalysis.front().y;
 		int tmpid;
@@ -186,25 +218,25 @@ int CWayFinding::nearestcarport(struct mapway start)
 		if(maplocation[tmpx-1][tmpy].type==3)
 		{
 			tmpid=maplocation[tmpx-1][tmpy].id;
-			if(garage[idtoindex[tmpid]].getnowstatus()==0)
+			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}
 		if(maplocation[tmpx][tmpy+1].type==3)
 		{
 			tmpid=maplocation[tmpx][tmpy+1].id;
-			if(garage[idtoindex[tmpid]].getnowstatus()==0)
+			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}			
 		if(maplocation[tmpx+1][tmpy].type==3)
 		{
 			tmpid=maplocation[tmpx+1][tmpy].id;
-			if(garage[idtoindex[tmpid]].getnowstatus()==0)
+			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}
 		if(maplocation[tmpx][tmpy-1].type==3)
 		{
 			tmpid=maplocation[tmpx][tmpy-1].id;
-			if(garage[idtoindex[tmpid]].getnowstatus()==0)
+			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}
 
@@ -239,39 +271,66 @@ int CWayFinding::nearestcarport(struct mapway start)
 	return -1;
 }
 
-int CWayFinding::nearestexit(struct mapway start)
+int CWayFinding::nearestexit(int id)
 {
 	queue<mapway> pathanalysis;        //寻路变量
-	pathanalysis.push(start);
+	MYSQL_RES *res;                    //查询结果集
+	MYSQL_ROW column;                  //数据行的列
+	CString str;
+	struct mapway tmp;
+	
+	//////////////////////////////////////////////////////////////////////////
+	str.Format("select x,y from t_map where type_id=%d and type=3",id);
+	
+	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+	
+	if(mysql_query(&serverinfo.mysql,str.GetBuffer(0))==NULL)
+	{
+		res=mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
+		column=mysql_fetch_row(res);//获取具体的数据
+		
+		if(column)
+		{
+			tmp.x=atoi(column[0]);
+			tmp.y=atoi(column[1]);
+		}
+		else
+		{
+			AfxMessageBox("map:未找到数据");
+			exit(1) ;
+		}
+	}
+	else
+	{
+		AfxMessageBox("数据库连接失败");
+		exit(1) ;
+	}
+
+	pathanalysis.push(tmp);
 	clearflage();
 	
-	AfxMessageBox("123");
 	for(;pathanalysis.size()>0;)
 	{
-		struct mapway tmp;
 		int tmpx=pathanalysis.front().x;
 		int tmpy=pathanalysis.front().y;
-		int tmpid;
 		
 		if(maplocation[tmpx-1][tmpy].type==2)
 		{
-			return tmpid;
+			return maplocation[tmpx-1][tmpy].id;
 		}
 		if(maplocation[tmpx][tmpy+1].type==2)
 		{
-			return tmpid;
+			return maplocation[tmpx][tmpy+1].id;
 		}			
 		if(maplocation[tmpx+1][tmpy].type==2)
 		{
-			return tmpid;
+			return maplocation[tmpx+1][tmpy].id;
 		}
 		if(maplocation[tmpx][tmpy-1].type==2)
 		{
-			return tmpid;
+			return maplocation[tmpx][tmpy-1].id;
 		}
-		CString str;
-		str.Format("%d:%d",tmpx,tmpy);
-AfxMessageBox(str);
+		
 		if(maplocation[tmpx-1][tmpy].type==4&&maplocation[tmpx-1][tmpy].flage==0)
 		{
 			tmp.x=tmpx-1;
@@ -306,9 +365,11 @@ AfxMessageBox(str);
 void CWayFinding::putinfo()
 {
 	FILE* fp;
-	struct mapway tmp;
 	fp=fopen("map.txt","w");
 
+	fprintf(fp,"%d\n",nearestcarport(1));
+	fprintf(fp,"%d\n",nearestexit(17));
+	
 	for(int i=0;i<map_x;i++)
 	{
 		for(int j=0;j<map_y;j++)

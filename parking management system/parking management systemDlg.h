@@ -1,5 +1,8 @@
 // parking management systemDlg.h : header file
 //
+//{{AFX_INCLUDES()
+#include "mscomm.h"
+//}}AFX_INCLUDES
 
 #if !defined(AFX_PARKINGMANAGEMENTSYSTEMDLG_H__FF645521_0785_4342_A124_9C0552124F11__INCLUDED_)
 #define AFX_PARKINGMANAGEMENTSYSTEMDLG_H__FF645521_0785_4342_A124_9C0552124F11__INCLUDED_
@@ -20,14 +23,29 @@ class CParkingmanagementsystemDlg : public CDialog
 
 // Construction
 public:
+	void setinfo(char* str);
 	CParkingmanagementsystemDlg(CWnd* pParent = NULL);	// standard constructor
 	virtual ~CParkingmanagementsystemDlg();
 
 // Dialog Data
 	//{{AFX_DATA(CParkingmanagementsystemDlg)
 	enum { IDD = IDD_PARKINGMANAGEMENTSYSTEM_DIALOG };
-		// NOTE: the ClassWizard will add data members here
+	CListCtrl	m_list_reservation;
+	CEdit	m_carplate;
+	CComboBox	m_list_input;
+	CEdit	m_info;
+	CButton	m_startend;
+	CEdit	m_link_info;
+	CEdit	m_freecar;
+	CEdit	m_sumcar;
+	CListCtrl	m_list_error;
+	CListCtrl	m_list_garage;
 	//}}AFX_DATA
+
+	int sumcar;
+	int spendcar;
+	//char sendstr[255];
+	HANDLE thread01;
 
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CParkingmanagementsystemDlg)
@@ -37,6 +55,7 @@ public:
 
 // Implementation
 protected:
+	void update_list();
 	CParkingmanagementsystemDlgAutoProxy* m_pAutoProxy;
 	HICON m_hIcon;
 
@@ -50,6 +69,15 @@ protected:
 	afx_msg void OnClose();
 	virtual void OnOK();
 	virtual void OnCancel();
+	afx_msg void OnMenuitem32774();
+	afx_msg void OnMenuitem32772();
+	afx_msg void OnButton2();
+	afx_msg void OnButton3();
+	afx_msg void OnButton1();
+	afx_msg void OnMenuitem32771();
+	afx_msg void OnTimer(UINT nIDEvent);
+	afx_msg void OnOnCommMscomm1();
+	DECLARE_EVENTSINK_MAP()
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

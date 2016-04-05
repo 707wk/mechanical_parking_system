@@ -26,9 +26,19 @@ static char THIS_FILE[] = __FILE__;
 
 struct serverset serverinfo;
 
+HANDLE hCom;  //全局变量，串口句柄
+
 CCarbarnInfo* garage;
 
+CWayFinding* mapinfo;
+
 int* idtoindex;
+
+int sumgarage;
+
+int link = 0;
+
+CParkingmanagementsystemDlg *dlg;
 
 /////////////////////////////////////////////////////////////////////////////
 // CParkingmanagementsystemApp
@@ -166,9 +176,9 @@ void readserverset()
 		exit(1);
 	}
 	
-	fscanf(fp,"server=%s\nusername=%s\npwd=%s\ndatabase=%s\nport=%d\ncost=%lf\nmscomm=%d\nmscommini=%s\nrefreshinterval=%d",
+	fscanf(fp,"server=%s\nusername=%s\npwd=%s\ndatabase=%s\nport=%d\ncost=%lf\nmscomm=%s\nBaudRate=%d\nByteSize=%d\nParity=%d\nStopBits=%d",
 		serverinfo.ip,serverinfo.name,serverinfo.password,serverinfo.database,
-		&serverinfo.port,&serverinfo.cost,&serverinfo.mscomm,serverinfo.mscommini,&serverinfo.refreshinterval);
+		&serverinfo.port,&serverinfo.cost,serverinfo.mscomm,&serverinfo.BaudRate,&serverinfo.ByteSize,&serverinfo.Parity,&serverinfo.StopBits);
 	
 	mysql_init(&serverinfo.mysql);
 	if(mysql_real_connect(&serverinfo.mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
@@ -223,6 +233,15 @@ BOOL CParkingmanagementsystemApp::InitInstance()
 		COleObjectFactory::UpdateRegistryAll();
 	}
 
+	HWND wnd;
+	wnd=::FindWindow(NULL,_T("堆垛式立体车库管理 v1.2"));
+	if(wnd)
+	{
+		AfxMessageBox(_T("程序已运行"));
+		//SendMessage(wnd,WM_CLOSE,0,0);
+		return FALSE;
+	}
+
 	//////////////////////////////////////////////////////////////////////////
 	//这写的,把自己恶心到了
 	check();
@@ -231,9 +250,56 @@ BOOL CParkingmanagementsystemApp::InitInstance()
 	readserverset();
 	//////////////////////////////////////////////////////////////////////////
 
-	CParkingmanagementsystemDlg dlg;
-	m_pMainWnd = &dlg;
-	int nResponse = dlg.DoModal();
+	MYSQL_RES *res;                    //查询结果集
+	MYSQL_ROW column;                  //数据行的列
+	CString str;
+	str="select max(id) from t_garageinfo";
+	
+	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+
+	if(mysql_query(&serverinfo.mysql,str.GetBuffer(0))==NULL)
+	{
+		res=mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
+		column=mysql_fetch_row(res);              //获取具体的数据
+		
+		idtoindex=new int[atoi(column[0])+1];
+	}
+	else
+	{
+		AfxMessageBox("init:001 数据库连接失败");
+		exit(1) ;
+	}
+
+	str="select id from t_garageinfo";
+	
+	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+
+	if(mysql_query(&serverinfo.mysql,str.GetBuffer(0))==NULL)
+	{
+		res=mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
+		int index=0;
+		garage=new CCarbarnInfo[mysql_num_rows(res)];
+		while(column=mysql_fetch_row(res))        //获取具体的数据
+		{
+			int tmpid=atoi(column[0]);
+			garage[index].readdate(tmpid);
+			idtoindex[tmpid]=index;
+			index++;
+		}
+		sumgarage=index;
+	}
+	else
+	{
+		AfxMessageBox("init:002 数据库连接失败");
+		exit(1) ;
+	}
+
+	mapinfo=new CWayFinding;
+
+	dlg=new CParkingmanagementsystemDlg;
+	
+	m_pMainWnd = dlg;
+	int nResponse = dlg->DoModal();
 	if (nResponse == IDOK)
 	{
 		// TODO: Place code here to handle when the dialog is
@@ -244,8 +310,16 @@ BOOL CParkingmanagementsystemApp::InitInstance()
 		// TODO: Place code here to handle when the dialog is
 		//  dismissed with Cancel
 	}
+	
+	
 
 	// Since the dialog has been closed, return FALSE so that we exit the
 	//  application, rather than start the application's message pump.
 	return FALSE;
+}
+
+CParkingmanagementsystemApp::~CParkingmanagementsystemApp()
+{
+	delete garage;
+	delete idtoindex;
 }

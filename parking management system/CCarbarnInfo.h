@@ -36,6 +36,7 @@
 #define _CCARBARNINFO_
 
 #include "StdAfx.h"
+#include "DataStructure.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -61,7 +62,8 @@ private:
 	int    carbarnid;                  //车库编号
 	string name;                       //车库名
 	int    nowstatus;                  //现状态
-	queue<string> command;             //命令队列
+	char   command[COMLEN];            //命令队列 存/取1字节 坐标2字节 
+	char   sqlcommand[COMLEN];         //sql命令
 	/*1.入队：如q.push(x):将x元素接到队列的末端；
 	2.出队：如q.pop() 弹出队列的第一个元素，并不会返回元素的值；
 	3,访问队首元素：如q.front()
@@ -100,13 +102,16 @@ public:
 	void   setname(string name);       //设置模块名
 	int    getnowstatus();             //获取当前状态
 	void   setnowstatus(int status);   //设置当前状态
-	int    getoldstatus();             //获取上一状态
-	void   setoldstatus(int status);   //设置上一状态
-	string getcommand();               //获取命令
-	void   addcommand(string command); //设置命令
-	void   popcommand();               //删除命令
+	//int    getoldstatus();           //获取上一状态
+	//void   setoldstatus(int status); //设置上一状态
+	void   getcommand(char* str);              //获取命令
+	void   setcommand(const char str[]);       //设置命令
+	void   setsqlcommand(const char str[]);    //设置sql命令
+	void   getsqlcommand(char* str);           //获取sql命令
+	int    getusernum();               //获取等待用户数
 	int    getspendtime();             //获取花费时间
 	void   accspendtime();             //累加时间
+	void   setzerospendtime();         //清零
 	int    getsumcar();                //获取总量
 	int    getspendcar();              //获取已存车量
 	int    getrows();                  //获取车库行
@@ -121,6 +126,7 @@ public:
 	int    getcols(int location);      //获取location的列
 	int    countqueue();               //按花费时间从小到大排序
 	int    findemptycarport();         //查找最近的车位,未找到返回-1
+	int    findemptycarid();           //查找最近的车位号,未找到返回-1
 	//////////////////////////////////////////////////////////////////////////
 	/*存车
 	{

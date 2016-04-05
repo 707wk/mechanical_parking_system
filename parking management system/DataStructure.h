@@ -43,6 +43,8 @@
 
 using namespace std;
 
+#define COMLEN 1024                    //命令缓存长度
+
 //系统设置
 struct serverset
 {
@@ -52,9 +54,13 @@ struct serverset
 	char   database[100];              //数据库名
 	int    port;                       //数据库端口
 	double cost;                       //费用(元/小时)(保留)
-	int    mscomm;                     //端口号
+
+	char   mscomm[255];                //端口号
 	char   mscommini[100];             //连接参数
-	int    refreshinterval;            //刷新间隔
+	int    BaudRate;                   //波特率为9600
+	int    ByteSize;                   //每个字节有8位
+	int    Parity;                     //无奇偶校验位
+	int    StopBits;                   //两个停止位
 
 	MYSQL  mysql;                      //mysql数据库
 };
