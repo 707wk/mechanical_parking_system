@@ -31,7 +31,7 @@ ImplementationFile=parking management systemDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=IDC_MSCOMM1
+LastObject=IDC_EDIT3
 
 
 [CLS:CParkingmanagementsystemDlgAutoProxy]
@@ -44,7 +44,7 @@ Filter=N
 [DLG:IDD_PARKINGMANAGEMENTSYSTEM_DIALOG]
 Type=1
 Class=CParkingmanagementsystemDlg
-ControlCount=23
+ControlCount=21
 Control1=IDC_LIST1,SysListView32,1350631425
 Control2=IDC_STATIC,button,1342177287
 Control3=IDC_STATIC,button,1342177287
@@ -65,9 +65,7 @@ Control17=IDC_STATIC,button,1342177287
 Control18=IDC_STATIC,button,1342177287
 Control19=IDC_COMBO1,combobox,1344340226
 Control20=IDC_STATIC,static,1342308352
-Control21=IDC_LIST3,SysListView32,1350631425
-Control22=IDC_STATIC,button,1342177287
-Control23=IDC_MSCOMM1,{648A5600-2C6E-101B-82B6-000000000014},1342242816
+Control21=IDC_EDIT3,edit,1352730692
 
 [MNU:IDR_MENU1]
 Type=1

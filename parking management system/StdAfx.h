@@ -34,6 +34,8 @@
 		{ l, w1, w2, { b1, b2, b3, b4, b5, b6, b7, b8 } };
 #endif // IMPLEMENT_OLECREATE2
 
+#define WM_COMM_RXCHAR (WM_USER + 100)
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 #include "windows.h"

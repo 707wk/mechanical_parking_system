@@ -320,6 +320,7 @@ BOOL CParkingmanagementsystemApp::InitInstance()
 
 CParkingmanagementsystemApp::~CParkingmanagementsystemApp()
 {
-	delete garage;
-	delete idtoindex;
+	link=0;
+	//delete garage;
+	//delete idtoindex;
 }

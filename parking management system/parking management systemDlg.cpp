@@ -70,7 +70,7 @@ void CParkingmanagementsystemDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CParkingmanagementsystemDlg)
-	DDX_Control(pDX, IDC_LIST3, m_list_reservation);
+	DDX_Control(pDX, IDC_EDIT3, m_carinfo);
 	DDX_Control(pDX, IDC_EDIT4, m_carplate);
 	DDX_Control(pDX, IDC_COMBO1, m_list_input);
 	DDX_Control(pDX, IDC_EDIT6, m_info);
@@ -141,7 +141,8 @@ BOOL CParkingmanagementsystemDlg::OnInitDialog()
 	m_list_error.InsertColumn(2,"状态"      ,LVCFMT_CENTER, 70,0);
 	m_list_error.InsertColumn(3,"命令耗时"  ,LVCFMT_CENTER, 70 ,0);
 
-	//设置列表主题
+	
+	/*//设置列表主题
 	m_list_reservation.SetExtendedStyle(
 		LVS_EX_FLATSB				// 扁平风格滚动
         | LVS_EX_FULLROWSELECT		// 允许正航选中
@@ -150,7 +151,7 @@ BOOL CParkingmanagementsystemDlg::OnInitDialog()
 	
 	m_list_reservation.InsertColumn(0,"ID"        ,LVCFMT_CENTER, 70,0);
 	m_list_reservation.InsertColumn(1,"车牌号"    ,LVCFMT_CENTER, 70,0);
-	m_list_reservation.InsertColumn(3,"等待时间"  ,LVCFMT_CENTER, 70 ,0);
+	m_list_reservation.InsertColumn(3,"等待时间"  ,LVCFMT_CENTER, 70 ,0);*/
 
 	m_link_info.SetWindowText("未连接");
 
@@ -430,7 +431,7 @@ void CParkingmanagementsystemDlg::OnButton2()
 {
 	// TODO: 存车
 	MYSQL_RES *res;                    //查询结果集
-	MYSQL_ROW column;                  //数据行的列
+//	MYSQL_ROW column;                  //数据行的列
 	CString strplate;
 	CString strinput;
 	CString strtmp;
@@ -460,14 +461,31 @@ void CParkingmanagementsystemDlg::OnButton2()
 		exit(1) ;
 	}
 
+	strtmp.Format("select * from t_carinfo where plate='%s'",strplate);
+	
+	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+	
+	if(mysql_query(&serverinfo.mysql,strtmp.GetBuffer(0))==NULL)
+	{
+		res=mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
+		
+		if(mysql_num_rows(res))
+		{
+			MessageBox("车牌重复");
+			return ;
+		}
+	}
+
 	int garageid=mapinfo->nearestcarport(atoi(strinput.GetBuffer(0)));
 	if(garageid==-1)
 	{
 		MessageBox("未找到空闲模块,请稍后再试!");
 		return ;
 	}
+	
 	strtmp.Format("最近的车库是第%d号车库",garageid);
-	MessageBox(strtmp);
+	//MessageBox(strtmp);
+	m_carinfo.SetWindowText(strtmp);
 	//sumcar
 	spendcar++;
 
@@ -491,53 +509,73 @@ void CParkingmanagementsystemDlg::OnButton2()
 	garage[index].setcommand(sendstr);
 
 	strtmp.Format("insert into t_carlocation(plate,carbarnid,num) values('%s',%d,%d)",
-		strplate,index,garage[index].findemptycarid());
+		strplate,garageid,garage[index].findemptycarid());
 	garage[index].setsqlcommand(strtmp.GetBuffer(0));
+
+	garage[index].savecar();
 }
 
 void CParkingmanagementsystemDlg::OnButton3() 
 {
 	// TODO: 取车
+	MYSQL_RES *res;                    //查询结果集
+	MYSQL_ROW column;                  //数据行的列
+	CString strplate;
+	CString strtmp;
 
-}
+	m_carplate.GetWindowText( strplate );
 
-BEGIN_EVENTSINK_MAP(CParkingmanagementsystemDlg, CDialog)
-    //{{AFX_EVENTSINK_MAP(CParkingmanagementsystemDlg)
-	ON_EVENT(CParkingmanagementsystemDlg, IDC_MSCOMM1, 1 /* OnComm */, OnOnCommMscomm1, VTS_NONE)
-	//}}AFX_EVENTSINK_MAP
-END_EVENTSINK_MAP()
+	if(strplate == "") return ;
 
+	strtmp.Format( "select carbarnid,num from t_carlocation where plate='%s'", strplate );
 
-void CParkingmanagementsystemDlg::OnOnCommMscomm1() 
-{
-	// TODO: Add your control notification handler code here
-//	lockflage=1;
-	char recstr[COMLEN]="12";
+	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 	
-	OnReceive(recstr,2);
-	recstr[2]='\0';
-	
-	if(recstr[0]<=0)return ;
-	if(recstr[0]>sumgarage)return ;
-	/////////////////////////////////////////////////////////////////////////////
-	int index=idtoindex[recstr[0]];
-	char strtmp[COMLEN]="";
-	garage[index].getsqlcommand(strtmp);
-	garage[index].setnowstatus(recstr[1]);
-	if(strtmp[0]!='\0'&&garage[index].getnowstatus()==STATEFREE)
+	if(mysql_query(&serverinfo.mysql,strtmp.GetBuffer(0))!=NULL)
 	{
-		mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
-		garage[index].getsqlcommand(strtmp);
-		if(mysql_query(&serverinfo.mysql,strtmp)!=NULL)
-		{
-			AfxMessageBox("数据库连接失败");
-			exit(1);
-		}
-		garage[index].setsqlcommand("");
+		AfxMessageBox("数据库连接失败");
+		exit(1) ;
 	}
-	/////////////////////////////////////////////////////////////////////////////
-}
+	res=mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
+	
+	if(mysql_num_rows(res)==0)
+	{
+		MessageBox("未找到车辆");
+		return ;
+	}
 
+	column=mysql_fetch_row(res);
+
+	int garageid = atoi(column[0]);
+	int num      = atoi(column[1]);
+
+	int nearoutput = mapinfo->nearestexit(garageid);
+	if(nearoutput==-1)
+	{
+		MessageBox("未找到出口,请检查地图设置!");
+		return ;
+	}
+
+	strtmp.Format("最近的出口是第%d号出口",nearoutput);
+	//MessageBox(strtmp);
+	m_carinfo.SetWindowText(strtmp);
+	spendcar--;
+
+	int index=idtoindex[garageid];
+	
+	garage[index].setnowstatus(BUSY);
+
+	char sendstr[]="123";
+	sendstr[0]=DELETECAR;
+	sendstr[1]=garage[index].getrows(num);
+	sendstr[2]=garage[index].getcols(num);
+	garage[index].setcommand(sendstr);
+
+	strtmp.Format("delete from t_carinfo where plate='%s';delete from t_carlocation where plate='%s'",strplate,strplate);
+	garage[index].setsqlcommand(strtmp.GetBuffer(0));
+
+	garage[index].deletecar(num);
+}
 
 void CParkingmanagementsystemDlg::OnTimer(UINT nIDEvent) 
 {
@@ -561,4 +599,10 @@ void CParkingmanagementsystemDlg::setinfo(char *str)
 {
 	m_info.SetWindowText(str);
 }
+
+BEGIN_EVENTSINK_MAP(CParkingmanagementsystemDlg, CDialog)
+    //{{AFX_EVENTSINK_MAP(CParkingmanagementsystemDlg)
+	//}}AFX_EVENTSINK_MAP
+END_EVENTSINK_MAP()
+
 

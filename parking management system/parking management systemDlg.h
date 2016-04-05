@@ -1,7 +1,6 @@
 // parking management systemDlg.h : header file
 //
 //{{AFX_INCLUDES()
-#include "mscomm.h"
 //}}AFX_INCLUDES
 
 #if !defined(AFX_PARKINGMANAGEMENTSYSTEMDLG_H__FF645521_0785_4342_A124_9C0552124F11__INCLUDED_)
@@ -30,7 +29,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CParkingmanagementsystemDlg)
 	enum { IDD = IDD_PARKINGMANAGEMENTSYSTEM_DIALOG };
-	CListCtrl	m_list_reservation;
+	CEdit	m_carinfo;
 	CEdit	m_carplate;
 	CComboBox	m_list_input;
 	CEdit	m_info;
@@ -76,7 +75,6 @@ protected:
 	afx_msg void OnButton1();
 	afx_msg void OnMenuitem32771();
 	afx_msg void OnTimer(UINT nIDEvent);
-	afx_msg void OnOnCommMscomm1();
 	DECLARE_EVENTSINK_MAP()
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

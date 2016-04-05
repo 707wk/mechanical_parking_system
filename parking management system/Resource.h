@@ -20,7 +20,6 @@
 #define IDC_EDIT6                       1010
 #define IDC_COMBO1                      1011
 #define IDC_LIST3                       1014
-#define IDC_MSCOMM1                     1016
 #define ID_MENUITEM32771                32771
 #define ID_MENUITEM32772                32772
 #define ID_MENUITEM32773                32773
@@ -31,9 +30,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        132
+#define _APS_NEXT_RESOURCE_VALUE        133
 #define _APS_NEXT_COMMAND_VALUE         32776
-#define _APS_NEXT_CONTROL_VALUE         1017
+#define _APS_NEXT_CONTROL_VALUE         1018
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

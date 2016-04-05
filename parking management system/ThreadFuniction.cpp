@@ -155,31 +155,37 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			OnSend(str,6);
 			garage[index].setcommand("");
 		}
-
-		char recstr[COMLEN]="12";
+		Sleep(100);
+		char recstr[COMLEN]="\0\0\0";
 
 		OnReceive(recstr,2);
 		recstr[2]='\0';
 
 		if(recstr[0]<=0)continue;
-		if(recstr[0]>sumgarage)continue;
+		//if(recstr[0]>sumgarage)continue;
 		/////////////////////////////////////////////////////////////////////////////
-		int index=idtoindex[recstr[0]];
+		//int index=idtoindex[recstr[0]];
 		char strtmp[COMLEN]="";
-		garage[index].getsqlcommand(strtmp);
-		garage[index].setnowstatus(recstr[1]);
-		if(strtmp[0]!='\0'&&garage[index].getnowstatus()==STATEFREE)
+		garage[idtoindex[recstr[0]]].getsqlcommand(strtmp);
+		garage[idtoindex[recstr[0]]].setnowstatus(recstr[1]);
+
+		char qwe1[255];
+		sprintf(qwe1,"%d %d %d %d",recstr[0],recstr[1],recstr[2],garage[idtoindex[recstr[0]]].getnowstatus());
+		dlg->setinfo(qwe1);
+
+		if(strtmp[0]!='\0'&&garage[idtoindex[recstr[0]]].getnowstatus()==STATEFREE)
 		{
 			mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
-			garage[index].getsqlcommand(strtmp);
+			garage[idtoindex[recstr[0]]].getsqlcommand(strtmp);
 			if(mysql_query(&serverinfo.mysql,strtmp)!=NULL)
 			{
 				AfxMessageBox("数据库连接失败");
 				exit(1);
 			}
-			garage[index].setsqlcommand("");
+			garage[idtoindex[recstr[0]]].setsqlcommand("");
 		}
 		/////////////////////////////////////////////////////////////////////////////
+		Sleep(900);
 
 		index=(index+1)%sumgarage;
 		//Sleep(200);

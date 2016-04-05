@@ -182,17 +182,14 @@ int CCarbarnInfo::savedatetomysql()
 	//把速度用%d输出造成程序崩溃了
 	//CString str;卧槽这样都可以
 	str.Format("\
-UPDATE t_garageinfo set name='%s',nowstatus=%d,command='%s',spendtime=%d,speedrows=%f,speedcols=%f,map_queue='%s' where id='%d'",
-name.c_str(),nowstatus,command,spendtime,speed_rows,speed_cols,tmpstr.c_str(),carbarnid);
+UPDATE t_garageinfo set name='%s',nowstatus=%d,command='%s',speedrows=%f,speedcols=%f,map_queue='%s' where id='%d'",
+name.c_str(),nowstatus,command,speed_rows,speed_cols,tmpstr.c_str(),carbarnid);
 	//////////////////////////////////////////////////////////////////////////
 
 	//AfxMessageBox(str);
 	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 	
-	if(mysql_query(&serverinfo.mysql,str.GetBuffer(0))==NULL)
-	{
-	}
-	else
+	if(mysql_query(&serverinfo.mysql,str.GetBuffer(0))!=NULL)
 	{
 		AfxMessageBox("数据库连接失败");
 		return -1;

@@ -107,10 +107,6 @@ SOURCE=.\md5.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\mscomm.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=".\parking management system.cpp"
 # End Source File
 # Begin Source File
@@ -161,10 +157,6 @@ SOURCE=.\DlgProxy.h
 # Begin Source File
 
 SOURCE=.\md5.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\mscomm.h
 # End Source File
 # Begin Source File
 
