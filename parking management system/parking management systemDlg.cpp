@@ -441,6 +441,12 @@ void CParkingmanagementsystemDlg::OnButton2()
 	
 	if(strplate=="")return ;
 
+	if(sumcar==spendcar)
+	{
+		MessageBox("车位已满");
+		return ;
+	}
+
 	strtmp.Format("select * from t_reservation where plate='%s'",strplate);
 	
 	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
@@ -571,7 +577,15 @@ void CParkingmanagementsystemDlg::OnButton3()
 	sendstr[2]=garage[index].getcols(num);
 	garage[index].setcommand(sendstr);
 
-	strtmp.Format("delete from t_carinfo where plate='%s';delete from t_carlocation where plate='%s'",strplate,strplate);
+	//delete from t_carinfo where plate='%s';
+	strtmp.Format("delete from t_carinfo where plate='%s'",strplate);
+	if(mysql_query(&serverinfo.mysql,strtmp.GetBuffer(0))!=NULL)
+	{
+		AfxMessageBox("数据库连接失败");
+		exit(1) ;
+	}
+
+	strtmp.Format("delete from t_carlocation where plate='%s'",strplate);
 	garage[index].setsqlcommand(strtmp.GetBuffer(0));
 
 	garage[index].deletecar(num);
@@ -604,5 +618,4 @@ BEGIN_EVENTSINK_MAP(CParkingmanagementsystemDlg, CDialog)
     //{{AFX_EVENTSINK_MAP(CParkingmanagementsystemDlg)
 	//}}AFX_EVENTSINK_MAP
 END_EVENTSINK_MAP()
-
 

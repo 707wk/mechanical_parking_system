@@ -102,6 +102,13 @@ void OnReceive(char (&str)[COMLEN],int length)
 	BOOL bReadStat;
 	
 	ClearCommError(hCom,&dwErrorFlags,&ComStat);
+
+	if(!ComStat.cbInQue)// 缓冲区无数据
+	{
+		strcpy(str,"\0\0\0");
+        return ;
+	}
+
 	dwBytesRead=min(dwBytesRead, (DWORD)ComStat.cbInQue);
 	bReadStat=ReadFile(hCom,str,
 		dwBytesRead,&dwBytesRead,&m_osRead);
@@ -125,7 +132,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 	int index=0;
 	char strtmp[COMLEN];
 
-	for(;;)
+	for(;;index=(index+1)%sumgarage)
 	{
 		char str[]="12345";
 		if(!link)
@@ -179,7 +186,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			garage[idtoindex[recstr[0]]].getsqlcommand(strtmp);
 			if(mysql_query(&serverinfo.mysql,strtmp)!=NULL)
 			{
-				AfxMessageBox("数据库连接失败");
+				AfxMessageBox("ThreadPoll:数据库连接失败");
 				exit(1);
 			}
 			garage[idtoindex[recstr[0]]].setsqlcommand("");
@@ -187,7 +194,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		/////////////////////////////////////////////////////////////////////////////
 		Sleep(900);
 
-		index=(index+1)%sumgarage;
+		//index=(index+1)%sumgarage;
 		//Sleep(200);
 	}
 	

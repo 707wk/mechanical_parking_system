@@ -12,11 +12,12 @@ ClassCount=3
 Class1=CParkingmanagementsystemApp
 Class2=CParkingmanagementsystemDlg
 
-ResourceCount=4
+ResourceCount=5
 Resource2=IDR_MAINFRAME
-Resource3=IDD_PARKINGMANAGEMENTSYSTEM_DIALOG
+Resource3=IDD_DIALOG1
 Class3=CParkingmanagementsystemDlgAutoProxy
-Resource4=IDR_MENU1
+Resource4=IDD_PARKINGMANAGEMENTSYSTEM_DIALOG
+Resource5=IDR_MENU1
 
 [CLS:CParkingmanagementsystemApp]
 Type=0
@@ -31,7 +32,7 @@ ImplementationFile=parking management systemDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=IDC_EDIT3
+LastObject=CParkingmanagementsystemDlg
 
 
 [CLS:CParkingmanagementsystemDlgAutoProxy]
@@ -75,4 +76,11 @@ Command2=ID_MENUITEM32775
 Command3=ID_MENUITEM32774
 Command4=ID_MENUITEM32772
 CommandCount=4
+
+[DLG:IDD_DIALOG1]
+Type=1
+Class=?
+ControlCount=2
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
 
