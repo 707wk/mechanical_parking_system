@@ -4,18 +4,7 @@
  *TEXT    :停车场地图管理系统
  *EMAIL   :dksx@qq.com
  *************************************/
-$dbh=null;
-try
-{
-	$dbh = new PDO("mysql:host=localhost;dbname=car","car","KnKsfyxX65dMVWKY",
-	array(PDO::ATTR_PERSISTENT => true)); 
-    $dbh->query("set names utf8");
-}
-catch (PDOException $e)
-{
-	echo 'Connection failed: ' . $e->getMessage();
-	die;
-}
+require_once "main.php";
 
 switch(@$_GET['do']){
 	case "wipemap":
@@ -26,7 +15,10 @@ switch(@$_GET['do']){
 		$result=$dbh->query("select * from t_garageinfo where id=$_GET[mkid]")->fetch();
 		echo json_encode($result);
 		exit();
-		
+	case 'getallmkinfo':
+	$result=$dbh->query("select * from t_garageinfo where 1")->fetchAll();
+	echo json_encode($result);
+	exit();
 	case 'getcrkinfo':
 	if($dbh->query("select * from t_map where x=$_GET[x] and y=$_GET[y]")->rowCount()==0){
 		$dbh->exec("INSERT INTO `t_map`( `x`, `y`, `type`, `type_id`) VALUES ($_GET[x] ,$_GET[y] ,$_GET[type] ,0)");
@@ -73,8 +65,8 @@ if(isset($_POST['do'])&&$_POST['y']!=""&&$_POST['x']!=""):
 endif;
 
 ?>
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
@@ -118,12 +110,17 @@ input ,select{
 	background-color:#b97a57;	
 	color:#000;
 }
+
 #Div0
 {
+	 position: absolute;
+    width: 100%;
+    height: 100%;
   float:left; width:auto; 
 }
 #Div2
 {
+
   float:left; width:auto; 
   width:100px;
    margin-left:20px;
@@ -175,17 +172,23 @@ h3{
 	width: 18px; 
 	height:18px; 
 } 
+.bk{
+		border:5px solid #aaaaaa;
+		border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;
+}
 </style>
 </head>
 <body>
-
+  
+	
 <div id="Div0">
 
-<h3></h3>
 
 <div id="Div1">
+<div class="bk">
 <table style="font-size:12px;margin-bottom:-16px">
 	<tr>
+	<td  ></td> <td>　</td>
 		<td class="square mk_in" ></td> <td>入口　</td>
 		<td class="square out"></td> <td>出口　</td>
 		<td class="square module"></td> <td>车库模块</td>
@@ -206,9 +209,9 @@ function create(){
 		if($a['x']>$maxx)$maxx=$a['x'];
 		if($a['y']>$maxy)$maxy=$a['y'];
 	}
-	echo '<table class="mytable" style="background-color:#000;border:0;" border="0" cellpadding="0" cellspacing="0">'."\n";
+	echo '<table class="mytable" style="background-color:#000;;" border="0" cellpadding="0" cellspacing="0">'."\n";
 	for($i=0;$i<=$maxx+1;$i++){
-		for($j=0;$j<=$maxy+1;$j++){
+		for($j=0;$j<=$maxy+1;$j++){ 
 			$class="wall";$value="";$t="0";
 			if(!empty($map[$i][$j])){
 				$class=$map[$i][$j]['type'];
@@ -219,7 +222,7 @@ function create(){
 		}
 		echo "</tr>";
 	}
-	echo "</table>";
+	echo "</table></div>";
 
 }
 
@@ -348,7 +351,7 @@ echo '</div>';
 </form>
 <div style="text-align:center;margin-top:6px;">
 <a class="btn btn-sm btn-primary" href="#" onclick="dosubmit()" ><span id="execcmd">编辑</span></a>
-<a class="btn btn-sm btn-success" href="#" onclick="location='?'">刷新</a><br>
+<a class="btn btn-sm btn-success" href="#" onclick="location.reload()">刷新</a><br>
 <a class="btn btn-sm btn-danger" href="#" style="margin-top:4px;width:96%;" onclick="wipe()">清空地图</a>
 
 
@@ -427,7 +430,7 @@ var arr=new Array();
 arr[0]=0;
 function dplcrkbj(type){
 	$.ajax({
-		type:"GET",url:"index.php",
+		type:"GET",url:"mapedit.php",
 		data:{do:"getcrkinfo",x:$('#x').val(),y:$('#y').val(),type:type},
 		success:function(data){
 		var x=JSON.parse(data); 
@@ -442,12 +445,12 @@ function dplcrkbj(type){
 
 function setcrk(){
 	$.ajax({
-		type:"GET",url:"index.php",
+		type:"GET",url:"mapedit.php",
 		data:{do:"setcrkinfo",x:$('#x').val(),y:$('#y').val(),type:$("#type").val(),type_id:$('#crkbh').val(),value:$('#crkbz').val()},
 		success:function(data){
 		//var x=JSON.parse(data); 
 		alert(data);
-		location.reload();
+		window.menuFrame.location.reload();
 		
 	}});
 	//$("#bjcrkdhk").modal("toggle");
@@ -456,7 +459,7 @@ function setcrk(){
 
 function dplmkbj(){ 
 	$.ajax({
-		type:"GET",url:"index.php",
+		type:"GET",url:"mapedit.php",
 		data:{do:"getmkinfo",mkid:$('#value').val()},
 		success:function(data){
 		var x=JSON.parse(data); 
@@ -513,7 +516,7 @@ function dosave(){
 	for(var i=1;i<arr.length;i++)
 		map_queue+=String((arr[i]<<16)+i)+" ";
 	$.ajax({
-	type:"GET",url:"index.php",
+	type:"GET",url:"mapedit.php",
 	data:{do:"setmkinfo",
 	x:$('#x').val(),
 	y:$('#y').val(),
@@ -530,7 +533,7 @@ function dosave(){
 	success:function(data){
 		//var zt=JSON.parse(data);
 		alert(data);
-		location.reload();
+				window.menuFrame.location.reload();
 	}});
 
 	//alert(map_queue);
