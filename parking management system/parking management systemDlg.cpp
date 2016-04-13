@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "parking management system.h"
 #include "parking management systemDlg.h"
+#include "debugmodel.h"
 #include "DlgProxy.h"
 #include "CCarbarnInfo.h"
 #include "CWayFinding.h"
@@ -27,6 +28,8 @@ extern CCarbarnInfo* garage;
 extern CWayFinding* mapinfo;
 
 extern int* idtoindex;
+
+extern int maxindex;
 
 extern int sumgarage;
 
@@ -95,6 +98,7 @@ BEGIN_MESSAGE_MAP(CParkingmanagementsystemDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON1, OnButton1)
 	ON_COMMAND(ID_MENUITEM32771, OnMenuitem32771)
 	ON_WM_TIMER()
+	ON_COMMAND(ID_MENUITEM32775, OnMenuitem32775)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -271,7 +275,7 @@ BOOL CParkingmanagementsystemDlg::CanExit()
 void CParkingmanagementsystemDlg::OnMenuitem32774() 
 {
 	// TODO: Add your command handler code here
-	ShellExecute(NULL,"open","http://127.0.0.1",NULL,NULL,SW_SHOWNORMAL);
+	ShellExecute(NULL,"open","http://127.0.0.1/mapedit/",NULL,NULL,SW_SHOWNORMAL);
 }
 
 void CParkingmanagementsystemDlg::OnMenuitem32772() 
@@ -290,11 +294,16 @@ void CParkingmanagementsystemDlg::update_list()
 
 	for(int i=0;i<sumgarage;i++)
 	{
+		//////////////////////////////////////////////////////////////////////////
+		//多定义了一个变量
+		index=i;
+		//////////////////////////////////////////////////////////////////////////
 		tmp.Format("%d",garage[i].getcarbarnid());
 		m_list_garage.InsertItem(index,tmp);
 		m_list_garage.SetItemText(index,1,garage[i].getname().c_str());
-		if(garage[i].getspendtime()>5)
+		if(garage[i].getspendtime()>maxindex+1)
 		{
+			garage[i].setoffline();
 			m_list_garage.SetItemText(index,2,"离线");
 			m_list_error.InsertItem(errorindex,tmp);
 			m_list_error.SetItemText(errorindex,1,garage[i].getname().c_str());
@@ -619,3 +628,20 @@ BEGIN_EVENTSINK_MAP(CParkingmanagementsystemDlg, CDialog)
 	//}}AFX_EVENTSINK_MAP
 END_EVENTSINK_MAP()
 
+
+void CParkingmanagementsystemDlg::OnMenuitem32775() 
+{
+	// TODO: Add your command handler code here
+	if(!link)
+	{
+		return ;
+	}
+
+	int tmp=link;
+	link=0;
+	
+	debugmodel dlg;
+	dlg.DoModal();
+
+	link=tmp;
+}

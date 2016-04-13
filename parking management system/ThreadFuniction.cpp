@@ -56,6 +56,8 @@ extern CCarbarnInfo* garage;
 
 extern int* idtoindex;
 
+extern int maxindex;
+
 extern int sumgarage;
 
 extern int link;
@@ -83,6 +85,11 @@ void OnSend(char* str,int length)
 		{
 			WaitForSingleObject(m_osWrite.hEvent,1000);
 		}
+	}
+	else
+	{
+		AfxMessageBox("OnSend:串口已断开");
+		exit(1);
 	}
 	
 }
@@ -168,8 +175,13 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		OnReceive(recstr,2);
 		recstr[2]='\0';
 
-		if(recstr[0]<=0)continue;
-		//if(recstr[0]>sumgarage)continue;
+		//////////////////////////////////////////////////////////////////////////
+		//判断接收是否合法
+		if(recstr[0]<=0)            continue;
+		if(recstr[0]>maxindex)      continue;
+		if(idtoindex[recstr[0]]==-1)continue;
+		//////////////////////////////////////////////////////////////////////////
+
 		/////////////////////////////////////////////////////////////////////////////
 		//int index=idtoindex[recstr[0]];
 		char strtmp[COMLEN]="";

@@ -34,6 +34,8 @@ CWayFinding* mapinfo;
 
 int* idtoindex;
 
+int maxindex=0;
+
 int sumgarage;
 
 int link = 0;
@@ -262,12 +264,18 @@ BOOL CParkingmanagementsystemApp::InitInstance()
 		res=mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
 		column=mysql_fetch_row(res);              //获取具体的数据
 		
-		idtoindex=new int[atoi(column[0])+1];
+		maxindex=atoi(column[0]);
+		idtoindex=new int[maxindex+1];
 	}
 	else
 	{
 		AfxMessageBox("init:001 数据库连接失败");
 		exit(1) ;
+	}
+
+	for(int i=0;i<maxindex+1;i++)
+	{
+		idtoindex[i]=-1;
 	}
 
 	str="select id from t_garageinfo";

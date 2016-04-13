@@ -2,22 +2,23 @@
 
 [General Info]
 Version=1
-LastClass=CParkingmanagementsystemDlg
+LastClass=debugmodel
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "parking management system.h"
 ODLFile=parking management system.odl
 
-ClassCount=3
+ClassCount=4
 Class1=CParkingmanagementsystemApp
 Class2=CParkingmanagementsystemDlg
 
-ResourceCount=5
-Resource2=IDR_MAINFRAME
+ResourceCount=4
+Resource2=IDD_PARKINGMANAGEMENTSYSTEM_DIALOG
 Resource3=IDD_DIALOG1
 Class3=CParkingmanagementsystemDlgAutoProxy
-Resource4=IDD_PARKINGMANAGEMENTSYSTEM_DIALOG
-Resource5=IDR_MENU1
+Resource1=IDR_MAINFRAME
+Class4=debugmodel
+Resource4=IDR_MENU1
 
 [CLS:CParkingmanagementsystemApp]
 Type=0
@@ -32,7 +33,7 @@ ImplementationFile=parking management systemDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=CParkingmanagementsystemDlg
+LastObject=ID_MENUITEM32775
 
 
 [CLS:CParkingmanagementsystemDlgAutoProxy]
@@ -46,7 +47,7 @@ Filter=N
 Type=1
 Class=CParkingmanagementsystemDlg
 ControlCount=21
-Control1=IDC_LIST1,SysListView32,1350631425
+Control1=IDC_LIST1,SysListView32,1350631689
 Control2=IDC_STATIC,button,1342177287
 Control3=IDC_STATIC,button,1342177287
 Control4=IDC_LIST2,SysListView32,1350631429
@@ -79,8 +80,30 @@ CommandCount=4
 
 [DLG:IDD_DIALOG1]
 Type=1
-Class=?
-ControlCount=2
-Control1=IDOK,button,1342242817
-Control2=IDCANCEL,button,1342242816
+Class=debugmodel
+ControlCount=15
+Control1=IDC_STATIC,static,1342308352
+Control2=IDC_STATIC,static,1342308352
+Control3=IDC_STATIC,static,1342308352
+Control4=IDC_COMBO1,combobox,1344340226
+Control5=IDC_EDIT1,edit,1350639744
+Control6=IDC_EDIT2,edit,1350639744
+Control7=IDC_STATIC,static,1342308352
+Control8=IDC_STATIC,static,1342308352
+Control9=IDC_BUTTON1,button,1342242816
+Control10=IDC_BUTTON2,button,1342242816
+Control11=IDC_BUTTON3,button,1342242816
+Control12=IDC_BUTTON4,button,1342242816
+Control13=IDC_EDIT3,edit,1352730692
+Control14=IDC_STATIC,button,1342177287
+Control15=IDC_STATIC,button,1342177287
+
+[CLS:debugmodel]
+Type=0
+HeaderFile=debugmodel.h
+ImplementationFile=debugmodel.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=IDC_EDIT1
+VirtualFilter=dWC
 

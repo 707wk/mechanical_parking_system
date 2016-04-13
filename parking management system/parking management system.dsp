@@ -99,6 +99,10 @@ SOURCE=.\CWayFinding.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\debugmodel.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgProxy.cpp
 # End Source File
 # Begin Source File
@@ -149,6 +153,10 @@ SOURCE=.\CWayFinding.h
 # Begin Source File
 
 SOURCE=.\DataStructure.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\debugmodel.h
 # End Source File
 # Begin Source File
 
@@ -209,12 +217,12 @@ SOURCE=.\libmysql.lib
 # End Source File
 # End Target
 # End Project
+# Section parking management system : {648A5600-2C6E-101B-82B6-000000000014}
+# 	2:21:DefaultSinkHeaderFile:mscomm.h
+# 	2:16:DefaultSinkClass:CMSComm
+# End Section
 # Section parking management system : {E6E17E90-DF38-11CF-8E74-00A0C90F26F8}
 # 	2:5:Class:CMSComm
 # 	2:10:HeaderFile:mscomm.h
 # 	2:8:ImplFile:mscomm.cpp
-# End Section
-# Section parking management system : {648A5600-2C6E-101B-82B6-000000000014}
-# 	2:21:DefaultSinkHeaderFile:mscomm.h
-# 	2:16:DefaultSinkClass:CMSComm
 # End Section

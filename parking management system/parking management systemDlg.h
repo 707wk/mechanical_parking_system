@@ -75,6 +75,7 @@ protected:
 	afx_msg void OnButton1();
 	afx_msg void OnMenuitem32771();
 	afx_msg void OnTimer(UINT nIDEvent);
+	afx_msg void OnMenuitem32775();
 	DECLARE_EVENTSINK_MAP()
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

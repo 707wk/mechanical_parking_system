@@ -34,6 +34,7 @@
 #include "StdAfx.h"
 #include "CCarbarnInfo.h"
 #include "DataStructure.h"
+#include "ControlCode.h"
 
 #include <iostream>
 #include <vector>
@@ -254,6 +255,11 @@ void CCarbarnInfo::setnowstatus(int status)
 {
 	this->nowstatus=status;
 	spendtime=0;
+}
+
+void CCarbarnInfo::setoffline()
+{
+	this->nowstatus=OFFLINE;
 }
 
 void CCarbarnInfo::getcommand(char* str)

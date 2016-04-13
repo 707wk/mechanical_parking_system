@@ -102,6 +102,7 @@ public:
 	void   setname(string name);       //设置模块名
 	int    getnowstatus();             //获取当前状态
 	void   setnowstatus(int status);   //设置当前状态
+	void   setoffline();               //设为离线状态
 	//int    getoldstatus();           //获取上一状态
 	//void   setoldstatus(int status); //设置上一状态
 	void   getcommand(char* str);              //获取命令
