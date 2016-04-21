@@ -1,12 +1,47 @@
+<?php 
+/*************************************
+ *CREATED :2016/4/20
+ *TEXT    :立体车库状态
+ *EMAIL   :dksx@qq.com
+ *************************************/
+ require_once "main.php";
+?>
 <!DOCTYPE html >
 <html >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>state</title>
-<link rel="stylesheet" href="css/index.css" type="text/css" media="screen" />
-<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
-<script src="//apps.bdimg.com/libs/jquery/1.11.3/jquery.js"></script>
-<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link href="libs/css/bootstrap.min.css" rel="stylesheet">
+<script src="libs/js/jquery.min.js"></script>
+<script src="libs/js/bootstrap.min.js"></script>
+<style>
+.bk{
+	border:5px solid #aaaaaa;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	padding:2px;
+}
+.bk2{
+	padding-left:20px;
+	margin-left:20px;
+	border:1px solid #aaa;
+	width:270px;
+	background-color:#D6FFD6;
+}
+body{
+	//background-color: #f5f5f5;
+}
+.top{
+	text-align:left;
+	margin-left:10px;
+}
+.mk{
+	font-size:14px;
+	border-bottom:#000000 1px dashed;
+	margin-bottom:3px;
+}
+</style>
 <script>
 function gethtml(x){
 	var arr=new Array(),t="";
@@ -43,14 +78,15 @@ function setpage(id){
 		// async: false,
 		success:function(data){
 			var i=0,t="";	
-			t="<table border=1><tr>";
+			t="<table border=0><tr>";
 			var xx=JSON.parse(data); 
 			$.each(xx, function(i, x){      
-				t+="<td>";
+				t+="<td><div class='bk'><p class='mk'>模块"+x.id+"</p>";
+				t+="";
 				t+=gethtml(x);
-				t+="模块"+x.id+"</td>";
+				t+="</div></td><td>&nbsp;</td>";
 				i++;
-				if(i<5&&i%5==0)t+="</tr><tr>"
+				if(i%5==0)t+="</tr><tr>"
 	　　}); 
 		t+="</tr></table>";
 			$('#state').html(t);
@@ -60,13 +96,21 @@ function setpage(id){
 		
 setpage();
 </script>
-<style>
-
-</style>
 
 </head>
 <body>
-<div id="state" style="font-size:20px;">
+<h3 class="top">【模块状态】</h3>
+<div class="bk2">
+<table style="font-size:15px;margin-bottom:0px;">
+	<tr>
+	<td  ></td> <td>　</td>
+		<td class=" " ><span class="glyphicon glyphicon-ok-circle"></span></td> <td>空闲　</td>
+		<td class=" "><span class="glyphicon glyphicon-ban-circle"></span></td> <td>有车　</td>
+		<td class=" "><span class="glyphicon glyphicon-log-in"></span></td> <td>出入口</td>
+	</tr>
+</table>
+</div>
+<div id="state" style="font-size:20px;margin-left:20px;">
 </div>
 </body>
 </html>

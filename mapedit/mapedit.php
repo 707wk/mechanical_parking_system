@@ -9,7 +9,7 @@ require_once "main.php";
 switch(@$_GET['do']){
 	case "wipemap":
 	$dbh->exec('delete from t_map where 1');
-	header("Location:index.php");
+	header("Location:mapedit.php");
 	exit();
 	case 'getmkinfo':
 		$result=$dbh->query("select * from t_garageinfo where id=$_GET[mkid]")->fetch();
@@ -60,7 +60,7 @@ if(isset($_POST['do'])&&$_POST['y']!=""&&$_POST['x']!=""):
 		$dbh->exec("INSERT INTO `t_map`(`x`, `y`, `type`, `type_id`,`value`) VALUES ($x,$y,$type,'0','')");
 	}
 	if($type==0)$dbh->exec("DELETE FROM `t_map` WHERE type=0");
-		header("Location:index.php");
+		header("Location:mapedit.php");
 	exit();
 endif;
 
@@ -69,9 +69,9 @@ endif;
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
-<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link href="libs/css/bootstrap.min.css" rel="stylesheet">
+<script src="libs/js/jquery.min.js"></script>
+<script src="libs/js/bootstrap.min.js"></script>
 <title>停车场地图管理系统</title>
 <style>
 body {
@@ -176,14 +176,16 @@ h3{
 		border:5px solid #aaaaaa;
 		border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;
 }
+.top{
+	text-align:left;
+	margin-left:10px;
+}
 </style>
 </head>
 <body>
-  
-	
+
 <div id="Div0">
-
-
+<h3 class="top">【地图设置】</h3>
 <div id="Div1">
 <div class="bk">
 <table style="font-size:12px;margin-bottom:-16px">
@@ -450,7 +452,7 @@ function setcrk(){
 		success:function(data){
 		//var x=JSON.parse(data); 
 		alert(data);
-		window.menuFrame.location.reload();
+		location.reload();
 		
 	}});
 	//$("#bjcrkdhk").modal("toggle");
@@ -533,7 +535,7 @@ function dosave(){
 	success:function(data){
 		//var zt=JSON.parse(data);
 		alert(data);
-				window.menuFrame.location.reload();
+				location.reload();
 	}});
 
 	//alert(map_queue);
