@@ -52,6 +52,8 @@ extern struct serverset serverinfo;
 
 extern HANDLE hCom;  //全局变量，串口句柄
 
+extern DCB dcb;
+
 extern CCarbarnInfo* garage;
 
 extern int* idtoindex;
@@ -64,7 +66,7 @@ extern int link;
 
 extern CParkingmanagementsystemDlg *dlg;
 
-void OnSend(char* str,int length) 
+void OnSendBit(char* str,int length) 
 {
 	// TODO: Add your control notification handler code here
 	OVERLAPPED m_osWrite;
@@ -92,6 +94,24 @@ void OnSend(char* str,int length)
 		exit(1);
 	}
 	
+}
+
+void OnSend(char* str,int length) 
+{
+	// TODO: Add your control notification handler code here
+	//GetCommState(hCom,&dcb);
+	dcb.Parity  =MARKPARITY;   //奇偶位为1
+	SetCommState(hCom,&dcb);
+
+	OnSendBit(str,1);
+	PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
+
+	//GetCommState(hCom,&dcb);
+	dcb.Parity  =SPACEPARITY;   //奇偶位为0
+	SetCommState(hCom,&dcb);
+	
+	OnSendBit(str+1,length-1);
+	PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
 }
 
 void OnReceive(char (&str)[COMLEN],int length) 
@@ -166,7 +186,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			str[2]=strtmp[1];
 			str[3]=strtmp[2];
 			str[4]=(str[0]+str[1]+str[2]+str[3])%CHECKMOD;
-			OnSend(str,6);
+			OnSend(str,5);
 			garage[index].setcommand("");
 		}
 		Sleep(100);

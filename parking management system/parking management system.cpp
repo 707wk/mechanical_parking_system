@@ -28,6 +28,8 @@ struct serverset serverinfo;
 
 HANDLE hCom;  //全局变量，串口句柄
 
+DCB dcb;
+
 CCarbarnInfo* garage;
 
 CWayFinding* mapinfo;

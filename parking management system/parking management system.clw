@@ -13,8 +13,8 @@ Class1=CParkingmanagementsystemApp
 Class2=CParkingmanagementsystemDlg
 
 ResourceCount=4
-Resource2=IDD_PARKINGMANAGEMENTSYSTEM_DIALOG
-Resource3=IDD_DIALOG1
+Resource2=IDD_DIALOG1
+Resource3=IDD_PARKINGMANAGEMENTSYSTEM_DIALOG
 Class3=CParkingmanagementsystemDlgAutoProxy
 Resource1=IDR_MAINFRAME
 Class4=debugmodel
@@ -104,6 +104,6 @@ HeaderFile=debugmodel.h
 ImplementationFile=debugmodel.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=IDC_EDIT1
+LastObject=IDC_COMBO1
 VirtualFilter=dWC
 

@@ -6,13 +6,7 @@
 --------------------Configuration: parking management system - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\707wk\AppData\Local\Temp\RSP9D97.tmp" with contents
-[
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/parking management system.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"D:\c\car\parking management system\parking management systemDlg.cpp"
-]
-Creating command line "cl.exe @C:\Users\707wk\AppData\Local\Temp\RSP9D97.tmp" 
-Creating temporary file "C:\Users\707wk\AppData\Local\Temp\RSP9D98.tmp" with contents
+Creating temporary file "C:\Users\707wk\AppData\Local\Temp\RSP3727.tmp" with contents
 [
 libmysql.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/parking management system.pdb" /debug /machine:I386 /out:"Debug/parking management system.exe" /pdbtype:sept 
 ".\Debug\CCarbarnInfo.obj"
@@ -27,10 +21,8 @@ libmysql.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/parking man
 ".\Debug\parking management system.res"
 ".\libmysql.lib"
 ]
-Creating command line "link.exe @C:\Users\707wk\AppData\Local\Temp\RSP9D98.tmp"
+Creating command line "link.exe @C:\Users\707wk\AppData\Local\Temp\RSP3727.tmp"
 <h3>Output Window</h3>
-Compiling...
-parking management systemDlg.cpp
 Linking...
 
 

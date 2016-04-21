@@ -23,6 +23,8 @@ extern struct serverset serverinfo;
 
 extern HANDLE hCom;  //全局变量，串口句柄
 
+extern DCB dcb;
+
 extern CCarbarnInfo* garage;
 
 extern CWayFinding* mapinfo;
@@ -143,7 +145,6 @@ BOOL CParkingmanagementsystemDlg::OnInitDialog()
 	m_list_error.InsertColumn(0,"编号"      ,LVCFMT_CENTER, 70,0);
 	m_list_error.InsertColumn(1,"备注"      ,LVCFMT_CENTER, 70,0);
 	m_list_error.InsertColumn(2,"状态"      ,LVCFMT_CENTER, 70,0);
-	m_list_error.InsertColumn(3,"命令耗时"  ,LVCFMT_CENTER, 70 ,0);
 
 	
 	/*//设置列表主题
@@ -335,7 +336,7 @@ void CParkingmanagementsystemDlg::update_list()
 			}
 		}
 
-		tmp.Format("%d",garage[i].getspendtime());
+		tmp.Format("%02d:%02d:%02d",garage[i].getspendtime()/3600,garage[i].getspendtime()/60%60,garage[i].getspendtime()%60);
 		m_list_garage.SetItemText(index,3,tmp);
 
 		tmp.Format("%d",garage[i].getsumcar());
