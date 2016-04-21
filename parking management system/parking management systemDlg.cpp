@@ -67,6 +67,7 @@ CParkingmanagementsystemDlg::~CParkingmanagementsystemDlg()
 	m_startend.SetWindowText(_T("连接设备"));
 	m_link_info.SetWindowText("未连接");
 	link = 0;
+	CloseHandle(hCom);
 	KillTimer(1);
 	CloseHandle(thread01);
 }
