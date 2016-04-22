@@ -187,7 +187,7 @@ void readserverset()
 	mysql_init(&serverinfo.mysql);
 	if(mysql_real_connect(&serverinfo.mysql, serverinfo.ip , serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
 	{
-		AfxMessageBox("link:本地数据库无法连接!");
+		AfxMessageBox("start:本地数据库无法连接!");
 		exit(1);
 	}
 }

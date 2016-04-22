@@ -100,18 +100,23 @@ void OnSend(char* str,int length)
 {
 	// TODO: Add your control notification handler code here
 	//GetCommState(hCom,&dcb);
-	dcb.Parity  =MARKPARITY;   //奇偶位为1
+/*	dcb.Parity  =MARKPARITY;   //奇偶位为1
 	SetCommState(hCom,&dcb);
 
 	OnSendBit(str,1);
-	PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
+	//PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
 
 	//GetCommState(hCom,&dcb);
 	dcb.Parity  =SPACEPARITY;   //奇偶位为0
 	SetCommState(hCom,&dcb);
 	
 	OnSendBit(str+1,length-1);
-	PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
+	//PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
+
+	dcb.Parity  =serverinfo.Parity;   //奇偶位
+	SetCommState(hCom,&dcb);
+*/
+	OnSendBit(str,length);
 }
 
 void OnReceive(char (&str)[COMLEN],int length) 
@@ -176,7 +181,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			str[2]=0;
 			str[3]=0;
 			str[4]=(str[0]+str[1]+str[2]+str[3])%CHECKMOD;
-			OnSend(str,6);
+			OnSend(str,5);
 		}
 		else
 		{
@@ -224,7 +229,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			garage[idtoindex[recstr[0]]].setsqlcommand("");
 		}
 		/////////////////////////////////////////////////////////////////////////////
-		Sleep(900);
+		Sleep(100);
 
 		//index=(index+1)%sumgarage;
 		//Sleep(200);
