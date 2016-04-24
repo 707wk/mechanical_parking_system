@@ -290,9 +290,16 @@ void CParkingmanagementsystemDlg::update_list()
 {
 	int index=0;
 	int errorindex=0;
+	int overtime=0;
 	CString tmp;
 	m_list_garage.DeleteAllItems();
 	m_list_error.DeleteAllItems();
+
+	//////////////////////////////////////////////////////////////////////////
+	//根据车库模块数量以及查询间隔确定超时时间
+	overtime=((maxindex+1)*serverinfo.intervaltime)/1000;
+	if(overtime<1)overtime=1;
+	//////////////////////////////////////////////////////////////////////////
 
 	for(int i=0;i<sumgarage;i++)
 	{
@@ -303,7 +310,7 @@ void CParkingmanagementsystemDlg::update_list()
 		tmp.Format("%d",garage[i].getcarbarnid());
 		m_list_garage.InsertItem(index,tmp);
 		m_list_garage.SetItemText(index,1,garage[i].getname().c_str());
-		if(garage[i].getspendtime()>maxindex+1)
+		if(garage[i].getspendtime()>overtime)
 		{
 			garage[i].setoffline();
 			m_list_garage.SetItemText(index,2,"离线");

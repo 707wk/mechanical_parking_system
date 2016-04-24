@@ -218,24 +218,40 @@ int CWayFinding::nearestcarport(int id)
 		if(maplocation[tmpx-1][tmpy].type==3)
 		{
 			tmpid=maplocation[tmpx-1][tmpy].id;
+
+			if(garage[idtoindex[tmpid]].getsumcar()==garage[idtoindex[tmpid]].getspendcar())
+				return -1;
+			
 			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}
 		if(maplocation[tmpx][tmpy+1].type==3)
 		{
 			tmpid=maplocation[tmpx][tmpy+1].id;
+
+			if(garage[idtoindex[tmpid]].getsumcar()==garage[idtoindex[tmpid]].getspendcar())
+				return -1;
+
 			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}			
 		if(maplocation[tmpx+1][tmpy].type==3)
 		{
 			tmpid=maplocation[tmpx+1][tmpy].id;
+			
+			if(garage[idtoindex[tmpid]].getsumcar()==garage[idtoindex[tmpid]].getspendcar())
+				return -1;
+			
 			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}
 		if(maplocation[tmpx][tmpy-1].type==3)
 		{
 			tmpid=maplocation[tmpx][tmpy-1].id;
+			
+			if(garage[idtoindex[tmpid]].getsumcar()==garage[idtoindex[tmpid]].getspendcar())
+				return -1;
+			
 			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}

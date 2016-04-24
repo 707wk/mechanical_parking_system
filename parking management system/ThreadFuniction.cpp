@@ -229,7 +229,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			garage[idtoindex[recstr[0]]].setsqlcommand("");
 		}
 		/////////////////////////////////////////////////////////////////////////////
-		Sleep(100);
+		Sleep(serverinfo.intervaltime);
 
 		//index=(index+1)%sumgarage;
 		//Sleep(200);

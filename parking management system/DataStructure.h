@@ -62,6 +62,8 @@ struct serverset
 	int    Parity;                     //无奇偶校验位
 	int    StopBits;                   //两个停止位
 
+	int    intervaltime;               //查询间隔
+	
 	MYSQL  mysql;                      //mysql数据库
 };
 
