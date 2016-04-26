@@ -439,10 +439,11 @@ void CParkingmanagementsystemDlg::OnButton1()
 	else if (link)
 	{
 		//m_Comm.SetPortOpen(FALSE);
-		CloseHandle(hCom);
+		link = 0;
+		Sleep(100);
 		m_startend.SetWindowText(_T("连接设备"));
 		m_link_info.SetWindowText("未连接");
-		link = 0;
+		CloseHandle(hCom);
 		KillTimer(1);
 	}
 }

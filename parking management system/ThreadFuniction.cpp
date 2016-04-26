@@ -102,7 +102,7 @@ void OnSend(char* str,int length)
 {
 	// TODO: Add your control notification handler code here
 	//GetCommState(hCom,&dcb);
-/*	dcb.Parity  =MARKPARITY;   //奇偶位为1
+	dcb.Parity  =MARKPARITY;   //奇偶位为1
 	SetCommState(hCom,&dcb);
 
 	OnSendBit(str,1);
@@ -117,8 +117,8 @@ void OnSend(char* str,int length)
 
 	dcb.Parity  =serverinfo.Parity;   //奇偶位
 	SetCommState(hCom,&dcb);
-*/
-	OnSendBit(str,length);
+
+//	OnSendBit(str,length);
 }
 
 void OnReceive(char (&str)[COMLEN],int length) 
