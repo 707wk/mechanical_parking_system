@@ -34,6 +34,8 @@ CCarbarnInfo* garage;
 
 CWayFinding* mapinfo;
 
+int reservation=0;
+
 int* idtoindex;
 
 int maxindex=0;

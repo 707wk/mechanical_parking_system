@@ -29,6 +29,8 @@ extern CCarbarnInfo* garage;
 
 extern CWayFinding* mapinfo;
 
+extern int reservation;
+
 extern int* idtoindex;
 
 extern int maxindex;

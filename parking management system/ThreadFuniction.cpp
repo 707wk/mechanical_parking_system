@@ -56,6 +56,8 @@ extern DCB dcb;
 
 extern CCarbarnInfo* garage;
 
+extern int reservation;
+
 extern int* idtoindex;
 
 extern int maxindex;
