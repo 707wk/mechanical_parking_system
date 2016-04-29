@@ -66,12 +66,12 @@ CParkingmanagementsystemDlg::~CParkingmanagementsystemDlg()
 		m_pAutoProxy->m_pDialog = NULL;
 
 	//m_Comm.SetPortOpen(FALSE);
-	m_startend.SetWindowText(_T("连接设备"));
-	m_link_info.SetWindowText("未连接");
-	link = 0;
-	CloseHandle(hCom);
-	KillTimer(1);
-	CloseHandle(thread01);
+	//m_startend.SetWindowText(_T("连接设备"));
+	//m_link_info.SetWindowText("未连接");
+	//link = -1;
+	//CloseHandle(hCom);
+	//KillTimer(1);
+	//CloseHandle(thread01);
 }
 
 void CParkingmanagementsystemDlg::DoDataExchange(CDataExchange* pDX)
@@ -88,6 +88,7 @@ void CParkingmanagementsystemDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT1, m_sumcar);
 	DDX_Control(pDX, IDC_LIST2, m_list_error);
 	DDX_Control(pDX, IDC_LIST1, m_list_garage);
+	DDX_Control(pDX, IDC_MSCOMM1, m_Comm);
 	//}}AFX_DATA_MAP
 }
 
@@ -191,6 +192,85 @@ BOOL CParkingmanagementsystemDlg::OnInitDialog()
 	update_list();
 
 	thread01=CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)ThreadPoll,NULL,0,NULL);
+
+/*	//////////////////////////////////////////////////////////////////////////
+	if (m_Comm.GetPortOpen())
+		m_Comm.SetPortOpen(FALSE);
+
+	int itmp;
+	sscanf(serverinfo.mscomm,"COM%d",&itmp);
+	m_Comm.SetCommPort(itmp); //选择com，可根据具体情况更改
+	m_Comm.SetInBufferSize(COMLEN);          //设置输入缓冲区的大小，Bytes
+	m_Comm.SetOutBufferSize(COMLEN);         //设置输入缓冲区的大小，Bytes
+
+	char ctmp[]="noems";
+	CString tmp;
+	tmp.Format("%d,%c,%d,%d",serverinfo.BaudRate,ctmp[serverinfo.Parity],serverinfo.ByteSize,serverinfo.StopBits);
+
+	m_Comm.SetSettings(tmp);               //波特率9600，无校验，8个数据位，1个停止位
+	m_Comm.SetInputMode(1);                //1：表示以二进制方式检取数据
+	m_Comm.SetRThreshold(1);               //参数1表示每当串口接收缓冲区中有多于或等于1个字符时将引发一个接收数据的OnComm事件
+	m_Comm.SetInputLen(0);                 //设置当前接收区数据长度为0
+	if (!m_Comm.GetPortOpen())
+	{
+		m_Comm.SetPortOpen(TRUE);          //打开串口
+		hCom=(long*)m_Comm.GetCommID();
+	}
+	else
+	{
+		m_Comm.SetPortOpen(FALSE);
+		MessageBox("串口打开失败!");
+		exit(1);
+	}
+	m_Comm.GetInput();                     //先预读缓冲区以清除残留数据
+	//////////////////////////////////////////////////////////////////////////
+*/
+	//////////////////////////////////////////////////////////////////////////
+	hCom=CreateFile(serverinfo.mscomm,//COM1口
+		GENERIC_READ|GENERIC_WRITE, //允许读和写
+		0, //独占方式
+		NULL,
+		OPEN_EXISTING, //打开而不是创建
+		FILE_ATTRIBUTE_NORMAL|FILE_FLAG_OVERLAPPED, //重叠方式
+		NULL);
+	if(hCom==(HANDLE)-1)
+	{
+		AfxMessageBox("打开COM失败!");
+		return FALSE;
+	}
+	
+	SetupComm(hCom,COMLEN,COMLEN); //输入缓冲区和输出缓冲区的大小都是100
+	
+	COMMTIMEOUTS TimeOuts;
+	//设定读超时
+	TimeOuts.ReadIntervalTimeout=MAXDWORD;
+	TimeOuts.ReadTotalTimeoutMultiplier=0;
+	TimeOuts.ReadTotalTimeoutConstant=0;
+	//在读一次输入缓冲区的内容后读操作就立即返回，
+	//而不管是否读入了要求的字符。
+	
+	
+	//设定写超时
+	TimeOuts.WriteTotalTimeoutMultiplier=100;
+	TimeOuts.WriteTotalTimeoutConstant=500;
+	SetCommTimeouts(hCom,&TimeOuts); //设置超时
+	
+	DCB dcb;
+	GetCommState(hCom,&dcb);
+	dcb.BaudRate=serverinfo.BaudRate; //波特率为9600
+	dcb.ByteSize=serverinfo.ByteSize; //每个字节有8位
+	dcb.Parity  =serverinfo.Parity;   //奇偶校验位
+	dcb.StopBits=serverinfo.StopBits; //停止位
+	SetCommState(hCom,&dcb);
+	
+	PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
+	//////////////////////////////////////////////////////////////////////////
+
+	m_startend.SetWindowText(_T("暂停"));
+	m_link_info.SetWindowText("已连接");
+	link = 1;
+	
+	SetTimer(1,1000,NULL);
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -251,6 +331,7 @@ void CParkingmanagementsystemDlg::OnOK()
 
 void CParkingmanagementsystemDlg::OnCancel() 
 {
+	link=-1;
 	if (CanExit())
 		CDialog::OnCancel();
 }
@@ -391,7 +472,7 @@ void CParkingmanagementsystemDlg::OnButton1()
 		m_Comm.GetInput();                     //先预读缓冲区以清除残留数据
 		//m_Comm.SetOutput(COleVariant("ok")); //发送数据
 		//////////////////////////////////////////////////////////////////////////*/
-		hCom=CreateFile(serverinfo.mscomm,//COM1口
+		/*hCom=CreateFile(serverinfo.mscomm,//COM1口
 			GENERIC_READ|GENERIC_WRITE, //允许读和写
 			0, //独占方式
 			NULL,
@@ -428,9 +509,9 @@ void CParkingmanagementsystemDlg::OnButton1()
 		dcb.StopBits=serverinfo.StopBits; //停止位
 		SetCommState(hCom,&dcb);
 		
-		PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
+		PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);*/
 
-		m_startend.SetWindowText(_T("断开设备"));
+		m_startend.SetWindowText(_T("暂停"));
 		m_link_info.SetWindowText("已连接");
 		link = 1;
 
@@ -440,10 +521,10 @@ void CParkingmanagementsystemDlg::OnButton1()
 	{
 		//m_Comm.SetPortOpen(FALSE);
 		link = 0;
-		Sleep(100);
-		m_startend.SetWindowText(_T("连接设备"));
-		m_link_info.SetWindowText("未连接");
-		CloseHandle(hCom);
+		//Sleep(500);
+		m_startend.SetWindowText(_T("继续"));
+		m_link_info.SetWindowText("已连接");
+		//CloseHandle(hCom);
 		KillTimer(1);
 	}
 }
@@ -632,7 +713,11 @@ void CParkingmanagementsystemDlg::OnTimer(UINT nIDEvent)
 
 void CParkingmanagementsystemDlg::setinfo(char *str)
 {
-	m_info.SetWindowText(str);
+	CString strtmp;
+	m_info.GetWindowText(strtmp);
+	strtmp="\r\n"+strtmp;
+	strtmp=str+strtmp;
+	m_info.SetWindowText(strtmp);
 }
 
 BEGIN_EVENTSINK_MAP(CParkingmanagementsystemDlg, CDialog)

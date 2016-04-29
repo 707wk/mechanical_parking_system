@@ -21,7 +21,6 @@ public:
 	enum { IDD = IDD_DIALOG1 };
 	CEdit	m_col;
 	CEdit	m_row;
-	CEdit	m_info;
 	CComboBox	m_garage_id;
 	//}}AFX_DATA
 

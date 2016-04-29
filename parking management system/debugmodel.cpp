@@ -38,7 +38,6 @@ debugmodel::debugmodel(CWnd* pParent /*=NULL*/)
 	: CDialog(debugmodel::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(debugmodel)
-		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 }
 
@@ -49,7 +48,6 @@ void debugmodel::DoDataExchange(CDataExchange* pDX)
 	//{{AFX_DATA_MAP(debugmodel)
 	DDX_Control(pDX, IDC_EDIT2, m_col);
 	DDX_Control(pDX, IDC_EDIT1, m_row);
-	DDX_Control(pDX, IDC_EDIT3, m_info);
 	DDX_Control(pDX, IDC_COMBO1, m_garage_id);
 	//}}AFX_DATA_MAP
 }
@@ -129,7 +127,7 @@ void debugmodel::savecar()
 	
 	data[4]=(data[0]+data[1]+data[2]+data[3])%CHECKMOD;
 	
-	OnSend(data,6);
+	OnSend(data,5);
 }
 
 void debugmodel::delcar() 
@@ -148,7 +146,7 @@ void debugmodel::delcar()
 	
 	data[4]=(data[0]+data[1]+data[2]+data[3])%CHECKMOD;
 	
-	OnSend(data,6);
+	OnSend(data,5);
 }
 
 void debugmodel::stop() 
@@ -167,7 +165,7 @@ void debugmodel::stop()
 	
 	data[4]=(data[0]+data[1]+data[2]+data[3])%CHECKMOD;
 	
-	OnSend(data,6);
+	OnSend(data,5);
 }
 
 void debugmodel::reset() 
@@ -186,5 +184,5 @@ void debugmodel::reset()
 	
 	data[4]=(data[0]+data[1]+data[2]+data[3])%CHECKMOD;
 	
-	OnSend(data,6);
+	OnSend(data,5);
 }

@@ -1,6 +1,7 @@
 // parking management systemDlg.h : header file
 //
 //{{AFX_INCLUDES()
+#include "mscomm.h"
 //}}AFX_INCLUDES
 
 #if !defined(AFX_PARKINGMANAGEMENTSYSTEMDLG_H__FF645521_0785_4342_A124_9C0552124F11__INCLUDED_)
@@ -39,6 +40,7 @@ public:
 	CEdit	m_sumcar;
 	CListCtrl	m_list_error;
 	CListCtrl	m_list_garage;
+	CMSComm	m_Comm;
 	//}}AFX_DATA
 
 	int sumcar;

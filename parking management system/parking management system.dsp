@@ -95,6 +95,10 @@ SOURCE=.\CCarbarnInfo.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\mscomm.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CWayFinding.cpp
 # End Source File
 # Begin Source File
@@ -141,6 +145,10 @@ SOURCE=.\ThreadFuniction.cpp
 # Begin Source File
 
 SOURCE=.\CCarbarnInfo.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\mscomm.h
 # End Source File
 # Begin Source File
 

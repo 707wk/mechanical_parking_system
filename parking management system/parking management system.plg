@@ -6,46 +6,48 @@
 --------------------Configuration: parking management system - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating command line "midl.exe /nologo /D "_DEBUG" /tlb "Debug/parking management system.tlb" /mktyplib203 /win32 "T:\parking management system.odl""
-Creating command line "rc.exe /l 0x804 /fo"Debug/parking management system.res" /i "Debug" /d "_DEBUG" /d "_AFXDLL" "T:\parking management system.rc"" 
-Creating temporary file "C:\Users\707wk\AppData\Local\Temp\RSP1AED.tmp" with contents
+Creating command line "midl.exe /nologo /D "_DEBUG" /tlb "Debug/parking management system.tlb" /mktyplib203 /win32 "T:\car\parking management system\parking management system.odl""
+Creating command line "rc.exe /l 0x804 /fo"Debug/parking management system.res" /i "Debug" /d "_DEBUG" /d "_AFXDLL" "T:\car\parking management system\parking management system.rc"" 
+Creating temporary file "C:\Users\wk950\AppData\Local\Temp\RSP8F30.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/parking management system.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"T:\CCarbarnInfo.cpp"
-"T:\CWayFinding.cpp"
-"T:\debugmodel.cpp"
-"T:\DlgProxy.cpp"
-"T:\md5.cpp"
-"T:\parking management system.cpp"
-"T:\parking management systemDlg.cpp"
-"T:\ThreadFuniction.cpp"
+"T:\car\parking management system\CCarbarnInfo.cpp"
+"T:\car\parking management system\mscomm.cpp"
+"T:\car\parking management system\CWayFinding.cpp"
+"T:\car\parking management system\debugmodel.cpp"
+"T:\car\parking management system\DlgProxy.cpp"
+"T:\car\parking management system\md5.cpp"
+"T:\car\parking management system\parking management system.cpp"
+"T:\car\parking management system\parking management systemDlg.cpp"
+"T:\car\parking management system\ThreadFuniction.cpp"
 ]
-Creating command line "cl.exe @C:\Users\707wk\AppData\Local\Temp\RSP1AED.tmp" 
-Creating temporary file "C:\Users\707wk\AppData\Local\Temp\RSP1AEE.tmp" with contents
+Creating command line "cl.exe @C:\Users\wk950\AppData\Local\Temp\RSP8F30.tmp" 
+Creating temporary file "C:\Users\wk950\AppData\Local\Temp\RSP8F31.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/parking management system.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"T:\StdAfx.cpp"
+"T:\car\parking management system\StdAfx.cpp"
 ]
-Creating command line "cl.exe @C:\Users\707wk\AppData\Local\Temp\RSP1AEE.tmp" 
-Creating temporary file "C:\Users\707wk\AppData\Local\Temp\RSP1AEF.tmp" with contents
+Creating command line "cl.exe @C:\Users\wk950\AppData\Local\Temp\RSP8F31.tmp" 
+Creating temporary file "C:\Users\wk950\AppData\Local\Temp\RSP8F32.tmp" with contents
 [
 libmysql.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/parking management system.pdb" /debug /machine:I386 /out:"Debug/parking management system.exe" /pdbtype:sept 
-.\Debug\CCarbarnInfo.obj
-.\Debug\CWayFinding.obj
-.\Debug\debugmodel.obj
-.\Debug\DlgProxy.obj
-.\Debug\md5.obj
+".\Debug\CCarbarnInfo.obj"
+".\Debug\mscomm.obj"
+".\Debug\CWayFinding.obj"
+".\Debug\debugmodel.obj"
+".\Debug\DlgProxy.obj"
+".\Debug\md5.obj"
 ".\Debug\parking management system.obj"
 ".\Debug\parking management systemDlg.obj"
-.\Debug\StdAfx.obj
-.\Debug\ThreadFuniction.obj
+".\Debug\StdAfx.obj"
+".\Debug\ThreadFuniction.obj"
 ".\Debug\parking management system.res"
-.\libmysql.lib
+".\libmysql.lib"
 ]
-Creating command line "link.exe @C:\Users\707wk\AppData\Local\Temp\RSP1AEF.tmp"
+Creating command line "link.exe @C:\Users\wk950\AppData\Local\Temp\RSP8F32.tmp"
 <h3>Output Window</h3>
 Creating Type Library...
-Processing T:\parking management system.odl
+Processing T:\car\parking management system\parking management system.odl
 parking management system.odl
 Processing C:\Program Files (x86)\Microsoft Visual Studio\VC98\INCLUDE\oaidl.idl
 oaidl.idl
@@ -60,6 +62,7 @@ Compiling...
 StdAfx.cpp
 Compiling...
 CCarbarnInfo.cpp
+mscomm.cpp
 CWayFinding.cpp
 debugmodel.cpp
 DlgProxy.cpp

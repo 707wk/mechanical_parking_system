@@ -323,17 +323,8 @@ BOOL CParkingmanagementsystemApp::InitInstance()
 		// TODO: Place code here to handle when the dialog is
 		//  dismissed with Cancel
 	}
-	
-	
 
 	// Since the dialog has been closed, return FALSE so that we exit the
 	//  application, rather than start the application's message pump.
 	return FALSE;
-}
-
-CParkingmanagementsystemApp::~CParkingmanagementsystemApp()
-{
-	link=0;
-	//delete garage;
-	//delete idtoindex;
 }

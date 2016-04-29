@@ -45,6 +45,7 @@
 #include <sstream>
 #include <algorithm>
 #include <queue>
+#include <time.h>
 
 using namespace std;
 
@@ -95,29 +96,33 @@ void OnSendBit(char* str,int length)
 		AfxMessageBox("OnSend:串口已断开");
 		exit(1);
 	}
-	
 }
 
 void OnSend(char* str,int length) 
 {
 	// TODO: Add your control notification handler code here
+
+	//char qwe1[255];
+	//sprintf(qwe1,"send:%2d %2d %2d %2d %2d",str[0],str[1],str[2],str[3],str[4]);
+	//dlg->setinfo(qwe1);
+
 	//GetCommState(hCom,&dcb);
-	dcb.Parity  =MARKPARITY;   //奇偶位为1
+	dcb.Parity  =SPACEPARITY;   //奇偶位为0
 	SetCommState(hCom,&dcb);
 
 	OnSendBit(str,1);
 	//PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
 
 	//GetCommState(hCom,&dcb);
-	dcb.Parity  =SPACEPARITY;   //奇偶位为0
+	dcb.Parity  =MARKPARITY;   //奇偶位为1
 	SetCommState(hCom,&dcb);
 	
 	OnSendBit(str+1,length-1);
 	//PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
 
-	dcb.Parity  =serverinfo.Parity;   //奇偶位
-	SetCommState(hCom,&dcb);
-
+	//dcb.Parity  =NOPARITY;   //奇偶位
+	//SetCommState(hCom,&dcb);
+	
 //	OnSendBit(str,length);
 }
 
@@ -139,7 +144,7 @@ void OnReceive(char (&str)[COMLEN],int length)
 
 	if(!ComStat.cbInQue)// 缓冲区无数据
 	{
-		strcpy(str,"\0\0\0");
+		//strcpy(str,"\0\0\0");
         return ;
 	}
 
@@ -166,9 +171,13 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 	int index=0;
 	char strtmp[COMLEN];
 
-	for(;;index=(index+1)%sumgarage)
+	time_t nowtime;
+	struct tm *local;
+
+	for(;link!=-1;index=(index+1)%sumgarage)
 	{
 		char str[]="12345";
+
 		if(!link)
 		{
 			Sleep(1000);
@@ -196,17 +205,41 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			OnSend(str,5);
 			garage[index].setcommand("");
 		}
-		Sleep(100);
-		char recstr[COMLEN]="\0\0\0";
 
+		Sleep(100);
+		char recstr[COMLEN]="\0\0\0\0";
+		
 		OnReceive(recstr,2);
-		recstr[2]='\0';
+		//recstr[2]='\0';
 
 		//////////////////////////////////////////////////////////////////////////
 		//判断接收是否合法
-		if(recstr[0]<=0)            continue;
-		if(recstr[0]>maxindex)      continue;
-		if(idtoindex[recstr[0]]==-1)continue;
+		if(recstr[0]==0)
+		{
+			continue;
+		}
+
+		nowtime = time(NULL);  
+		local=localtime(&nowtime);
+		
+		char qwe1[255];
+		sprintf(qwe1,"[%02d:%02d:%02d] rev:%2X %2X %2X",local->tm_hour,local->tm_min,local->tm_sec,recstr[0],recstr[1],recstr[2]);
+		dlg->setinfo(qwe1);
+
+		if(recstr[0]<0)
+		{
+			continue;
+		}
+
+		if(recstr[0]>maxindex)
+		{
+			continue;
+		}
+
+		if(idtoindex[recstr[0]]==-1)
+		{
+			continue;
+		}
 		//////////////////////////////////////////////////////////////////////////
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -214,10 +247,6 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		char strtmp[COMLEN]="";
 		garage[idtoindex[recstr[0]]].getsqlcommand(strtmp);
 		garage[idtoindex[recstr[0]]].setnowstatus(recstr[1]);
-
-		char qwe1[255];
-		sprintf(qwe1,"%d %d %d %d",recstr[0],recstr[1],recstr[2],garage[idtoindex[recstr[0]]].getnowstatus());
-		dlg->setinfo(qwe1);
 
 		if(strtmp[0]!='\0'&&garage[idtoindex[recstr[0]]].getnowstatus()==STATEFREE)
 		{

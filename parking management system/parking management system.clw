@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=debugmodel
+LastClass=CParkingmanagementsystemDlg
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "parking management system.h"
@@ -33,7 +33,7 @@ ImplementationFile=parking management systemDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=ID_MENUITEM32775
+LastObject=IDC_MSCOMM1
 
 
 [CLS:CParkingmanagementsystemDlgAutoProxy]
@@ -46,7 +46,7 @@ Filter=N
 [DLG:IDD_PARKINGMANAGEMENTSYSTEM_DIALOG]
 Type=1
 Class=CParkingmanagementsystemDlg
-ControlCount=21
+ControlCount=23
 Control1=IDC_LIST1,SysListView32,1350631689
 Control2=IDC_STATIC,button,1342177287
 Control3=IDC_STATIC,button,1342177287
@@ -62,12 +62,14 @@ Control12=IDC_EDIT5,edit,1350633600
 Control13=IDC_BUTTON1,button,1342242816
 Control14=IDC_BUTTON2,button,1342242816
 Control15=IDC_BUTTON3,button,1342242816
-Control16=IDC_EDIT6,edit,1352730692
+Control16=IDC_EDIT6,edit,1350633476
 Control17=IDC_STATIC,button,1342177287
 Control18=IDC_STATIC,button,1342177287
 Control19=IDC_COMBO1,combobox,1344340226
 Control20=IDC_STATIC,static,1342308352
 Control21=IDC_EDIT3,edit,1352730692
+Control22=IDC_STATIC,button,1342177287
+Control23=IDC_MSCOMM1,{648A5600-2C6E-101B-82B6-000000000014},1342242816
 
 [MNU:IDR_MENU1]
 Type=1
@@ -81,7 +83,7 @@ CommandCount=4
 [DLG:IDD_DIALOG1]
 Type=1
 Class=debugmodel
-ControlCount=15
+ControlCount=13
 Control1=IDC_STATIC,static,1342308352
 Control2=IDC_STATIC,static,1342308352
 Control3=IDC_STATIC,static,1342308352
@@ -94,9 +96,7 @@ Control9=IDC_BUTTON1,button,1342242816
 Control10=IDC_BUTTON2,button,1342242816
 Control11=IDC_BUTTON3,button,1342242816
 Control12=IDC_BUTTON4,button,1342242816
-Control13=IDC_EDIT3,edit,1352730692
-Control14=IDC_STATIC,button,1342177287
-Control15=IDC_STATIC,button,1342177287
+Control13=IDC_STATIC,button,1342177287
 
 [CLS:debugmodel]
 Type=0
@@ -104,6 +104,6 @@ HeaderFile=debugmodel.h
 ImplementationFile=debugmodel.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=IDC_COMBO1
+LastObject=IDC_EDIT3
 VirtualFilter=dWC
 

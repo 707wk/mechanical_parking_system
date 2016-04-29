@@ -23,7 +23,6 @@ class CParkingmanagementsystemApp : public CWinApp
 {
 public:
 	CParkingmanagementsystemApp();
-	~CParkingmanagementsystemApp();
 
 // Overrides
 	// ClassWizard generated virtual function overrides
