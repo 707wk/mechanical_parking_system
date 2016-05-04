@@ -107,23 +107,23 @@ void OnSend(char* str,int length)
 	//dlg->setinfo(qwe1);
 
 	//GetCommState(hCom,&dcb);
-	dcb.Parity  =SPACEPARITY;   //奇偶位为0
-	SetCommState(hCom,&dcb);
+	//dcb.Parity  =SPACEPARITY;   //奇偶位为0
+	//SetCommState(hCom,&dcb);
 
-	OnSendBit(str,1);
+	//OnSendBit(str,1);
 	//PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
 
 	//GetCommState(hCom,&dcb);
-	dcb.Parity  =MARKPARITY;   //奇偶位为1
-	SetCommState(hCom,&dcb);
+	//dcb.Parity  =MARKPARITY;   //奇偶位为1
+	//SetCommState(hCom,&dcb);
 	
-	OnSendBit(str+1,length-1);
+	//OnSendBit(str+1,length-1);
 	//PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
 
 	//dcb.Parity  =NOPARITY;   //奇偶位
 	//SetCommState(hCom,&dcb);
 	
-//	OnSendBit(str,length);
+	OnSendBit(str,length);
 }
 
 void OnReceive(char (&str)[COMLEN],int length) 
@@ -176,7 +176,10 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 
 	for(;link!=-1;index=(index+1)%sumgarage)
 	{
-		char str[]="12345";
+		char str[]="1234567";
+
+		str[0]=(char)0x55;
+		str[2]=(char)0xaa;
 
 		if(!link)
 		{
@@ -187,22 +190,21 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		garage[index].getcommand(strtmp);
 		if(strtmp[0]=='\0')//命令为空
 		{
-			str[0]=garage[index].getcarbarnid();
-			str[1]=GETSTATE;
-			str[2]=0;
-			str[3]=0;
-			str[4]=(str[0]+str[1]+str[2]+str[3])%CHECKMOD;
-			OnSend(str,5);
+			str[1]=garage[index].getcarbarnid();
+			str[3]=GETSTATE;
+			str[4]=0;
+			str[5]=0;
+			str[6]=(str[1]+str[3]+str[4]+str[5])%CHECKMOD;
+			OnSend(str,7);
 		}
 		else
 		{
-			str[0]=garage[index].getcarbarnid();
-			//tmp=garage[index].getcommand();
-			str[1]=strtmp[0];
-			str[2]=strtmp[1];
-			str[3]=strtmp[2];
-			str[4]=(str[0]+str[1]+str[2]+str[3])%CHECKMOD;
-			OnSend(str,5);
+			str[1]=garage[index].getcarbarnid();
+			str[3]=strtmp[0];
+			str[4]=strtmp[1];
+			str[5]=strtmp[2];
+			str[6]=(str[1]+str[3]+str[4]+str[5])%CHECKMOD;
+			OnSend(str,7);
 			garage[index].setcommand("");
 		}
 
