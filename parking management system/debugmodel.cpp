@@ -114,75 +114,91 @@ void debugmodel::OnCancel()
 void debugmodel::savecar() 
 {
 	// TODO: Add your control notification handler code here
-	char data[6] = "12345";
+	char data[]="1234567";
+	
+	data[0]=(char)0x55;
+	data[2]=(char)0xaa;
+
 	CString tmp;
 	m_garage_id.GetWindowText(tmp);
 	
-	data[0] = atoi(tmp.GetBuffer(0));
-	data[1] = SAVECAR;
+	data[1] = atoi(tmp.GetBuffer(0));
+	data[3] = SAVECAR;
 	m_row.GetWindowText(tmp);
-	data[2] = atoi(tmp.GetBuffer(0));
+	data[4] = atoi(tmp.GetBuffer(0));
 	m_col.GetWindowText(tmp);
-	data[3] = atoi(tmp.GetBuffer(0));
+	data[5] = atoi(tmp.GetBuffer(0));
 	
-	data[4]=(data[0]+data[1]+data[2]+data[3])%CHECKMOD;
+	data[6]=(data[1]+data[3]+data[4]+data[5])%CHECKMOD;
 	
-	OnSend(data,5);
+	OnSend(data,7);
 }
 
 void debugmodel::delcar() 
 {
 	// TODO: Add your control notification handler code here
-	char data[6] = "12345";
+	char data[]="1234567";
+	
+	data[0]=(char)0x55;
+	data[2]=(char)0xaa;
+
 	CString tmp;
 	m_garage_id.GetWindowText(tmp);
 	
-	data[0] = atoi(tmp.GetBuffer(0));
-	data[1] = DELETECAR;
+	data[1] = atoi(tmp.GetBuffer(0));
+	data[3] = DELETECAR;
 	m_row.GetWindowText(tmp);
-	data[2] = atoi(tmp.GetBuffer(0));
+	data[4] = atoi(tmp.GetBuffer(0));
 	m_col.GetWindowText(tmp);
-	data[3] = atoi(tmp.GetBuffer(0));
+	data[5] = atoi(tmp.GetBuffer(0));
 	
-	data[4]=(data[0]+data[1]+data[2]+data[3])%CHECKMOD;
+	data[6]=(data[1]+data[3]+data[4]+data[5])%CHECKMOD;
 	
-	OnSend(data,5);
+	OnSend(data,7);
 }
 
 void debugmodel::stop() 
 {
 	// TODO: Add your control notification handler code here
-	char data[6] = "12345";
+	char data[]="1234567";
+	
+	data[0]=(char)0x55;
+	data[2]=(char)0xaa;
+
 	CString tmp;
 	m_garage_id.GetWindowText(tmp);
 	
-	data[0] = atoi(tmp.GetBuffer(0));
-	data[1] = STOP;
+	data[1] = atoi(tmp.GetBuffer(0));
+	data[3] = STOP;
 	m_row.GetWindowText(tmp);
-	data[2] = atoi(tmp.GetBuffer(0));
+	data[4] = atoi(tmp.GetBuffer(0));
 	m_col.GetWindowText(tmp);
-	data[3] = atoi(tmp.GetBuffer(0));
+	data[5] = atoi(tmp.GetBuffer(0));
 	
-	data[4]=(data[0]+data[1]+data[2]+data[3])%CHECKMOD;
+	data[6]=(data[1]+data[3]+data[4]+data[5])%CHECKMOD;
 	
-	OnSend(data,5);
+	OnSend(data,7);
 }
 
 void debugmodel::reset() 
 {
 	// TODO: Add your control notification handler code here
-	char data[6] = "12345";
+	char data[]="1234567";
+	
+	data[0]=(char)0x55;
+	data[2]=(char)0xaa;
+
 	CString tmp;
 	m_garage_id.GetWindowText(tmp);
 	
-	data[0] = atoi(tmp.GetBuffer(0));
-	data[1] = RESET;
+	data[1] = atoi(tmp.GetBuffer(0));
+	data[3] = RESET;
 	m_row.GetWindowText(tmp);
-	data[2] = atoi(tmp.GetBuffer(0));
+	data[4] = atoi(tmp.GetBuffer(0));
 	m_col.GetWindowText(tmp);
-	data[3] = atoi(tmp.GetBuffer(0));
+	data[5] = atoi(tmp.GetBuffer(0));
 	
-	data[4]=(data[0]+data[1]+data[2]+data[3])%CHECKMOD;
+	data[6]=(data[1]+data[3]+data[4]+data[5])%CHECKMOD;
 	
-	OnSend(data,5);
+	OnSend(data,7);
 }

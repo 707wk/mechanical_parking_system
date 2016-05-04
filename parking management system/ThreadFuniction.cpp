@@ -225,7 +225,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		local=localtime(&nowtime);
 		
 		char qwe1[255];
-		sprintf(qwe1,"[%02d:%02d:%02d] rev:%2X %2X %2X",local->tm_hour,local->tm_min,local->tm_sec,recstr[0],recstr[1],recstr[2]);
+		sprintf(qwe1,"[%02d:%02d:%02d] rev:%2X %2X",local->tm_hour,local->tm_min,local->tm_sec,recstr[0],recstr[1]);
 		dlg->setinfo(qwe1);
 
 		if(recstr[0]<0)
