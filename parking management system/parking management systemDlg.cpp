@@ -164,11 +164,11 @@ BOOL CParkingmanagementsystemDlg::OnInitDialog()
 
 	m_link_info.SetWindowText("未连接");
 
-	for(int i=0;i<sumgarage;i++)
+/*	for(int i=0;i<sumgarage;i++)
 	{
 		sumcar+=garage[i].getsumcar();
 		spendcar+=garage[i].getspendcar();
-	}
+	}*/
 
 	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 	
@@ -193,38 +193,6 @@ BOOL CParkingmanagementsystemDlg::OnInitDialog()
 
 	thread01=CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)ThreadPoll,NULL,0,NULL);
 
-/*	//////////////////////////////////////////////////////////////////////////
-	if (m_Comm.GetPortOpen())
-		m_Comm.SetPortOpen(FALSE);
-
-	int itmp;
-	sscanf(serverinfo.mscomm,"COM%d",&itmp);
-	m_Comm.SetCommPort(itmp); //选择com，可根据具体情况更改
-	m_Comm.SetInBufferSize(COMLEN);          //设置输入缓冲区的大小，Bytes
-	m_Comm.SetOutBufferSize(COMLEN);         //设置输入缓冲区的大小，Bytes
-
-	char ctmp[]="noems";
-	CString tmp;
-	tmp.Format("%d,%c,%d,%d",serverinfo.BaudRate,ctmp[serverinfo.Parity],serverinfo.ByteSize,serverinfo.StopBits);
-
-	m_Comm.SetSettings(tmp);               //波特率9600，无校验，8个数据位，1个停止位
-	m_Comm.SetInputMode(1);                //1：表示以二进制方式检取数据
-	m_Comm.SetRThreshold(1);               //参数1表示每当串口接收缓冲区中有多于或等于1个字符时将引发一个接收数据的OnComm事件
-	m_Comm.SetInputLen(0);                 //设置当前接收区数据长度为0
-	if (!m_Comm.GetPortOpen())
-	{
-		m_Comm.SetPortOpen(TRUE);          //打开串口
-		hCom=(long*)m_Comm.GetCommID();
-	}
-	else
-	{
-		m_Comm.SetPortOpen(FALSE);
-		MessageBox("串口打开失败!");
-		exit(1);
-	}
-	m_Comm.GetInput();                     //先预读缓冲区以清除残留数据
-	//////////////////////////////////////////////////////////////////////////
-*/
 	//////////////////////////////////////////////////////////////////////////
 	hCom=CreateFile(serverinfo.mscomm,//COM1口
 		GENERIC_READ|GENERIC_WRITE, //允许读和写
@@ -378,6 +346,9 @@ void CParkingmanagementsystemDlg::update_list()
 	m_list_garage.DeleteAllItems();
 	m_list_error.DeleteAllItems();
 
+	sumcar  =0;
+	spendcar=0;
+
 	//////////////////////////////////////////////////////////////////////////
 	//根据车库模块数量以及查询间隔确定超时时间
 	overtime=((maxindex+1)*serverinfo.intervaltime)/1000;
@@ -404,6 +375,9 @@ void CParkingmanagementsystemDlg::update_list()
 		}
 		else
 		{
+			sumcar+=garage[i].getsumcar();
+			spendcar+=garage[i].getspendcar();
+
 			switch(garage[i].getnowstatus())
 			{
 			case STATEFREE:
@@ -595,7 +569,7 @@ void CParkingmanagementsystemDlg::OnButton2()
 	//MessageBox(strtmp);
 	m_carinfo.SetWindowText(strtmp);
 	//sumcar
-	spendcar++;
+	//spendcar++;
 
 	strtmp.Format("insert into t_carinfo(plate,start) values('%s',now())",strplate);
 	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
@@ -667,7 +641,7 @@ void CParkingmanagementsystemDlg::OnButton3()
 	strtmp.Format("最近的出口是第%d号出口",nearoutput);
 	//MessageBox(strtmp);
 	m_carinfo.SetWindowText(strtmp);
-	spendcar--;
+	//spendcar--;
 
 	int index=idtoindex[garageid];
 	

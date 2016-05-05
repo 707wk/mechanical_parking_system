@@ -169,10 +169,12 @@ void OnReceive(char (&str)[COMLEN],int length)
 DWORD WINAPI ThreadPoll(LPVOID pParam)
 {
 	int index=0;
+	int command_flage=0;
 	char strtmp[COMLEN];
 
 	time_t nowtime;
 	struct tm *local;
+	char qwe1[255];
 
 	for(;link!=-1;index=(index+1)%sumgarage)
 	{
@@ -196,6 +198,8 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			str[5]=0;
 			str[6]=(str[1]+str[3]+str[4]+str[5])%CHECKMOD;
 			OnSend(str,7);
+
+			command_flage=0;
 		}
 		else
 		{
@@ -205,13 +209,23 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			str[5]=strtmp[2];
 			str[6]=(str[1]+str[3]+str[4]+str[5])%CHECKMOD;
 			OnSend(str,7);
-			garage[index].setcommand("");
+			//garage[index].setcommand("");
+
+			nowtime = time(NULL);  
+			local=localtime(&nowtime);
+			
+			sprintf(qwe1,"[%02d:%02d:%02d] sen:%02X-%02X-%02X-%02X-%02X",
+				local->tm_hour,local->tm_min,local->tm_sec,str[1],str[3],str[4],str[5],str[6]);
+			dlg->setinfo(qwe1);
+
+			command_flage=1;
 		}
 
 		Sleep(100);
-		char recstr[COMLEN]="\0\0\0\0";
+		char recstr[COMLEN];
+		memset(recstr,'\0',COMLEN);
 		
-		OnReceive(recstr,2);
+		OnReceive(recstr,4);
 		//recstr[2]='\0';
 
 		//////////////////////////////////////////////////////////////////////////
@@ -224,10 +238,15 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		nowtime = time(NULL);  
 		local=localtime(&nowtime);
 		
-		char qwe1[255];
-		sprintf(qwe1,"[%02d:%02d:%02d] rev:%2X %2X",local->tm_hour,local->tm_min,local->tm_sec,recstr[0],recstr[1]);
+		sprintf(qwe1,"[%02d:%02d:%02d] rev:%02X-%02X-%02X-%02X",
+			local->tm_hour,local->tm_min,local->tm_sec,recstr[0],recstr[1],recstr[2],recstr[3]);
 		dlg->setinfo(qwe1);
 
+		if(command_flage&&recstr[1]==ACCEPTED)
+		{
+			garage[index].setcommand("");
+		}
+		
 		if(recstr[0]<0)
 		{
 			continue;
