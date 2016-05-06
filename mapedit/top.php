@@ -19,6 +19,14 @@
 
 </script>
 <style>
+body{
+	-webkit-touch-callout: none;  
+	-webkit-user-select: none;  
+	-khtml-user-select: none;  
+	-moz-user-select: none;  
+	-ms-user-select: none;  
+	user-select: none;  
+}
 a{
 	cursor:default;
 }
@@ -26,7 +34,9 @@ a{
 </style>
 </head>
 <body>
-
+<script>
+document.oncontextmenu=function(e){return false;}  
+</script>
 <nav class="navbar navbar-default">
         <div class="container-fluid" style="background-color:rgb(81,146,187);color:#fff;">
           <div class="navbar-header">

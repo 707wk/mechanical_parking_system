@@ -34,7 +34,7 @@ body{
 }
 .top{
 	text-align:left;
-	margin-left:10px;
+	margin-left:20px;
 }
 .mk{
 	font-size:14px;

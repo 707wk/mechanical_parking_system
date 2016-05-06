@@ -23,7 +23,13 @@ function go(uri){
 
 <style>
 body{
-background-color:rgb(49,64,93);
+	background-color:rgb(49,64,93);
+	-webkit-touch-callout: none;  
+	-webkit-user-select: none;  
+	-khtml-user-select: none;  
+	-moz-user-select: none;  
+	-ms-user-select: none;  
+	user-select: none;  
 }
 a{
 	cursor:default;
@@ -31,10 +37,15 @@ a{
 }
 </style>
 </head>
+
 <body>
+<script>
+document.oncontextmenu=function(e){return false;}  
+</script>
 	<div class="span2" style="height:0px;">
 		<ul  class="nav nav-list" style="text-align:center">
 			<li class=""><a onclick="go('state.php')" ><span class="glyphicon glyphicon-info-sign"></span>&nbsp;模块状态</a></li>
+			<li class=""><a onclick="go('carstate.php')" ><span class="glyphicon glyphicon-tasks"></span>&nbsp;车辆状态</a></li>
 			<li class=""><a onclick="go('mapedit.php')" ><span class="glyphicon glyphicon-edit"></span>&nbsp;地图设置</a></li>
 			<li class=""><a onclick="go('usermgr.php')" ><span class="glyphicon glyphicon-user"></span>&nbsp;用户管理</a></li>
 			<li class=""><a onclick="go('peicemgr.php')" ><span class="glyphicon glyphicon-usd"></span>&nbsp;收费管理</a></li>

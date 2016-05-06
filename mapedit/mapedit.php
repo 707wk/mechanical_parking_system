@@ -178,7 +178,7 @@ h3{
 }
 .top{
 	text-align:left;
-	margin-left:10px;
+	margin-left:20px;
 }
 </style>
 </head>

@@ -21,12 +21,12 @@ body{
 	//background-color: #f5f5f5;
 	margin-left:5px;
 }
-.top{
+h3{
 	text-align:left;
-	margin-left:5px;
+	margin-left:15px;
 }
 </style>
 </head>
 <body >
-<h3 class="top">【收费管理】</h3>
+<h3>【收费管理】</h3>
 </body>

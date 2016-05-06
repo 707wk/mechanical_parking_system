@@ -21,14 +21,14 @@ body{
 	//background-color: #f5f5f5;
 	margin-left:5px;
 }
-.top{
+h3{
 	text-align:left;
-	margin-left:5px;
+	margin-left:15px;
 }
 </style>
 </head>
 <body >
-<h3 class="top">【用户管理】</h3>
+<h3>【用户管理】</h3>
 <div style="max-width:800px">
  <table  id="table1"  data-undefined-text="无" data-pagination="true"  data-search="true"data-show-refresh="true"  data-page-list="[10,50, 100, 200, ALL]" data-toolbar="#toolbar1" >
 </table>
@@ -41,7 +41,7 @@ body{
 <script>
 function init(){
 $('#table1').bootstrapTable({
-				url: 'userapi.php?cmd=yhlb',
+				url: 'ajaxapi.php?cmd=yhlb',
 				columns: [
 				{
 					field: 'ra1',
