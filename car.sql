@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : car
-Source Server Version : 50612
+Source Server         : localhost_3306
+Source Server Version : 50617
 Source Host           : localhost:3306
 Source Database       : car
 
 Target Server Type    : MYSQL
-Target Server Version : 50612
+Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2015-10-10 20:12:21
+Date: 2016-05-07 16:52:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,14 +20,15 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `t_carinfo`;
 CREATE TABLE `t_carinfo` (
-  `id` int(11) NOT NULL,
-  `mac` int(11) DEFAULT NULL,
-  `index` int(11) DEFAULT NULL,
-  `rows` int(11) DEFAULT NULL,
-  `cols` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `mac` (`mac`) USING HASH
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='id           //卡号\r\nmac        //存储车库mac\r\nindex      //第几个\r\nrows       //第几行\r\ncols        //第几列\r\n';
+  `plate` varchar(255) NOT NULL COMMENT '车牌号',
+  `start` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '入库时间',
+  `end` timestamp NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `carbarnid` int(11) DEFAULT NULL COMMENT '车库编号',
+  `num` int(11) DEFAULT NULL,
+  `rows` int(11) DEFAULT NULL COMMENT '第几行',
+  `cols` int(11) DEFAULT NULL COMMENT '第几列',
+  PRIMARY KEY (`plate`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_carinfo
@@ -38,38 +39,49 @@ CREATE TABLE `t_carinfo` (
 -- ----------------------------
 DROP TABLE IF EXISTS `t_garageinfo`;
 CREATE TABLE `t_garageinfo` (
-  `mac` int(11) NOT NULL,
-  `map_rows` int(11) DEFAULT NULL,
-  `map_cols` int(11) DEFAULT NULL,
-  `rows` int(11) DEFAULT NULL,
-  `cols` int(11) DEFAULT NULL,
-  `speedrows` double(11,3) DEFAULT NULL,
-  `speedcols` double(11,3) DEFAULT NULL,
-  `sumcar` int(11) DEFAULT NULL,
-  `spendcar` int(11) DEFAULT NULL,
-  `map_queue` text,
-  PRIMARY KEY (`mac`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='mac             //存储车库mac\r\nmap_rows    //地图第几行\r\nmap_cols     //地图第几列\r\nrows            //共几行\r\ncols             //共几列\r\nspeedrows   //横轴移动速度\r\nspeedcols    //纵轴移动速度\r\nsumcar        //总存车量\r\nspendcar     //已存车量\r\nmap_queue  //存放位置列表\r\n';
+  `id` int(11) NOT NULL DEFAULT '0' COMMENT '编号',
+  `name` varchar(255) DEFAULT NULL COMMENT '车库名',
+  `nowstatus` int(11) DEFAULT NULL COMMENT '现在状态',
+  `oldstatus` int(11) DEFAULT NULL COMMENT '上一状态',
+  `command` varchar(255) DEFAULT NULL COMMENT '正在执行的命令',
+  `sumcar` int(11) DEFAULT '-1' COMMENT '容量',
+  `spendcar` int(11) DEFAULT '-1' COMMENT '已存车量',
+  `map_rows` int(11) DEFAULT '-1' COMMENT '第几行',
+  `map_cols` int(11) DEFAULT '-1' COMMENT '第几列',
+  `rows` int(11) DEFAULT '-1' COMMENT '几行',
+  `cols` int(11) DEFAULT '-1' COMMENT '几列',
+  `speedrows` double(11,3) DEFAULT '-1.000' COMMENT '横向移动速度',
+  `speedcols` double(11,3) DEFAULT '-1.000' COMMENT '纵向移动速度',
+  `map_queue` text COMMENT '位置列表',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_garageinfo
 -- ----------------------------
+INSERT INTO `t_garageinfo` VALUES ('1', '1', null, null, null, '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '');
+INSERT INTO `t_garageinfo` VALUES ('2', '2', null, null, null, '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '');
+INSERT INTO `t_garageinfo` VALUES ('3', '3', null, null, null, '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '');
+INSERT INTO `t_garageinfo` VALUES ('4', '4', null, null, null, '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '');
 
 -- ----------------------------
 -- Table structure for `t_history`
 -- ----------------------------
 DROP TABLE IF EXISTS `t_history`;
 CREATE TABLE `t_history` (
-  `time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `plate_number` char(30) DEFAULT NULL,
-  `id` int(11) DEFAULT NULL,
-  `mac` int(11) DEFAULT NULL,
-  `timestatus` int(11) DEFAULT NULL,
-  `balancestatus` double DEFAULT NULL,
-  `money` double DEFAULT NULL,
-  `balance` double DEFAULT NULL,
-  KEY `plate_number` (`plate_number`) USING HASH
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='time               //当前时间\r\nplate_number //车牌\r\nid                  //卡号\r\nmac               //存储车库mac\r\ntimestatus      //存车:1 取车:2\r\nbalancestatus //充值:1 扣费:2\r\nmoney           //充值/扣除费用\r\nbalance         //充值/扣除之后余额\r\n';
+  `time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '当前时间',
+  `plate` varchar(100) DEFAULT NULL COMMENT '车牌',
+  `name` varchar(100) DEFAULT NULL COMMENT '车主姓名',
+  `timestatus` int(11) DEFAULT NULL COMMENT '存车:1 取车:2 充值:3',
+  `carbarnid` int(11) DEFAULT NULL COMMENT '车库编号',
+  `carbarnname` varchar(255) DEFAULT NULL COMMENT '车库名',
+  `rows` int(11) DEFAULT NULL COMMENT '第几行',
+  `cols` int(11) DEFAULT NULL COMMENT '第几列',
+  `money` double DEFAULT NULL COMMENT '充值/扣除费用',
+  `balance` double DEFAULT NULL COMMENT '余额',
+  PRIMARY KEY (`time`),
+  KEY `plate` (`plate`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_history
@@ -80,44 +92,77 @@ CREATE TABLE `t_history` (
 -- ----------------------------
 DROP TABLE IF EXISTS `t_idtoplatenumber`;
 CREATE TABLE `t_idtoplatenumber` (
-  `id` int(11) NOT NULL DEFAULT '0',
-  `plate_number` char(30) NOT NULL,
-  `balance` double DEFAULT NULL,
-  `start` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `end` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `plate_number` (`plate_number`) USING HASH
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='id                  //卡号\r\nplate_number //车牌\r\nbalance         //余额\r\nstart              //停车时间\r\nend               //取车时间\r\n';
+  `plate` varchar(255) NOT NULL COMMENT '车牌号',
+  `username` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `balance` double DEFAULT NULL COMMENT '余额',
+  PRIMARY KEY (`plate`),
+  KEY `plate_number` (`plate`) USING HASH
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_idtoplatenumber
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `t_mapinfo`
+-- Table structure for `t_map`
 -- ----------------------------
-DROP TABLE IF EXISTS `t_mapinfo`;
-CREATE TABLE `t_mapinfo` (
-  `rows` int(11) NOT NULL DEFAULT '0',
-  `cols` int(11) DEFAULT NULL,
-  PRIMARY KEY (`rows`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='rows  //地图行数\r\ncols   //地图列数\r\n';
+DROP TABLE IF EXISTS `t_map`;
+CREATE TABLE `t_map` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `x` int(11) NOT NULL,
+  `y` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  `type_id` int(11) NOT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=350 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of t_mapinfo
+-- Records of t_map
+-- ----------------------------
+INSERT INTO `t_map` VALUES ('317', '2', '1', '1', '1', '');
+INSERT INTO `t_map` VALUES ('318', '2', '2', '4', '0', '');
+INSERT INTO `t_map` VALUES ('319', '2', '3', '4', '0', '');
+INSERT INTO `t_map` VALUES ('320', '3', '2', '4', '0', '');
+INSERT INTO `t_map` VALUES ('321', '3', '1', '2', '1', '');
+INSERT INTO `t_map` VALUES ('322', '2', '4', '4', '0', '');
+INSERT INTO `t_map` VALUES ('323', '2', '5', '4', '0', '');
+INSERT INTO `t_map` VALUES ('328', '3', '5', '4', '0', '');
+INSERT INTO `t_map` VALUES ('329', '4', '5', '4', '0', '');
+INSERT INTO `t_map` VALUES ('330', '4', '6', '4', '0', '');
+INSERT INTO `t_map` VALUES ('331', '4', '7', '4', '0', '');
+INSERT INTO `t_map` VALUES ('332', '4', '8', '4', '0', '');
+INSERT INTO `t_map` VALUES ('345', '2', '6', '4', '0', '');
+INSERT INTO `t_map` VALUES ('346', '2', '7', '3', '1', null);
+INSERT INTO `t_map` VALUES ('347', '5', '5', '3', '2', null);
+INSERT INTO `t_map` VALUES ('348', '4', '9', '3', '3', null);
+INSERT INTO `t_map` VALUES ('349', '1', '5', '3', '4', null);
+
+-- ----------------------------
+-- Table structure for `t_reservation`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_reservation`;
+CREATE TABLE `t_reservation` (
+  `plate` varchar(255) NOT NULL COMMENT '车牌号',
+  PRIMARY KEY (`plate`),
+  KEY `plate_number` (`plate`) USING HASH
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of t_reservation
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `t_maplocation`
+-- Table structure for `t_user`
 -- ----------------------------
-DROP TABLE IF EXISTS `t_maplocation`;
-CREATE TABLE `t_maplocation` (
-  `rows` int(11) NOT NULL DEFAULT '0',
-  `cols` int(11) NOT NULL DEFAULT '0',
-  `object` int(11) DEFAULT NULL,
-  PRIMARY KEY (`rows`,`cols`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='rows    //第几行\r\ncols     //第几列\r\nobject  //对象是什么\r\n';
+DROP TABLE IF EXISTS `t_user`;
+CREATE TABLE `t_user` (
+  `name` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `type` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
--- Records of t_maplocation
+-- Records of t_user
 -- ----------------------------

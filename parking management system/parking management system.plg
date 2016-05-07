@@ -8,7 +8,7 @@
 <h3>Command Lines</h3>
 Creating command line "midl.exe /nologo /D "_DEBUG" /tlb "Debug/parking management system.tlb" /mktyplib203 /win32 "T:\car\parking management system\parking management system.odl""
 Creating command line "rc.exe /l 0x804 /fo"Debug/parking management system.res" /i "Debug" /d "_DEBUG" /d "_AFXDLL" "T:\car\parking management system\parking management system.rc"" 
-Creating temporary file "C:\Users\wk950\AppData\Local\Temp\RSPFBD9.tmp" with contents
+Creating temporary file "C:\Users\wk950\AppData\Local\Temp\RSP54CE.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/parking management system.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
 "T:\car\parking management system\CCarbarnInfo.cpp"
@@ -21,14 +21,14 @@ Creating temporary file "C:\Users\wk950\AppData\Local\Temp\RSPFBD9.tmp" with con
 "T:\car\parking management system\parking management systemDlg.cpp"
 "T:\car\parking management system\ThreadFuniction.cpp"
 ]
-Creating command line "cl.exe @C:\Users\wk950\AppData\Local\Temp\RSPFBD9.tmp" 
-Creating temporary file "C:\Users\wk950\AppData\Local\Temp\RSPFBDA.tmp" with contents
+Creating command line "cl.exe @C:\Users\wk950\AppData\Local\Temp\RSP54CE.tmp" 
+Creating temporary file "C:\Users\wk950\AppData\Local\Temp\RSP54CF.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/parking management system.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
 "T:\car\parking management system\StdAfx.cpp"
 ]
-Creating command line "cl.exe @C:\Users\wk950\AppData\Local\Temp\RSPFBDA.tmp" 
-Creating temporary file "C:\Users\wk950\AppData\Local\Temp\RSPFBDB.tmp" with contents
+Creating command line "cl.exe @C:\Users\wk950\AppData\Local\Temp\RSP54CF.tmp" 
+Creating temporary file "C:\Users\wk950\AppData\Local\Temp\RSP54D0.tmp" with contents
 [
 libmysql.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/parking management system.pdb" /debug /machine:I386 /out:"Debug/parking management system.exe" /pdbtype:sept 
 ".\Debug\CCarbarnInfo.obj"
@@ -44,7 +44,7 @@ libmysql.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/parking man
 ".\Debug\parking management system.res"
 ".\libmysql.lib"
 ]
-Creating command line "link.exe @C:\Users\wk950\AppData\Local\Temp\RSPFBDB.tmp"
+Creating command line "link.exe @C:\Users\wk950\AppData\Local\Temp\RSP54D0.tmp"
 <h3>Output Window</h3>
 Creating Type Library...
 Processing T:\car\parking management system\parking management system.odl

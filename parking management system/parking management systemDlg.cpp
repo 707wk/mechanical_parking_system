@@ -590,8 +590,8 @@ void CParkingmanagementsystemDlg::OnButton2()
 	sendstr[2]=garage[index].getcols(garage[index].findemptycarid());
 	garage[index].setcommand(sendstr);
 
-	strtmp.Format("insert into t_carlocation(plate,carbarnid,num) values('%s',%d,%d)",
-		strplate,garageid,garage[index].findemptycarid());
+	strtmp.Format("update t_carinfo set carbarnid=%d,num=%d where plate='%s'",
+		garageid,garage[index].findemptycarid(),strplate);
 	garage[index].setsqlcommand(strtmp.GetBuffer(0));
 
 	garage[index].savecar();
@@ -609,7 +609,7 @@ void CParkingmanagementsystemDlg::OnButton3()
 
 	if(strplate == "") return ;
 
-	strtmp.Format( "select carbarnid,num from t_carlocation where plate='%s'", strplate );
+	strtmp.Format( "select carbarnid,num from t_carinfo where plate='%s'", strplate );
 
 	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 	
@@ -661,7 +661,7 @@ void CParkingmanagementsystemDlg::OnButton3()
 		exit(1) ;
 	}
 
-	strtmp.Format("delete from t_carlocation where plate='%s'",strplate);
+	strtmp.Format("delete from t_carinfo where plate='%s'",strplate);
 	garage[index].setsqlcommand(strtmp.GetBuffer(0));
 
 	garage[index].deletecar(num);
