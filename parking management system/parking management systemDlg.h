@@ -30,12 +30,12 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CParkingmanagementsystemDlg)
 	enum { IDD = IDD_PARKINGMANAGEMENTSYSTEM_DIALOG };
+	CStatic	m_stateico;
 	CEdit	m_carinfo;
 	CEdit	m_carplate;
 	CComboBox	m_list_input;
 	CEdit	m_info;
 	CButton	m_startend;
-	CEdit	m_link_info;
 	CEdit	m_freecar;
 	CEdit	m_sumcar;
 	CListCtrl	m_list_error;

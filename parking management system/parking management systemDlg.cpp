@@ -78,12 +78,12 @@ void CParkingmanagementsystemDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CParkingmanagementsystemDlg)
+	DDX_Control(pDX, IDC_STATE_ICO, m_stateico);
 	DDX_Control(pDX, IDC_EDIT3, m_carinfo);
 	DDX_Control(pDX, IDC_EDIT4, m_carplate);
 	DDX_Control(pDX, IDC_COMBO1, m_list_input);
 	DDX_Control(pDX, IDC_EDIT6, m_info);
 	DDX_Control(pDX, IDC_BUTTON1, m_startend);
-	DDX_Control(pDX, IDC_EDIT5, m_link_info);
 	DDX_Control(pDX, IDC_EDIT2, m_freecar);
 	DDX_Control(pDX, IDC_EDIT1, m_sumcar);
 	DDX_Control(pDX, IDC_LIST2, m_list_error);
@@ -136,8 +136,8 @@ BOOL CParkingmanagementsystemDlg::OnInitDialog()
 	m_list_garage.InsertColumn(1,"备注"      ,LVCFMT_CENTER, 70 ,0);
 	m_list_garage.InsertColumn(2,"状态"      ,LVCFMT_CENTER, 70 ,0);
 	m_list_garage.InsertColumn(3,"命令耗时"  ,LVCFMT_CENTER, 70 ,0);
-	m_list_garage.InsertColumn(4,"容量"      ,LVCFMT_CENTER, 70 ,0);
-	m_list_garage.InsertColumn(5,"已存车辆数",LVCFMT_CENTER, 90 ,0);
+	m_list_garage.InsertColumn(4,"容量"      ,LVCFMT_CENTER, 50 ,0);
+	m_list_garage.InsertColumn(5,"已存"      ,LVCFMT_CENTER, 50 ,0);
 
 	//设置列表主题
 	m_list_error.SetExtendedStyle(
@@ -162,7 +162,7 @@ BOOL CParkingmanagementsystemDlg::OnInitDialog()
 	m_list_reservation.InsertColumn(1,"车牌号"    ,LVCFMT_CENTER, 70,0);
 	m_list_reservation.InsertColumn(3,"等待时间"  ,LVCFMT_CENTER, 70 ,0);*/
 
-	m_link_info.SetWindowText("未连接");
+//	m_link_info.SetWindowText("未连接");
 
 /*	for(int i=0;i<sumgarage;i++)
 	{
@@ -235,9 +235,12 @@ BOOL CParkingmanagementsystemDlg::OnInitDialog()
 	//////////////////////////////////////////////////////////////////////////
 
 	m_startend.SetWindowText(_T("暂停"));
-	m_link_info.SetWindowText("已连接");
+//	m_link_info.SetWindowText("已连接");
 	link = 1;
 	
+	HICON hIcon=AfxGetApp()->LoadIcon(IDI_ICON_GREEN);
+	m_stateico.SetIcon(hIcon);
+
 	SetTimer(1,1000,NULL);
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -395,9 +398,14 @@ void CParkingmanagementsystemDlg::update_list()
 			case STATERSET:
 				m_list_garage.SetItemText(index,2,"复位");
 				break;
+			case ACCEPTED:
+				m_list_garage.SetItemText(index,2,"已接收");
+				break;
 			case BUSY:
 				m_list_garage.SetItemText(index,2,"运行中");
 				break;
+			default:
+				m_list_garage.SetItemText(index,2,"未知");
 			}
 		}
 
@@ -486,8 +494,11 @@ void CParkingmanagementsystemDlg::OnButton1()
 		PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);*/
 
 		m_startend.SetWindowText(_T("暂停"));
-		m_link_info.SetWindowText("已连接");
+//		m_link_info.SetWindowText("已连接");
 		link = 1;
+
+		HICON hIcon=AfxGetApp()->LoadIcon(IDI_ICON_GREEN);
+		m_stateico.SetIcon(hIcon);
 
 		SetTimer(1,1000,NULL);
 	}
@@ -497,8 +508,12 @@ void CParkingmanagementsystemDlg::OnButton1()
 		link = 0;
 		//Sleep(500);
 		m_startend.SetWindowText(_T("继续"));
-		m_link_info.SetWindowText("已连接");
+//		m_link_info.SetWindowText("已连接");
 		//CloseHandle(hCom);
+
+		HICON hIcon=AfxGetApp()->LoadIcon(IDI_ICON_RED);
+		m_stateico.SetIcon(hIcon);
+
 		KillTimer(1);
 	}
 }
