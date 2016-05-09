@@ -26,23 +26,26 @@ h3{
 	margin-left:15px;
 }
 #carsearch{
-	width:130px;
+	width:196px;
+	margin-right:0px;
+	display: inline;
 }
 #toolbar{
+	//text-align:right;
 }
 </style>
 </head>
 <body >
 <h3>【车辆状态】</h3>
 <div style="max-width:800px">
- <div id="toolbar1">
- <input type="number" id="carsearch" placeholder="按车辆编号搜索">
+ <div id="toolbar1" style="margin-left:100px;">
+ <input type="text" class="form-control" id="carsearch" placeholder="按车辆编号搜索">
+ <button class="btn btn-default" type="button" id="refresh" title="刷新"><i class="glyphicon glyphicon-refresh icon-refresh"></i></button>
  </div>
- <table  id="table1"  data-undefined-text="无" data-pagination="true"  data-search="false"data-show-refresh="true"  data-page-list="[10,50, 100, 200, ALL]" data-toolbar="#toolbar1" >
+ <table  id="table1"  data-undefined-text="无" data-pagination="true"  data-search="false"data-show-refresh="false"  data-page-list="[10,50, 100, 200, ALL]" data-toolbar="#toolbar1" >
 </table>
 </div>
-<div id="toolbar1" >
-</div>
+
 <script>
 function init(){
 $('#table1').bootstrapTable({
@@ -76,12 +79,16 @@ $('#table1').bootstrapTable({
 					title: '存车开始时间'
 				} ]
 			});
+		$('#toolbar1').css("margin-left",parseInt($('#table1').css('width'))-239+"px");
 }
 init();
 $("#carsearch").keyup(function(){
 	var plt=$('#carsearch').val();
 	if(plt)$('#table1').bootstrapTable('filterBy',{'plate':plt});
 	else $('#table1').bootstrapTable('filterBy',null);
+});	
+$("#refresh").click(function(){
+	$('#table1').bootstrapTable('refresh');
 });	
 
 </script>

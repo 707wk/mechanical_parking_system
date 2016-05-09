@@ -65,7 +65,7 @@ if(isset($_POST['do'])&&$_POST['y']!=""&&$_POST['x']!=""):
 endif;
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -76,11 +76,22 @@ endif;
 <style>
 body {
 	font-family: '微软雅黑';
-	background-color: #f5f5f5;
+	background-color: #fff;
 }
 input ,select{
-	background-color: #f5f5f5;
+	background-color: #fff;
 }
+
+.modal_wrapper{
+	display: table;
+	height: 100%;
+	margin: 0px auto;
+}
+.modal-dialog{
+	display: table-cell;
+	vertical-align: middle;
+}
+
 .mytable td{
 	height:22px;
 	width:22px;
@@ -180,6 +191,12 @@ h3{
 	text-align:left;
 	margin-left:20px;
 }
+.form-control{
+	margin-right:0px;display:inline;width:auto;
+}
+.modal{
+	margin:5% 10% 5% 10%;overflow-x:hidden;overflow-y:hidden;
+}
 </style>
 </head>
 <body>
@@ -248,22 +265,18 @@ echo '</div>';
 
 
 <div class="modal" id="bjcrkdhk" data-backdrop="static" >
-<div class="modal-dialog "  style="display: inline-block; width: 350px;;margin-left:30%;margin-top:50px;">
+<div class="modal-dialog "  style="display: inline-block; width: 350px;margin-left:30%;margin-top:50px;">
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
 			<h4 class="modal-title">编辑出入口信息</h4>
 		</div>
 		<div class="modal-body" style="height:120px;">
-				<div class="form-group" style="">
-					<label class="col-sm-6 control-label">编号</label>
-					<div class="col-sm-6">
-					<input type="text" class="form-control" id="crkbh" placeholder="">
-					</div>
-					<label class="col-sm-6 control-label">名称</label>
-					<div class="col-sm-6">
+				<div style="">
+					<label>编号</label>
+					<input type="text" class="form-control" id="crkbh" placeholder=""><br>
+					<label>名称</label>
 					<input type="text" class="form-control" id="crkbz" placeholder="">
-					</div>
 				</div>
 		</div>
 		<div class="modal-footer">
@@ -277,8 +290,8 @@ echo '</div>';
 </div>
 
 
-<div class="modal" id="bjmkdhk" data-backdrop="static" >
-<div class="modal-dialog "  style="display: inline-block;width:auto;margin-left:23%;margin-right:23%;margin-top:50px;">
+<div class="modal" id="bjmkdhk" data-backdrop="static" style="margin:5% 10% 5% 10%;overflow-x:hidden;overflow-y:hidden">
+<div class="modal-dialog "  style="display: inline;" >
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
@@ -286,35 +299,21 @@ echo '</div>';
 		</div>
 		<div class="modal-body" style="height:auto;max-height:768px;min-height:360px;">
 			<div class="col-sm-5 ">
-				<div class="form-group" style="">
-					<label class="col-sm-6 control-label">模块编号</label>
-					<div class="col-sm-6">
-					<input type="text" class="form-control" id="compotr" placeholder="">
-					</div>
-					<label class="col-sm-6 control-label">模块名称</label>
-					<div class="col-sm-6">
-					<input type="text" class="form-control" id="mkname" placeholder="">
-					</div>
-					<label class="col-sm-6 control-label">模块层数</label>
-					<div class="col-sm-6">
-					<input type="text" class="form-control" id="rows" placeholder="最大8层">
-					</div> 
-					<label class="col-sm-6 control-label">模块列数</label>
-					<div class="col-sm-6">
-					<input type="text" class="form-control" id="cols" placeholder="最大13列">
-					</div>
-					<label class="col-sm-6 control-label">横向速度</label>
-					<div class="col-sm-6">
-					<input type="text" class="form-control" id="speedrows" placeholder="">
-					</div>
-					<label class="col-sm-6 control-label">纵向速度</label>
-					<div class="col-sm-6">
-					<input type="text" class="form-control" id="speedcols" placeholder="">
-					</div>
-					<label class="col-sm-6 control-label">入口编号</label>
-					<div class="col-sm-6">
+				<div class="" style="margin-right:0px;display:inline">
+					<label>模块编号</label>
+					<input type="text" class="form-control" id="compotr" placeholder=""><br>
+					<label>模块名称</label>
+					<input type="text" class="form-control" id="mkname" placeholder=""><br>
+					<label>模块层数</label>
+					<input type="text" class="form-control" id="rows" placeholder="最大8层"><br>
+					<label>模块列数</label>
+					<input type="text" class="form-control" id="cols" placeholder="最大13列"><br>
+					<label>横向速度</label>
+					<input type="text" class="form-control" id="speedrows" placeholder=""><br>
+					<label>纵向速度</label>
+					<input type="text" class="form-control" id="speedcols" placeholder=""><br>
+					<label>入口编号</label>
 					<textarea type="text" class="form-control" id="instr" placeholder="入口编号"></textarea>
-					</div>
 					<center>
 					<button type="button" class="btn btn-success" style="margin-top:20px;" data-dismiss="modal" onclick="dosave()">保存模块信息</button>&nbsp;&nbsp;
 					<button type="button" class="btn btn-default" style="margin-top:20px;" data-dismiss="modal">放弃修改</button>　

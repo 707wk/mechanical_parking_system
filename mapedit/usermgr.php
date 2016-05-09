@@ -33,10 +33,10 @@ h3{
  <table  id="table1"  data-undefined-text="无" data-pagination="true"  data-search="true"data-show-refresh="true"  data-page-list="[10,50, 100, 200, ALL]" data-toolbar="#toolbar1" >
 </table>
 </div>
-<div id="toolbar1">
-<button class="btn btn-success" onclick="alert('building...')">增加用户</button>&nbsp;
-<button class="btn btn-info" onclick="alert('building...')">编辑用户</button>&nbsp;
-<button class="btn btn-danger" onclick="alert('building...')">删除用户</button>	
+<div id="toolbar1" class="btn-group">
+<button class="btn btn-primary" onclick="alert('building...')"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;增加</button>&nbsp;
+<button class="btn btn-primary" onclick="alert('building...')"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;编辑</button>&nbsp;
+<button class="btn btn-primary" onclick="alert('building...')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;删除</button>	
 </div>
 <script>
 function init(){
