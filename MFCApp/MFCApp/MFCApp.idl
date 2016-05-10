@@ -3,7 +3,8 @@
 // 此文件将由 MIDL 编译器处理以产生
 // 类型库(MFCApp.tlb)。
 
-[ uuid(66B0105E-C748-4017-ABF1-11C95E6AF2BE), version(1.0) ]
+#include "olectl.h"
+[uuid(66B0105E-C748-4017-ABF1-11C95E6AF2BE), version(1.0)]
 library MFCApp
 {
 	importlib("stdole32.tlb");
@@ -25,5 +26,21 @@ library MFCApp
 	coclass MFCApp
 	{
 		[default] dispinterface IMFCApp;
+	};
+	//  debugmodel 的主调度接口
+		
+	[ uuid(ABBA8598-9C60-4A1F-90DF-ED4EB9BE8697) ]
+	dispinterface Idebugmodel
+	{
+		properties:
+		methods:
+	};
+
+	//  debugmodel 的类信息
+
+	[ uuid(23A05A32-1319-4691-9ADB-8545B3EC348A) ]
+	coclass debugmodel
+	{
+		[default] dispinterface Idebugmodel;
 	};
 };

@@ -54,6 +54,9 @@
     <ClInclude Include="ThreadFuniction.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="debugmodel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MFCApp.cpp">
@@ -80,6 +83,9 @@
     <ClCompile Include="ThreadFuniction.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="debugmodel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="MFCApp.idl">
@@ -99,6 +105,12 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\MFCApp.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\green.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\red.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

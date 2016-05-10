@@ -3,6 +3,8 @@
 //
 
 #pragma once
+#include "afxwin.h"
+#include "afxcmn.h"
 
 class CMFCAppDlgAutoProxy;
 
@@ -17,6 +19,7 @@ class CMFCAppDlg : public CDialogEx
 public:
 	CMFCAppDlg(CWnd* pParent = NULL);	// 标准构造函数
 	virtual ~CMFCAppDlg();
+	void setinfo(char* str);
 
 // 对话框数据
 	enum { IDD = IDD_MFCAPP_DIALOG };
@@ -24,9 +27,14 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 
+	int sumcar;
+	int spendcar;
+	//char sendstr[255];
+	HANDLE thread01;
 
 // 实现
 protected:
+	void update_list();
 	CMFCAppDlgAutoProxy* m_pAutoProxy;
 	HICON m_hIcon;
 
@@ -43,4 +51,23 @@ protected:
 public:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
+	CEdit m_info;
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	CListCtrl m_list_garage;
+	CListCtrl m_list_error;
+	CEdit m_sumcar;
+	CEdit m_freecar;
+	CComboBox m_list_input;
+	CButton m_startend;
+	CStatic m_stateico;
+	afx_msg void OnBnClickedButton3();
+	CEdit m_carplate;
+	afx_msg void OnBnClickedButton1();
+	CEdit m_carinfo;
+	CListCtrl m_list_passageway;
+	afx_msg void OnBnClickedButton2();
+	afx_msg void On32774();
+	afx_msg void On32773();
+	afx_msg void On32771();
+	afx_msg void On32772();
 };
