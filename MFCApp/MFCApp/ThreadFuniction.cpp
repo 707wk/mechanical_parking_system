@@ -180,8 +180,8 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 	{
 		char str[]="1234567";
 
-		str[0]=(char)0x55;
-		str[2]=(char)0xaa;
+		str[0] = ADDFIRST;
+		str[2] = ADDEND;
 
 		if(!link)
 		{

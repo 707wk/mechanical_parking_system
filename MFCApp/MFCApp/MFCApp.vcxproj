@@ -139,6 +139,7 @@
     <Midl Include="MFCApp.idl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="MFCApp.reg" />
     <None Include="res\MFCApp.rc2" />
   </ItemGroup>

@@ -555,6 +555,8 @@ void CMFCAppDlg::OnBnClickedButton1()
 	CString strinput;
 //	CString strtmp;
 	char strtmp[1024];
+	char pValue[1024];
+	DWORD dwNum;
 
 	m_carplate.GetWindowText(strplate);
 	m_list_input.GetWindowText(strinput);
@@ -569,8 +571,12 @@ void CMFCAppDlg::OnBnClickedButton1()
 		return;
 	}
 
+	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, NULL, 0, NULL, FALSE);
+	memset(pValue, 0, 1024);
+	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
+
 //	strtmp.Format(
-	sprintf(strtmp,"select * from t_reservation where plate='%s'", strplate);
+	sprintf(strtmp, "select * from t_reservation where plate='%s'", pValue);
 
 	mysql_query(&serverinfo.mysql, "SET NAMES 'UTF-8'");
 
@@ -581,7 +587,7 @@ void CMFCAppDlg::OnBnClickedButton1()
 		if (mysql_num_rows(res))
 		{
 //			strtmp.Format(
-			sprintf(strtmp,"delete from t_reservation where plate='%s'", strplate);
+			sprintf(strtmp, "delete from t_reservation where plate='%s'", pValue);
 			mysql_query(&serverinfo.mysql, strtmp);
 		}
 	}
@@ -591,8 +597,12 @@ void CMFCAppDlg::OnBnClickedButton1()
 		exit(1);
 	}
 
+	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, NULL, 0, NULL, FALSE);
+	memset(pValue, 0, 1024);
+	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
+
 //	strtmp.Format(
-	sprintf(strtmp,"select * from t_carinfo where plate='%s'", strplate);
+	sprintf(strtmp, "select * from t_carinfo where plate='%s'", pValue);
 
 	mysql_query(&serverinfo.mysql, "SET NAMES 'UTF-8'");
 
@@ -607,14 +617,13 @@ void CMFCAppDlg::OnBnClickedButton1()
 		}
 	}
 
-	DWORD dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strinput, -1, NULL, 0, NULL, FALSE);
-	char *pValue = new char[1024];
+	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strinput, -1, NULL, 0, NULL, FALSE);
 	memset(pValue, 0, 1024);
 	WideCharToMultiByte(CP_OEMCP, NULL, strinput, -1, pValue, dwNum, NULL, FALSE);
 	
 	int garageid = mapinfo->nearestcarport(atoi(pValue));
 
-	delete pValue;
+//	delete pValue;
 
 
 	if (garageid == -1)
@@ -631,8 +640,12 @@ void CMFCAppDlg::OnBnClickedButton1()
 	//sumcar
 	//spendcar++;
 
+	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, NULL, 0, NULL, FALSE);
+	memset(pValue, 0, 1024);
+	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
+
 //	strtmp.Format(
-	sprintf(strtmp,"insert into t_carinfo(plate,start) values('%s',now())", strplate);
+	sprintf(strtmp, "insert into t_carinfo(plate,start) values('%s',now())", pValue);
 	mysql_query(&serverinfo.mysql, "SET NAMES 'UTF-8'");
 
 	if (mysql_query(&serverinfo.mysql, strtmp) != NULL)
@@ -653,7 +666,7 @@ void CMFCAppDlg::OnBnClickedButton1()
 
 //	strtmp.Format(
 	sprintf(strtmp,"update t_carinfo set carbarnid=%d,num=%d where plate='%s'",
-		garageid, garage[index].findemptycarid(), strplate);
+		garageid, garage[index].findemptycarid(), pValue);
 	garage[index].setsqlcommand(strtmp);
 
 	garage[index].savecar();
@@ -668,13 +681,19 @@ void CMFCAppDlg::OnBnClickedButton2()
 	CString strplate;
 //	CString strtmp;
 	char strtmp[1024];
+	char pValue[1024];
+	DWORD dwNum;
 
 	m_carplate.GetWindowText(strplate);
 
 	if (strplate == "") return;
 
+	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, NULL, 0, NULL, FALSE);
+	memset(pValue, 0, 1024);
+	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
+
 //	strtmp.Format(
-	sprintf(strtmp,"select carbarnid,num from t_carinfo where plate='%s'", strplate);
+	sprintf(strtmp, "select carbarnid,num from t_carinfo where plate='%s'", pValue);
 
 	mysql_query(&serverinfo.mysql, "SET NAMES 'UTF-8'");
 
@@ -721,7 +740,7 @@ void CMFCAppDlg::OnBnClickedButton2()
 
 	//delete from t_carinfo where plate='%s';
 //	strtmp.Format(
-	sprintf(strtmp,"delete from t_carinfo where plate='%s'", strplate);
+	sprintf(strtmp, "update t_carinfo set carbarnid=0,num=0 where plate='%s'", pValue);
 	if (mysql_query(&serverinfo.mysql, strtmp) != NULL)
 	{
 		AfxMessageBox(_T("数据库连接失败"));
@@ -729,7 +748,7 @@ void CMFCAppDlg::OnBnClickedButton2()
 	}
 
 //	strtmp.Format(
-	sprintf(strtmp,"delete from t_carinfo where plate='%s'", strplate);
+	sprintf(strtmp, "delete from t_carinfo where plate='%s'", pValue);
 	garage[index].setsqlcommand(strtmp);
 
 	garage[index].deletecar(num);
