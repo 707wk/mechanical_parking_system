@@ -76,10 +76,10 @@ endif;
 <style>
 body {
 	font-family: '微软雅黑';
-	background-color: #fff;
+	background-color: #F2F2F2;
 }
 input ,select{
-	background-color: #fff;
+	background-color: #F2F2F2;
 }
 
 .modal_wrapper{

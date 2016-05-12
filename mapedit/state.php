@@ -30,7 +30,7 @@
 	background-color:#D6FFD6;
 }
 body{
-	//background-color: #f5f5f5;
+	background-color: #F2F2F2;
 }
 .top{
 	text-align:left;

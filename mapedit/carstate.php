@@ -18,7 +18,7 @@
 <script src="libs/js/table.js"></script>
 <style>
 body{
-	//background-color: #f5f5f5;
+	background-color: #F2F2F2;
 	margin-left:5px;
 }
 h3{
@@ -32,6 +32,9 @@ h3{
 }
 #toolbar{
 	//text-align:right;
+}
+table{
+	background-color: #FFF;
 }
 </style>
 </head>

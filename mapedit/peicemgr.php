@@ -18,7 +18,7 @@ require_once "main.php";
 <script src="libs/table.js"></script>
 <style>
 body{
-	//background-color: #f5f5f5;
+	background-color: #F2F2F2;
 	margin-left:5px;
 }
 h3{

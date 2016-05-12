@@ -18,12 +18,15 @@ require_once "main.php";
 <script src="libs/js/table.js"></script>
 <style>
 body{
-	//background-color: #f5f5f5;
+	background-color: #F2F2F2;
 	margin-left:5px;
 }
 h3{
 	text-align:left;
 	margin-left:15px;
+}
+table{
+	background-color: #fff;	
 }
 </style>
 </head>
