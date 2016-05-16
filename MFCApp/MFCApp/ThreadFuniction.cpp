@@ -173,7 +173,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 	char strtmp[COMLEN];
 
 	time_t nowtime;
-	struct tm *local;
+	struct tm *local = new struct tm;
 	char qwe1[255];
 
 	for(;link!=-1;index=(index+1)%sumgarage)
@@ -212,9 +212,9 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			//garage[index].setcommand("");
 
 			nowtime = time(NULL);  
-			local=localtime(&nowtime);
+			localtime_s(local,&nowtime);
 			
-			sprintf(qwe1,"[%02d:%02d:%02d] sen:%02X-%02X-%02X-%02X-%02X",
+			sprintf_s(qwe1, COMLEN, "[%02d:%02d:%02d] sen:%02X-%02X-%02X-%02X-%02X",
 				local->tm_hour,local->tm_min,local->tm_sec,str[1],str[3],str[4],str[5],str[6]);
 			dlg->setinfo(qwe1);
 
@@ -236,9 +236,9 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		}
 
 		nowtime = time(NULL);  
-		local=localtime(&nowtime);
+		localtime_s(local,&nowtime);
 		
-		sprintf(qwe1,"[%02d:%02d:%02d] rev:%02X-%02X-%02X-%02X",
+		sprintf_s(qwe1, COMLEN, "[%02d:%02d:%02d] rev:%02X-%02X-%02X-%02X",
 			local->tm_hour,local->tm_min,local->tm_sec,recstr[0],recstr[1],recstr[2],recstr[3]);
 		dlg->setinfo(qwe1);
 

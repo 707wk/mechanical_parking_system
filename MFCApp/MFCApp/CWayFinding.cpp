@@ -182,7 +182,7 @@ int CWayFinding::nearestcarport(int id)
 
 	//////////////////////////////////////////////////////////////////////////
 //	str.Format("select x,y from t_map where type_id=%d and type=1",id);
-	sprintf(str, "select x,y from t_map where type_id=%d and type=1", id);
+	sprintf_s(str, COMLEN, "select x,y from t_map where type_id=%d and type=1", id);
 	
 	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 
@@ -300,7 +300,7 @@ int CWayFinding::nearestexit(int id)
 	
 	//////////////////////////////////////////////////////////////////////////
 //	str.Format("select x,y from t_map where type_id=%d and type=3",id);
-	sprintf(str, "select x,y from t_map where type_id=%d and type=3", id);
+	sprintf_s(str, COMLEN, "select x,y from t_map where type_id=%d and type=3", id);
 	
 	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 	
@@ -385,7 +385,7 @@ int CWayFinding::nearestexit(int id)
 void CWayFinding::putinfo()
 {
 	FILE* fp;
-	fp=fopen("map.txt","w");
+	fopen_s(&fp,"map.txt", "w");
 
 	fprintf(fp,"%d\n",nearestcarport(1));
 	fprintf(fp,"%d\n",nearestexit(17));
