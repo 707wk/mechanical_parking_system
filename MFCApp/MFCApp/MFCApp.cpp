@@ -67,14 +67,14 @@ int check()
 //	string f = ifo.szCSDVersion;
 
 	DWORD dwNum = WideCharToMultiByte(CP_OEMCP, NULL, ifo.szCSDVersion, -1, NULL, 0, NULL, FALSE);
-	char *pValue = new char[1024];
-	memset(pValue, 0, 1024);
+	char *pValue = new char[COMLEN];
+	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, ifo.szCSDVersion, -1, pValue, dwNum, NULL, FALSE);
 	string f = pValue;
 	delete pValue;
 
 //	CString qwe;
-	char qwe[1024];
+	char qwe[COMLEN];
 	sprintf(qwe,"-%X%X%X%X%X", a, b, c, d, e);
 
 	//string szBuffer;
@@ -133,7 +133,7 @@ int check()
 		exit(1);
 	}
 //	CString strtime;
-	char strtime[1024];
+	char strtime[COMLEN];
 	sprintf(strtime,"UPDATE md5 SET lasttime=now() WHERE md5key='%s'", md5str.c_str());
 	//×´Ì¬:0:Î´×¢²á 1:¼¤»î 2:Í£ÓÃ
 	switch (atoi(column[0]))

@@ -177,7 +177,7 @@ int CWayFinding::nearestcarport(int id)
 	MYSQL_RES *res;                    //查询结果集
 	MYSQL_ROW column;                  //数据行的列
 //	cstring str;
-	char str[1024];
+	char str[COMLEN];
 	struct mapway tmp;
 
 	//////////////////////////////////////////////////////////////////////////
@@ -295,7 +295,7 @@ int CWayFinding::nearestexit(int id)
 	MYSQL_RES *res;                    //查询结果集
 	MYSQL_ROW column;                  //数据行的列
 //	CString str;
-	char str[1024];
+	char str[COMLEN];
 	struct mapway tmp;
 	
 	//////////////////////////////////////////////////////////////////////////

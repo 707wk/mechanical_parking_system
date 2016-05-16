@@ -554,8 +554,8 @@ void CMFCAppDlg::OnBnClickedButton1()
 	CString strplate;
 	CString strinput;
 //	CString strtmp;
-	char strtmp[1024];
-	char pValue[1024];
+	char strtmp[COMLEN];
+	char pValue[COMLEN];
 	DWORD dwNum;
 
 	m_carplate.GetWindowText(strplate);
@@ -572,7 +572,7 @@ void CMFCAppDlg::OnBnClickedButton1()
 	}
 
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, NULL, 0, NULL, FALSE);
-	memset(pValue, 0, 1024);
+	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
 
 //	strtmp.Format(
@@ -598,7 +598,7 @@ void CMFCAppDlg::OnBnClickedButton1()
 	}
 
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, NULL, 0, NULL, FALSE);
-	memset(pValue, 0, 1024);
+	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
 
 //	strtmp.Format(
@@ -618,7 +618,7 @@ void CMFCAppDlg::OnBnClickedButton1()
 	}
 
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strinput, -1, NULL, 0, NULL, FALSE);
-	memset(pValue, 0, 1024);
+	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strinput, -1, pValue, dwNum, NULL, FALSE);
 	
 	int garageid = mapinfo->nearestcarport(atoi(pValue));
@@ -641,7 +641,7 @@ void CMFCAppDlg::OnBnClickedButton1()
 	//spendcar++;
 
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, NULL, 0, NULL, FALSE);
-	memset(pValue, 0, 1024);
+	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
 
 //	strtmp.Format(
@@ -680,8 +680,8 @@ void CMFCAppDlg::OnBnClickedButton2()
 	MYSQL_ROW column;                  //数据行的列
 	CString strplate;
 //	CString strtmp;
-	char strtmp[1024];
-	char pValue[1024];
+	char strtmp[COMLEN];
+	char pValue[COMLEN];
 	DWORD dwNum;
 
 	m_carplate.GetWindowText(strplate);
@@ -689,7 +689,7 @@ void CMFCAppDlg::OnBnClickedButton2()
 	if (strplate == "") return;
 
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, NULL, 0, NULL, FALSE);
-	memset(pValue, 0, 1024);
+	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
 
 //	strtmp.Format(

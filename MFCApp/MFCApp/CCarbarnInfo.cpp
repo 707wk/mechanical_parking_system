@@ -75,9 +75,9 @@ int CCarbarnInfo::readdate(int carbarnid)
 	MYSQL_RES *res;                    //查询结果集
 	MYSQL_ROW column;                  //数据行的列
 //	CString str;
-	char str[1024];
+	char str[COMLEN];
 //	str.Format("select name,command,rows,cols,speedrows,speedcols,map_queue from t_garageinfo where id='%d'",carbarnid);
-	sprintf_s(str, 1024, "select name,command,rows,cols,speedrows,speedcols,map_queue from t_garageinfo where id='%d'", carbarnid);
+	sprintf_s(str, COMLEN, "select name,command,rows,cols,speedrows,speedcols,map_queue from t_garageinfo where id='%d'", carbarnid);
 	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 
 	if(mysql_query(&serverinfo.mysql,str)==NULL)
@@ -173,12 +173,12 @@ int CCarbarnInfo::savedatetomysql()
 {
 	string tmpstr;
 //	CString str;
-	char str[1024];
+	char str[COMLEN];
 
 	for(int i=0;i<(rows*cols)&&i<(int)map_queue.size();i++)
 	{
 //		str.Format("%d ",combine(map_queue[i].id,map_queue[i].idle));
-		sprintf_s(str, 1024, "%d ", combine(map_queue[i].id, map_queue[i].idle));
+		sprintf_s(str, COMLEN, "%d ", combine(map_queue[i].id, map_queue[i].idle));
 		tmpstr=tmpstr+str;
 	}
 	//AfxMessageBox(tmpstr.c_str());
@@ -187,7 +187,7 @@ int CCarbarnInfo::savedatetomysql()
 	//把速度用%d输出造成程序崩溃了
 	//CString str;卧槽这样都可以
 //	str.Format(
-	sprintf_s(str, 1024, "\
+	sprintf_s(str, COMLEN, "\
 UPDATE t_garageinfo set name='%s',nowstatus=%d,command='%s',speedrows=%f,speedcols=%f,map_queue='%s' where id='%d'",
 name.c_str(),nowstatus,command,speed_rows,speed_cols,tmpstr.c_str(),carbarnid);
 	//////////////////////////////////////////////////////////////////////////
@@ -270,7 +270,7 @@ void CCarbarnInfo::setoffline()
 void CCarbarnInfo::getcommand(char* str)
 {
 	if(command[0]=='\0')str[0]='\0';
-	else strcpy_s(str,1024,this->command);
+	else strcpy_s(str,COMLEN,this->command);
 }
 
 void CCarbarnInfo::setcommand(const char str[])
@@ -508,7 +508,7 @@ int CCarbarnInfo::newgarage()
 {
 	string tmpstr;
 //	CString str;
-	char str[1024];
+	char str[COMLEN];
 	
 	map_queue.clear();
 	map_queue.swap( (std::vector <speed_location>)(map_queue));
@@ -526,7 +526,7 @@ int CCarbarnInfo::newgarage()
 	}
 
 	//AfxMessageBox(tmpstr.c_str());
-	sprintf_s(str, 1024, "INSERT INTO t_garageinfo \
+	sprintf_s(str, COMLEN, "INSERT INTO t_garageinfo \
 (id,name,rows,cols,speedrows,speedcols,sumcar,spendcar,map_queue,compotr) \
 VALUES(%d,'%s',%d,%d,%f,%f,%d,%d,'%s')",
 this->carbarnid,this->name.c_str(),this->rows,this->cols,this->speed_rows,this->speed_cols,0,0,tmpstr.c_str());
@@ -575,7 +575,7 @@ int CCarbarnInfo::clear()
 void CCarbarnInfo::deletedate()
 {
 //	CString str;
-	char str[1024];
+	char str[COMLEN];
 	//////////////////////////////////////////////////////////////////////////
 //	str.Format("DELETE FROM t_garageinfo where id='%d'",carbarnid);
 	sprintf_s(str, COMLEN, "DELETE FROM t_garageinfo where id='%d'", carbarnid);

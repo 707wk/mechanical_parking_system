@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include "DataStructure.h"
 
 /* Type define */
 typedef unsigned char byte;
@@ -53,7 +54,7 @@ private:
 
 	static const byte PADDING[64];	/* padding for calculate */
 	static const char HEX[16];
-	enum { BUFFER_SIZE = 1024 };
+	enum { BUFFER_SIZE = COMLEN };
 };
 
 #endif /*MD5_H*/
