@@ -44,6 +44,12 @@
 
 using namespace std;
 
+#define WALL   0x00
+#define MK_IN  0x01
+#define MK_OUT 0x02
+#define MODULE 0x03
+#define ROAD   0x04
+
 //µØÍ¼Êý×é
 struct maptype
 {

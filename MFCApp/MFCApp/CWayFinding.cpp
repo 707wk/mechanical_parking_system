@@ -164,7 +164,7 @@ void CWayFinding::initmap()
 	{
 		for(int j=0;j<map_y;j++)
 		{
-			maplocation[i][j].type    =0;
+			maplocation[i][j].type    =WALL;
 			maplocation[i][j].flage   =0;
 			maplocation[i][j].id      =0;
 		}
@@ -182,7 +182,7 @@ int CWayFinding::nearestcarport(int id)
 
 	//////////////////////////////////////////////////////////////////////////
 //	str.Format("select x,y from t_map where type_id=%d and type=1",id);
-	sprintf_s(str, COMLEN, "select x,y from t_map where type_id=%d and type=1", id);
+	sprintf_s(str, COMLEN, "select x,y from t_map where type_id=%d and type=%d", id, MK_IN);
 	
 	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 
@@ -217,7 +217,7 @@ int CWayFinding::nearestcarport(int id)
 		int tmpy=pathanalysis.front().y;
 		int tmpid;
 		
-		if(maplocation[tmpx-1][tmpy].type==3)
+		if(maplocation[tmpx-1][tmpy].type==MODULE)
 		{
 			tmpid=maplocation[tmpx-1][tmpy].id;
 
@@ -227,7 +227,7 @@ int CWayFinding::nearestcarport(int id)
 			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}
-		if(maplocation[tmpx][tmpy+1].type==3)
+		if(maplocation[tmpx][tmpy+1].type==MODULE)
 		{
 			tmpid=maplocation[tmpx][tmpy+1].id;
 
@@ -237,7 +237,7 @@ int CWayFinding::nearestcarport(int id)
 			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}			
-		if(maplocation[tmpx+1][tmpy].type==3)
+		if(maplocation[tmpx+1][tmpy].type==MODULE)
 		{
 			tmpid=maplocation[tmpx+1][tmpy].id;
 			
@@ -247,7 +247,7 @@ int CWayFinding::nearestcarport(int id)
 			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}
-		if(maplocation[tmpx][tmpy-1].type==3)
+		if(maplocation[tmpx][tmpy-1].type==MODULE)
 		{
 			tmpid=maplocation[tmpx][tmpy-1].id;
 			
@@ -258,25 +258,25 @@ int CWayFinding::nearestcarport(int id)
 				return tmpid;
 		}
 
-		if(maplocation[tmpx-1][tmpy].type==4&&maplocation[tmpx-1][tmpy].flage==0)
+		if(maplocation[tmpx-1][tmpy].type==ROAD&&maplocation[tmpx-1][tmpy].flage==0)
 		{
 			tmp.x=tmpx-1;
 			tmp.y=tmpy;
 			pathanalysis.push(tmp);
 		}
-		if(maplocation[tmpx][tmpy+1].type==4&&maplocation[tmpx][tmpy+1].flage==0)
+		if(maplocation[tmpx][tmpy+1].type==ROAD&&maplocation[tmpx][tmpy+1].flage==0)
 		{
 			tmp.x=tmpx;
 			tmp.y=tmpy+1;
 			pathanalysis.push(tmp);
 		}
-		if(maplocation[tmpx+1][tmpy].type==4&&maplocation[tmpx+1][tmpy].flage==0)
+		if(maplocation[tmpx+1][tmpy].type==ROAD&&maplocation[tmpx+1][tmpy].flage==0)
 		{
 			tmp.x=tmpx+1;
 			tmp.y=tmpy;
 			pathanalysis.push(tmp);
 		}
-		if(maplocation[tmpx][tmpy-1].type==4&&maplocation[tmpx][tmpy-1].flage==0)
+		if(maplocation[tmpx][tmpy-1].type==ROAD&&maplocation[tmpx][tmpy-1].flage==0)
 		{
 			tmp.x=tmpx;
 			tmp.y=tmpy-1;
@@ -299,8 +299,8 @@ int CWayFinding::nearestexit(int id)
 	struct mapway tmp;
 	
 	//////////////////////////////////////////////////////////////////////////
-//	str.Format("select x,y from t_map where type_id=%d and type=3",id);
-	sprintf_s(str, COMLEN, "select x,y from t_map where type_id=%d and type=3", id);
+//	str.Format("select x,y from t_map where type_id=%d and type=%d",id,MODULE);
+	sprintf_s(str, COMLEN, "select x,y from t_map where type_id=%d and type=%d", id, MODULE);
 	
 	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
 	
@@ -334,42 +334,42 @@ int CWayFinding::nearestexit(int id)
 		int tmpx=pathanalysis.front().x;
 		int tmpy=pathanalysis.front().y;
 		
-		if(maplocation[tmpx-1][tmpy].type==2)
+		if(maplocation[tmpx-1][tmpy].type==MK_OUT)
 		{
 			return maplocation[tmpx-1][tmpy].id;
 		}
-		if(maplocation[tmpx][tmpy+1].type==2)
+		if(maplocation[tmpx][tmpy+1].type==MK_OUT)
 		{
 			return maplocation[tmpx][tmpy+1].id;
 		}			
-		if(maplocation[tmpx+1][tmpy].type==2)
+		if(maplocation[tmpx+1][tmpy].type==MK_OUT)
 		{
 			return maplocation[tmpx+1][tmpy].id;
 		}
-		if(maplocation[tmpx][tmpy-1].type==2)
+		if(maplocation[tmpx][tmpy-1].type==MK_OUT)
 		{
 			return maplocation[tmpx][tmpy-1].id;
 		}
 		
-		if(maplocation[tmpx-1][tmpy].type==4&&maplocation[tmpx-1][tmpy].flage==0)
+		if(maplocation[tmpx-1][tmpy].type==ROAD&&maplocation[tmpx-1][tmpy].flage==0)
 		{
 			tmp.x=tmpx-1;
 			tmp.y=tmpy;
 			pathanalysis.push(tmp);
 		}
-		if(maplocation[tmpx][tmpy+1].type==4&&maplocation[tmpx][tmpy+1].flage==0)
+		if(maplocation[tmpx][tmpy+1].type==ROAD&&maplocation[tmpx][tmpy+1].flage==0)
 		{
 			tmp.x=tmpx;
 			tmp.y=tmpy+1;
 			pathanalysis.push(tmp);
 		}
-		if(maplocation[tmpx+1][tmpy].type==4&&maplocation[tmpx+1][tmpy].flage==0)
+		if(maplocation[tmpx+1][tmpy].type==ROAD&&maplocation[tmpx+1][tmpy].flage==0)
 		{
 			tmp.x=tmpx+1;
 			tmp.y=tmpy;
 			pathanalysis.push(tmp);
 		}
-		if(maplocation[tmpx][tmpy-1].type==4&&maplocation[tmpx][tmpy-1].flage==0)
+		if(maplocation[tmpx][tmpy-1].type==ROAD&&maplocation[tmpx][tmpy-1].flage==0)
 		{
 			tmp.x=tmpx;
 			tmp.y=tmpy-1;
