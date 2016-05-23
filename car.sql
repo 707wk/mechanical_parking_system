@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2016-05-07 16:52:45
+Date: 2016-05-23 11:39:14
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -33,6 +33,9 @@ CREATE TABLE `t_carinfo` (
 -- ----------------------------
 -- Records of t_carinfo
 -- ----------------------------
+INSERT INTO `t_carinfo` VALUES ('1', '2016-05-23 11:35:10', '2016-05-23 11:35:10', '2', '1', null, null);
+INSERT INTO `t_carinfo` VALUES ('3', '2016-05-23 11:36:41', '2016-05-23 11:36:41', '2', '5', null, null);
+INSERT INTO `t_carinfo` VALUES ('4', '2016-05-23 11:37:15', '2016-05-23 11:37:15', '2', '3', null, null);
 
 -- ----------------------------
 -- Table structure for `t_garageinfo`
@@ -60,7 +63,7 @@ CREATE TABLE `t_garageinfo` (
 -- Records of t_garageinfo
 -- ----------------------------
 INSERT INTO `t_garageinfo` VALUES ('1', '1', null, null, null, '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '');
-INSERT INTO `t_garageinfo` VALUES ('2', '2', null, null, null, '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '');
+INSERT INTO `t_garageinfo` VALUES ('2', '2', '6', null, '', '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '65537 2 65541 65539 6 9 7 10 13 4 11 14 17 8 15 18 12 19 16 20 ');
 INSERT INTO `t_garageinfo` VALUES ('3', '3', null, null, null, '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '');
 INSERT INTO `t_garageinfo` VALUES ('4', '4', null, null, null, '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '');
 
