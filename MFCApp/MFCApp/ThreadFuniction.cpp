@@ -123,6 +123,15 @@ void OnSend(char* str,int length)
 	//dcb.Parity  =NOPARITY;   //ÆæÅ¼Î»
 	//SetCommState(hCom,&dcb);
 	
+	printf("send:%02X-%02X-%02X-%02X-%02X-%02X-%02X\n", 
+		(unsigned char)str[0], 
+		(unsigned char)str[1], 
+		(unsigned char)str[2], 
+		(unsigned char)str[3], 
+		(unsigned char)str[4], 
+		(unsigned char)str[5], 
+		(unsigned char)str[6]);
+
 	OnSendBit(str,length);
 }
 
@@ -174,7 +183,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 
 	time_t nowtime;
 	struct tm local;
-	char qwe1[255];
+//	char qwe1[255];
 
 	for(;link!=-1;index=(index+1)%sumgarage)
 	{
@@ -214,9 +223,9 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			nowtime = time(NULL);  
 			localtime_s(&local,&nowtime);
 			
-			sprintf_s(qwe1, COMLEN, "[%02d:%02d:%02d] sen:%02X-%02X-%02X-%02X-%02X",
+			printf("[%02d:%02d:%02d] sen:%02X-%02X-%02X-%02X-%02X\n",
 				local.tm_hour,local.tm_min,local.tm_sec,str[1],str[3],str[4],str[5],str[6]);
-			dlg->setinfo(qwe1);
+//			dlg->setinfo(qwe1);
 
 			command_flage=1;
 		}
@@ -238,9 +247,9 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		nowtime = time(NULL);  
 		localtime_s(&local,&nowtime);
 		
-		sprintf_s(qwe1, COMLEN, "[%02d:%02d:%02d] rev:%02X-%02X-%02X-%02X",
-			local.tm_hour,local.tm_min,local.tm_sec,recstr[0],recstr[1],recstr[2],recstr[3]);
-		dlg->setinfo(qwe1);
+		printf("[%02d:%02d:%02d] rev:%02X-%02X-%02X-%02X\n",
+			local.tm_hour,local.tm_min,local.tm_sec,recstr[0],recstr[1],recstr[2],recstr[3]);//*/
+//		dlg->setinfo(qwe1);
 
 		if(command_flage&&recstr[1]==ACCEPTED)
 		{

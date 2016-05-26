@@ -384,7 +384,7 @@ int CWayFinding::nearestexit(int id)
 
 void CWayFinding::putinfo()
 {
-	FILE* fp;
+/*	FILE* fp;
 	fopen_s(&fp,"map.txt", "w");
 
 	fprintf(fp,"%d\n",nearestcarport(1));
@@ -398,7 +398,8 @@ void CWayFinding::putinfo()
 		}
 		fprintf(fp,"\n");
 	}
-	fclose(fp);
+	fclose(fp);*/
+	printf("test map class\n");
 	return ;
 }
 

@@ -291,6 +291,20 @@ BOOL CMFCAppApp::InitInstance()
 		//SendMessage(wnd,WM_CLOSE,0,0);
 		return FALSE;
 	}
+
+	///////////////////////////////////////////////////////////////////////////
+	FILE* fpDebugOut = NULL;
+	FILE* fpDebugIn = NULL;
+	if (!AllocConsole())
+	{
+		AfxMessageBox(_T("控制台生成失败。"));
+	}
+	SetConsoleTitle(_T("Debug Window"));
+	_tfreopen_s(&fpDebugOut, _T("CONOUT$"), _T("w"), stdout);
+	_tfreopen_s(&fpDebugIn, _T("CONIN$"), _T("r"), stdin);
+	_tsetlocale(LC_ALL, _T("chs"));     //这是必要的，否则unicode模式下使用C库函数控制台输出不了中文
+	///////////////////////////////////////////////////////////////////////////
+
 //	AfxMessageBox(_T("001"));
 	//////////////////////////////////////////////////////////////////////////
 	//这写的,把自己恶心到了
@@ -422,6 +436,10 @@ BOOL CMFCAppApp::InitInstance()
 	{
 		delete pShellManager;
 	}
+
+	fclose(fpDebugOut);
+	fclose(fpDebugIn);
+	FreeConsole();
 
 	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，
 	//  而不是启动应用程序的消息泵。

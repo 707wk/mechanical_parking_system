@@ -65,7 +65,6 @@ CMFCAppDlg::~CMFCAppDlg()
 void CMFCAppDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_EDIT6, m_info);
 	DDX_Control(pDX, IDC_LIST1, m_list_garage);
 	DDX_Control(pDX, IDC_LIST2, m_list_error);
 	DDX_Control(pDX, IDC_EDIT1, m_sumcar);
@@ -74,7 +73,6 @@ void CMFCAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON3, m_startend);
 	DDX_Control(pDX, IDC_STATE_ICO, m_stateico);
 	DDX_Control(pDX, IDC_EDIT3, m_carplate);
-	DDX_Control(pDX, IDC_EDIT5, m_carinfo);
 	DDX_Control(pDX, IDC_LIST3, m_list_passageway);
 }
 
@@ -336,13 +334,13 @@ void CMFCAppDlg::OnBnClickedCancel()
 	CDialogEx::OnCancel();
 }
 
-void CMFCAppDlg::setinfo(char* str)
+/*void CMFCAppDlg::setinfo(char* str)
 {
 	CString strtmp;
 //	m_info.GetWindowText(strtmp);
 	strtmp = str;
 	m_info.SetWindowText(strtmp);
-}
+}*/
 
 
 void CMFCAppDlg::OnTimer(UINT_PTR nIDEvent)
@@ -633,10 +631,10 @@ void CMFCAppDlg::OnBnClickedButton1()
 	}
 
 //	strtmp.Format(
-	sprintf_s(strtmp, COMLEN, "最近的车库是第%d号车库", garageid);
+	printf("最近的车库是第%d号车库\n", garageid);
 	//MessageBox(strtmp);
-	CString tmp(strtmp);
-	m_carinfo.SetWindowText(tmp);
+//	CString tmp(strtmp);
+//	m_carinfo.SetWindowText(tmp);
 	//sumcar
 	//spendcar++;
 
@@ -722,10 +720,10 @@ void CMFCAppDlg::OnBnClickedButton2()
 		return;
 	}
 
-	CString tmp;
-	tmp.Format(_T("最近的出口是第%d号出口"), nearoutput);
+//	CString tmp;
+	printf("最近的出口是第%d号出口\n", nearoutput);
 	//MessageBox(strtmp);
-	m_carinfo.SetWindowText(tmp);
+//	m_carinfo.SetWindowText(tmp);
 	//spendcar--;
 
 	int index = idtoindex[garageid];

@@ -41,7 +41,6 @@ public:
 	afx_msg void OnBnClickedButton6();
 	afx_msg void OnBnClickedButton3();
 	afx_msg void OnBnClickedButton4();
-	CEdit m_info;
 	CEdit m_location;
 	CEdit m_state;
 };

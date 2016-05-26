@@ -36,6 +36,8 @@
 
 #include <afxsock.h>            // MFC Ì×½Ó×ÖÀ©Õ¹
 
+#include <locale.h>
+
 #include "windows.h"
 #include "wininet.h"
 #include "winsock.h"

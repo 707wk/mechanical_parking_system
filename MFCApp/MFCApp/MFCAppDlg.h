@@ -19,7 +19,6 @@ class CMFCAppDlg : public CDialogEx
 public:
 	CMFCAppDlg(CWnd* pParent = NULL);	// 标准构造函数
 	virtual ~CMFCAppDlg();
-	void setinfo(char* str);
 
 // 对话框数据
 	enum { IDD = IDD_MFCAPP_DIALOG };
@@ -51,7 +50,6 @@ protected:
 public:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
-	CEdit m_info;
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CListCtrl m_list_garage;
 	CListCtrl m_list_error;
@@ -63,7 +61,6 @@ public:
 	afx_msg void OnBnClickedButton3();
 	CEdit m_carplate;
 	afx_msg void OnBnClickedButton1();
-	CEdit m_carinfo;
 	CListCtrl m_list_passageway;
 	afx_msg void OnBnClickedButton2();
 	afx_msg void On32774();

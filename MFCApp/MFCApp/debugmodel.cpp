@@ -57,7 +57,6 @@ void debugmodel::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO1, m_garage_id);
 	DDX_Control(pDX, IDC_EDIT1, m_row);
 	DDX_Control(pDX, IDC_EDIT2, m_col);
-	DDX_Control(pDX, IDC_EDIT3, m_info);
 	DDX_Control(pDX, IDC_EDIT5, m_location);
 	DDX_Control(pDX, IDC_EDIT4, m_state);
 }
@@ -379,12 +378,13 @@ void debugmodel::OnBnClickedButton4()
 
 void debugmodel::putinfo(char* recstr)
 {
-	CString tmp;
-	tmp.Format(_T("rev:%02X-%02X-%02X-%02X"),
+//	CString tmp;
+//	tmp.Format(_T(
+	printf("rev:%02X-%02X-%02X-%02X\n",
 		recstr[0], recstr[1], recstr[2], recstr[3]);
-	CString strtmp;
-	m_info.GetWindowText(strtmp);
-	strtmp = _T("\r\n") + strtmp;
-	strtmp = tmp + strtmp;
-	m_info.SetWindowText(strtmp);
+//	CString strtmp;
+//	m_info.GetWindowText(strtmp);
+//	strtmp = _T("\r\n") + strtmp;
+//	strtmp = tmp + strtmp;
+//	m_info.SetWindowText(strtmp);
 }
