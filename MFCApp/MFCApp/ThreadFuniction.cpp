@@ -109,26 +109,26 @@ void OnSend(char* str,int length)
 		(unsigned char)str[3],
 		(unsigned char)str[4],
 		(unsigned char)str[5],
-		(unsigned char)str[6]);
+		(unsigned char)str[6]);//*/
 
 	//	OnSendBit(str,length);
 
 	GetCommState(hCom,&dcb);
-	dcb.Parity  =SPACEPARITY;   //奇偶位为0
+	dcb.Parity = MARKPARITY;//   //奇偶位为1
 	SetCommState(hCom,&dcb);
 
-	OnSendBit(str,1);
+	OnSendBit(str+1,1);
 	PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
 
 	GetCommState(hCom,&dcb);
-	dcb.Parity  =MARKPARITY;   //奇偶位为1
+	dcb.Parity = SPACEPARITY;//   //奇偶位为0
 	SetCommState(hCom,&dcb);
 	
-	OnSendBit(str+1,length-1);
+	OnSendBit(str+3,length-3);
 	PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
 
-	//dcb.Parity  =NOPARITY;   //奇偶位
-	//SetCommState(hCom,&dcb);
+	dcb.Parity  =NOPARITY;   //奇偶位
+	SetCommState(hCom,&dcb);
 }
 
 void OnReceive(char (&str)[COMLEN],int length) 
@@ -233,7 +233,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 
 		Sleep(100);
 		char recstr[COMLEN];
-		memset(recstr,'\0',COMLEN);
+		//memset(recstr,'\0',COMLEN);
 		
 		OnReceive(recstr,4);
 		//recstr[2]='\0';
@@ -242,10 +242,10 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		//判断接收是否合法
 		if(recstr[0]==0)
 		{
-			printf("no data\n");
+			printf("\r");
 			continue;
 		}
-
+		
 		nowtime = time(NULL);  
 		localtime_s(&local,&nowtime);
 		
