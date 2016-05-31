@@ -102,37 +102,33 @@ void OnSend(char* str,int length)
 {
 	// TODO: Add your control notification handler code here
 
-	//char qwe1[255];
-	//sprintf(qwe1,"send:%2d %2d %2d %2d %2d",str[0],str[1],str[2],str[3],str[4]);
-	//dlg->setinfo(qwe1);
+	printf("send:%02X-%02X-%02X-%02X-%02X\t",
+		//(unsigned char)str[0], 
+		(unsigned char)str[1],
+		//(unsigned char)str[2], 
+		(unsigned char)str[3],
+		(unsigned char)str[4],
+		(unsigned char)str[5],
+		(unsigned char)str[6]);
 
-	//GetCommState(hCom,&dcb);
-	//dcb.Parity  =SPACEPARITY;   //奇偶位为0
-	//SetCommState(hCom,&dcb);
+	//	OnSendBit(str,length);
 
-	//OnSendBit(str,1);
-	//PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
+	GetCommState(hCom,&dcb);
+	dcb.Parity  =SPACEPARITY;   //奇偶位为0
+	SetCommState(hCom,&dcb);
 
-	//GetCommState(hCom,&dcb);
-	//dcb.Parity  =MARKPARITY;   //奇偶位为1
-	//SetCommState(hCom,&dcb);
+	OnSendBit(str,1);
+	PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
+
+	GetCommState(hCom,&dcb);
+	dcb.Parity  =MARKPARITY;   //奇偶位为1
+	SetCommState(hCom,&dcb);
 	
-	//OnSendBit(str+1,length-1);
-	//PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
+	OnSendBit(str+1,length-1);
+	PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
 
 	//dcb.Parity  =NOPARITY;   //奇偶位
 	//SetCommState(hCom,&dcb);
-	
-	printf("send:%02X-%02X-%02X-%02X-%02X-%02X-%02X\n", 
-		(unsigned char)str[0], 
-		(unsigned char)str[1], 
-		(unsigned char)str[2], 
-		(unsigned char)str[3], 
-		(unsigned char)str[4], 
-		(unsigned char)str[5], 
-		(unsigned char)str[6]);
-
-	OnSendBit(str,length);
 }
 
 void OnReceive(char (&str)[COMLEN],int length) 
@@ -224,7 +220,12 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			localtime_s(&local,&nowtime);
 			
 			printf("[%02d:%02d:%02d] sen:%02X-%02X-%02X-%02X-%02X\n",
-				local.tm_hour,local.tm_min,local.tm_sec,str[1],str[3],str[4],str[5],str[6]);
+				local.tm_hour,local.tm_min,local.tm_sec,
+				(unsigned char)str[1],
+				(unsigned char)str[3],
+				(unsigned char)str[4],
+				(unsigned char)str[5],
+				(unsigned char)str[6]);
 //			dlg->setinfo(qwe1);
 
 			command_flage=1;
@@ -241,6 +242,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		//判断接收是否合法
 		if(recstr[0]==0)
 		{
+			printf("no data\n");
 			continue;
 		}
 
@@ -248,7 +250,11 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		localtime_s(&local,&nowtime);
 		
 		printf("[%02d:%02d:%02d] rev:%02X-%02X-%02X-%02X\n",
-			local.tm_hour,local.tm_min,local.tm_sec,recstr[0],recstr[1],recstr[2],recstr[3]);//*/
+			local.tm_hour,local.tm_min,local.tm_sec,
+			(unsigned char)recstr[0],
+			(unsigned char)recstr[1],
+			(unsigned char)recstr[2],
+			(unsigned char)recstr[3]);//*/
 //		dlg->setinfo(qwe1);
 
 		if(command_flage&&recstr[1]==ACCEPTED)
