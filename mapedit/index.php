@@ -1,24 +1,72 @@
 <?php
 /*************************************
- *CREATED :2016/4/20
- *TEXT    :立体车库管理后台
+ *CREATED :2016/5/31
+ *TEXT    :立体车库客户端API
  *EMAIL   :dksx@qq.com
  *************************************/
- require_once "main.php";
-?>
-<!DOCTYPE html >
-<html >
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>立体车库管理后台</title>
-<script>
-</script>
-</head>
-<frameset rows="51,*" cols="*" frameborder="no" border="0" framespacing="0" >
-  <frame src="top.php" name="topFrame" scrolling="No" noresize="noresize" id="topFrame" />
-  <frameset name="BottomArea" cols="110,*" frameborder="no" border="0" framespacing="0">
-    <frame src="left.php" name="leftFrame" scrolling="No" noresize="noresize" id="leftFrame" />
-    <frame src="state.php" name="mainFrame" id="mainFrame" />
-  </frameset>
-</frameset>
-</html>
+require_once "config.php";
+$dbh=null;
+header("Content-type: text/html; charset=utf-8");
+try
+{
+	$dbh = new PDO("mysql:host=$config[sqlhost];dbname=$config[dbname]","$config[sqluser]","$config[sqlpwd]"); 
+    $dbh->exec("SET NAMES 'utf8'");
+	
+}
+catch (PDOException $e)
+{
+	echo 'Connection failed: ' . $e->getMessage();
+	die;
+}
+$token=@$_POST['token'];
+if(empty($token)){
+	Session_start();  
+}
+else {
+	session_id($token);
+	Session_start();  
+}
+switch(@$_POST['type']){
+	case "login":
+		$result=$dbh->prepare("SELECT `plate`, `money` FROM `t_car_user` WHERE phone=? and passwd=?");
+		$result->execute(array(@$_POST['phone'],@$_POST['passwd']));
+		if($result->rowCount()==1){
+			$_SESSION['user']=@$_POST['phone'];
+			exit(json_encode(array('code'=>1,"msg"=>"登陆成功!","token"=>session_id())));
+		}
+		else {
+			exit(json_encode(array('code'=>0,"msg"=>"手机号或密码错误!")));
+		}
+	case "reg":
+		$phone=@$_POST['phone'];
+		$plate=@$_POST['plate'];
+		$md5_pwd=@$_POST['passwd'];
+		$result=$dbh->prepare("SELECT `plate`, `money` FROM `t_car_user` WHERE phone=?");
+		$result->execute(array($phone));
+		if($result->rowCount()==1){
+			exit(json_encode(array('code'=>0,"msg"=>"注册失败，该手机号已存在，请找回密码！")));
+		}
+		$result=$dbh->prepare("INSERT INTO `t_car_user`(`phone`, `passwd`, `plate`, `money`) VALUES (?,?,?,?)");
+		$result->execute(array($phone,$md5_pwd,$plate,0));
+		if($result){
+			exit(json_encode(array('code'=>1,"msg"=>"注册成功，请点击登陆!")));
+		}else {
+			exit(json_encode(array('code'=>0,"msg"=>"注册失败,未知错误!")));
+		}
+	case "getinfo":
+		if(empty($_SESSION['user']))exit(json_encode(array('code'=>0,"msg"=>"身份已过期,请重新登陆!")));
+		$result=$dbh->prepare("SELECT `phone`,`plate`, `money` FROM `t_car_user` WHERE phone=?");
+		$sth=$result->execute(array($_SESSION['user']));
+		if($result->rowCount()==1){
+			$info=$result->fetch();
+			exit(json_encode(array('code'=>1,"msg"=>"success","info"=>$info,"token"=>session_id())));
+		}
+		else {
+			exit(json_encode(array('code'=>0,"msg"=>"手机号或密码错误!")));
+		}
+	
+	
+	
+	default:
+		exit(json_encode(array('code'=>0,"msg"=>"invalid parameter!")));
+}

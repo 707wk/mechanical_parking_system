@@ -168,13 +168,15 @@ void readserverset()
 		exit(1);
 	}
 
-	fscanf(fp, "server=%s\nusername=%s\npwd=%s\ndatabase=%s\nport=%d\ncost=%lf\nmscomm=%s\nBaudRate=%d\nByteSize=%d\nParity=%d\nStopBits=%d\nintervalTime=%d",
+	fscanf(fp, "server=%s\nusername=%s\npwd=%s\ndatabase=%s\ndataport=%d\niocpport=%d\ncost=%lf\nmscomm=%s\nBaudRate=%d\nByteSize=%d\nParity=%d\nStopBits=%d\nintervalTime=%d",
 		serverinfo.ip, serverinfo.name, serverinfo.password, serverinfo.database,
-		&serverinfo.port, &serverinfo.cost, serverinfo.mscomm, &serverinfo.BaudRate, &serverinfo.ByteSize, &serverinfo.Parity, &serverinfo.StopBits,
+		&serverinfo.dataport,&serverinfo.iocpport, 
+		&serverinfo.cost, 
+		serverinfo.mscomm, &serverinfo.BaudRate, &serverinfo.ByteSize, &serverinfo.Parity, &serverinfo.StopBits,
 		&serverinfo.intervaltime);
 
 	mysql_init(&serverinfo.mysql);
-	if (mysql_real_connect(&serverinfo.mysql, serverinfo.ip, serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.port, NULL, 0) == NULL)
+	if (mysql_real_connect(&serverinfo.mysql, serverinfo.ip, serverinfo.name, serverinfo.password, serverinfo.database, serverinfo.dataport, NULL, 0) == NULL)
 	{
 		AfxMessageBox(_T("start:本地数据库无法连接!"));
 		exit(1);

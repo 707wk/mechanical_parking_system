@@ -52,7 +52,8 @@ struct serverset
 	char   name[100];                  //数据库用户名
 	char   password[100];              //数据库密码
 	char   database[100];              //数据库名
-	int    port;                       //数据库端口
+	int    dataport;                   //数据库端口
+	int    iocpport;                   //socket端口
 	double cost;                       //费用(元/小时)(保留)
 
 	char   mscomm[255];                //端口号
