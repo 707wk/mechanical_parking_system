@@ -61,7 +61,7 @@ CWayFinding::CWayFinding()
 	//////////////////////////////////////////////////////////////////////////
 //	str="select max(x) from t_map";
 	
-	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'GB2312'");
 
 	if (mysql_query(&serverinfo.mysql, "select max(x) from t_map") == NULL)
 	{
@@ -88,7 +88,7 @@ CWayFinding::CWayFinding()
 	//////////////////////////////////////////////////////////////////////////
 //	str="select max(y) from t_map";
 	
-	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'GB2312'");
 
 	if (mysql_query(&serverinfo.mysql, "select max(y) from t_map") == NULL)
 	{
@@ -123,7 +123,7 @@ CWayFinding::CWayFinding()
 	//////////////////////////////////////////////////////////////////////////
 //	str="select x,y,type,type_id from t_map";
 	
-	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'GB2312'");
 
 	if (mysql_query(&serverinfo.mysql, "select x,y,type,type_id from t_map") == NULL)
 	{
@@ -184,7 +184,7 @@ int CWayFinding::nearestcarport(int id)
 //	str.Format("select x,y from t_map where type_id=%d and type=1",id);
 	sprintf_s(str, COMLEN, "select x,y from t_map where type_id=%d and type=%d", id, MK_IN);
 	
-	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'GB2312'");
 
 	if(mysql_query(&serverinfo.mysql,str)==NULL)
 	{
@@ -302,7 +302,7 @@ int CWayFinding::nearestexit(int id)
 //	str.Format("select x,y from t_map where type_id=%d and type=%d",id,MODULE);
 	sprintf_s(str, COMLEN, "select x,y from t_map where type_id=%d and type=%d", id, MODULE);
 	
-	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'GB2312'");
 	
 	if(mysql_query(&serverinfo.mysql,str)==NULL)
 	{

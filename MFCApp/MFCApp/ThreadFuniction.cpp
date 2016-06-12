@@ -286,7 +286,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 
 		if(strtmp[0]!='\0'&&garage[idtoindex[recstr[0]]].getnowstatus()==STATEFREE)
 		{
-			mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+			mysql_query(&serverinfo.mysql,"SET NAMES 'GB2312'");
 			garage[idtoindex[recstr[0]]].getsqlcommand(strtmp);
 			if(mysql_query(&serverinfo.mysql,strtmp)!=NULL)
 			{

@@ -113,6 +113,7 @@
     <ClInclude Include="DataStructure.h" />
     <ClInclude Include="debugmodel.h" />
     <ClInclude Include="DlgProxy.h" />
+    <ClInclude Include="IOCPserver.h" />
     <ClInclude Include="md5.h" />
     <ClInclude Include="MFCApp.h" />
     <ClInclude Include="MFCAppDlg.h" />
@@ -126,6 +127,7 @@
     <ClCompile Include="CWayFinding.cpp" />
     <ClCompile Include="debugmodel.cpp" />
     <ClCompile Include="DlgProxy.cpp" />
+    <ClCompile Include="IOCPserver.cpp" />
     <ClCompile Include="md5.cpp" />
     <ClCompile Include="MFCApp.cpp" />
     <ClCompile Include="MFCAppDlg.cpp" />

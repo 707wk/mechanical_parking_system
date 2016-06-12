@@ -113,7 +113,7 @@ BOOL debugmodel::OnInitDialog()
 	MYSQL_RES *res;                    //查询结果集
 	MYSQL_ROW column;                  //数据行的列
 
-	mysql_query(&serverinfo.mysql, "SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
 	if (mysql_query(&serverinfo.mysql, "select id from t_garageinfo") == NULL)
 	{

@@ -165,10 +165,11 @@ sock
 #define OUTPUTGARAGE   0x03         //车库模块取车
 #define RESERVATION    0x04         //预约存车
 #define UNRESERVATION  0x05         //取消预约
+#define GETGARAGEINFO  0x06         //获取停车场信息
 
 //返回码
 #define TASKSUCCEED    0x01         //请求成功
-#define OCCUPIED       0x02         //车位已满
+#define NOCAR          0x02         //车位已满
 #define GARAGEBUSY     0x03         //无空闲模块
-#define OUTPUTDELE     0x04         //未找到车辆
+#define NOTFOUND       0x04         //未找到车辆
 //////////////////////////////////////////////////////////////////////////

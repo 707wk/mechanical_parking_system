@@ -78,7 +78,7 @@ int CCarbarnInfo::readdate(int carbarnid)
 	char str[COMLEN];
 //	str.Format("select name,command,rows,cols,speedrows,speedcols,map_queue from t_garageinfo where id='%d'",carbarnid);
 	sprintf_s(str, COMLEN, "select name,command,rows,cols,speedrows,speedcols,map_queue from t_garageinfo where id='%d'", carbarnid);
-	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'GB2312'");
 
 	if(mysql_query(&serverinfo.mysql,str)==NULL)
 	{
@@ -92,9 +92,7 @@ int CCarbarnInfo::readdate(int carbarnid)
 			this->carbarnid=carbarnid;
 			//////////////////////////////////////////////////////////////////////////
 			this->name=column[0];
-			//this->nowstatus=atoi(column[1]);
-			//this->command.push(column[1]);
-			//this->spendtime=atoi(column[]);
+			//printf("%s>", this->name.c_str());
 			this->sumcar=0;
 			this->spendcar=0;
 			this->rows=atoi(column[2]);
@@ -193,7 +191,7 @@ name.c_str(),nowstatus,command,speed_rows,speed_cols,tmpstr.c_str(),carbarnid);
 	//////////////////////////////////////////////////////////////////////////
 
 	//AfxMessageBox(str);
-	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'GB2312'");
 	
 	if(mysql_query(&serverinfo.mysql,str)!=NULL)
 	{
@@ -532,7 +530,7 @@ VALUES(%d,'%s',%d,%d,%f,%f,%d,%d,'%s')",
 this->carbarnid,this->name.c_str(),this->rows,this->cols,this->speed_rows,this->speed_cols,0,0,tmpstr.c_str());
 
 	//AfxMessageBox(str);
-	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'GB2312'");
 	
 	if(mysql_query(&serverinfo.mysql,str)!=NULL)
 	{
@@ -581,7 +579,7 @@ void CCarbarnInfo::deletedate()
 	sprintf_s(str, COMLEN, "DELETE FROM t_garageinfo where id='%d'", carbarnid);
 	//////////////////////////////////////////////////////////////////////////
 	//AfxMessageBox(str);
-	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'GB2312'");
 	
 	if(mysql_query(&serverinfo.mysql,str)!=NULL)
 	{
@@ -594,7 +592,7 @@ void CCarbarnInfo::deletedate()
 	sprintf_s(str, COMLEN, "DELETE FROM t_carinfo where id='%d'", carbarnid);
 	//////////////////////////////////////////////////////////////////////////
 	//AfxMessageBox(str);
-	mysql_query(&serverinfo.mysql,"SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql,"SET NAMES 'GB2312'");
 	
 	if(mysql_query(&serverinfo.mysql,str)!=NULL)
 	{

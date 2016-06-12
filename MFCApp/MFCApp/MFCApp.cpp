@@ -6,6 +6,7 @@
 #include "MFCApp.h"
 #include "MFCAppDlg.h"
 
+#include "IOCPserver.h"
 #include "CCarbarnInfo.h"
 #include "CWayFinding.h"
 #include "md5.h"
@@ -110,7 +111,7 @@ int check()
 		AfxMessageBox(_T("link:连接验证服务器失败!"));
 		exit(1);
 	}
-	mysql_query(&check, "SET NAMES 'UTF-8'");
+	mysql_query(&check, "SET NAMES 'GB2312'");
 	if (mysql_real_query(&check, query.c_str(), (UINT)query.size()) != NULL)
 	{
 		AfxMessageBox(_T("search:连接验证服务器失败!"));
@@ -307,15 +308,12 @@ BOOL CMFCAppApp::InitInstance()
 	_tsetlocale(LC_ALL, _T("chs"));     //这是必要的，否则unicode模式下使用C库函数控制台输出不了中文
 	///////////////////////////////////////////////////////////////////////////
 
-//	AfxMessageBox(_T("001"));
 	//////////////////////////////////////////////////////////////////////////
 	//这写的,把自己恶心到了
 	check();
-//AfxMessageBox(_T("002"));
 	//////////////////////////////////////////////////////////////////////////
 	//读取配置文件
 	readserverset();
-//	AfxMessageBox(_T("003"));
 	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
@@ -344,7 +342,6 @@ BOOL CMFCAppApp::InitInstance()
 	//在读一次输入缓冲区的内容后读操作就立即返回，
 	//而不管是否读入了要求的字符。
 
-
 	//设定写超时
 	TimeOuts.WriteTotalTimeoutMultiplier = 100;
 	TimeOuts.WriteTotalTimeoutConstant = 500;
@@ -364,9 +361,8 @@ BOOL CMFCAppApp::InitInstance()
 	MYSQL_RES *res;                    //查询结果集
 	MYSQL_ROW column;                  //数据行的列
 	CString str;
-//	str = "select max(id) from t_garageinfo";
 
-	mysql_query(&serverinfo.mysql, "SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
 	if (mysql_query(&serverinfo.mysql, "select max(id) from t_garageinfo") == NULL)
 	{
@@ -386,10 +382,8 @@ BOOL CMFCAppApp::InitInstance()
 	{
 		idtoindex[i] = -1;
 	}
-//	AfxMessageBox(_T("004"));
-//	str = "select id from t_garageinfo";
 
-	mysql_query(&serverinfo.mysql, "SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
 	if (mysql_query(&serverinfo.mysql, "select id from t_garageinfo") == NULL)
 	{
@@ -410,9 +404,8 @@ BOOL CMFCAppApp::InitInstance()
 		AfxMessageBox(_T("init:002 数据库连接失败"));
 		exit(1);
 	}
-//	AfxMessageBox(_T("005"));
 	mapinfo = new CWayFinding;
-//	AfxMessageBox(_T("006"));
+
 	CMFCAppDlg maindlg;
 	dlg = &maindlg;
 	m_pMainWnd = &maindlg;

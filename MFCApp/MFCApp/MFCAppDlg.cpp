@@ -13,6 +13,7 @@
 #include "DataStructure.h"
 #include "ControlCode.h"
 #include "ThreadFuniction.h"
+#include "IOCPserver.h"
 #include "md5.h"
 
 #ifdef _DEBUG
@@ -166,7 +167,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 	spendcar+=garage[i].getspendcar();
 	}*/
 
-	mysql_query(&serverinfo.mysql, "SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
 	if (mysql_query(&serverinfo.mysql, "select type_id from t_map where type=1") == NULL)
 	{
@@ -189,6 +190,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 	update_list();
 
 	thread01 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ThreadPoll, NULL, 0, NULL);
+	thread02 =CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)iocpstartserver, NULL, 0, NULL);
 
 /*	//////////////////////////////////////////////////////////////////////////
 	CString tmp(serverinfo.mscomm);
@@ -576,7 +578,7 @@ void CMFCAppDlg::OnBnClickedButton1()
 //	strtmp.Format(
 	sprintf_s(strtmp, COMLEN, "select * from t_reservation where plate='%s'", pValue);
 
-	mysql_query(&serverinfo.mysql, "SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
 	if (mysql_query(&serverinfo.mysql, strtmp) == NULL)
 	{
@@ -602,7 +604,7 @@ void CMFCAppDlg::OnBnClickedButton1()
 //	strtmp.Format(
 	sprintf_s(strtmp, COMLEN, "select * from t_carinfo where plate='%s'", pValue);
 
-	mysql_query(&serverinfo.mysql, "SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
 	if (mysql_query(&serverinfo.mysql, strtmp) == NULL)
 	{
@@ -644,7 +646,7 @@ void CMFCAppDlg::OnBnClickedButton1()
 
 //	strtmp.Format(
 	sprintf_s(strtmp, COMLEN, "insert into t_carinfo(plate,start) values('%s',now())", pValue);
-	mysql_query(&serverinfo.mysql, "SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
 	if (mysql_query(&serverinfo.mysql, strtmp) != NULL)
 	{
@@ -693,7 +695,7 @@ void CMFCAppDlg::OnBnClickedButton2()
 //	strtmp.Format(
 	sprintf_s(strtmp, COMLEN, "select carbarnid,num from t_carinfo where plate='%s'", pValue);
 
-	mysql_query(&serverinfo.mysql, "SET NAMES 'UTF-8'");
+	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
 	if (mysql_query(&serverinfo.mysql, strtmp) != NULL)
 	{
@@ -763,7 +765,7 @@ void CMFCAppDlg::On32774()
 void CMFCAppDlg::On32773()
 {
 	// TODO:  在此添加命令处理程序代码
-	ShellExecute(NULL, _T("open"), _T("http://127.0.0.1/mapedit/"), NULL, NULL, SW_SHOWNORMAL);
+	ShellExecute(NULL, _T("open"), _T("http://127.0.0.1/manage/"), NULL, NULL, SW_SHOWNORMAL);
 }
 
 

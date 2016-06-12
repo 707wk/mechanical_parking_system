@@ -30,6 +30,7 @@ public:
 	int spendcar;
 	//char sendstr[255];
 	HANDLE thread01;
+	HANDLE thread02;
 
 // й╣ож
 protected:
