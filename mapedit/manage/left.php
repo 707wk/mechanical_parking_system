@@ -48,9 +48,9 @@ document.oncontextmenu=function(e){return false;}
 			<li class=""><a onclick="go('carstate.php')" ><span class="glyphicon glyphicon-tasks"></span>&nbsp;车辆状态</a></li>
 			<li class=""><a onclick="go('mapedit.php')" ><span class="glyphicon glyphicon-edit"></span>&nbsp;地图设置</a></li>
 			<li class=""><a onclick="go('usermgr.php')" ><span class="glyphicon glyphicon-user"></span>&nbsp;用户管理</a></li>
-			<li class=""><a onclick="go('permgr.php')" ><span class="glyphicon glyphicon-user"></span>&nbsp;权限管理</a></li>
+			<li class=""><a onclick="go('permgr.php')" ><span class="glyphicon glyphicon-asterisk"></span>&nbsp;权限管理</a></li>
 			<li class=""><a onclick="go('peicemgr.php')" ><span class="glyphicon glyphicon-usd"></span>&nbsp;收费管理</a></li>
-			<li class=""><a onclick="go('history.php')" ><span class="glyphicon glyphicon-usd"></span>&nbsp;历史记录</a></li>
+			<li class=""><a onclick="go('history.php')" ><span class="glyphicon glyphicon-calendar"></span>&nbsp;历史记录</a></li>
        </ul>
      </div>
 </body>

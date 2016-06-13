@@ -15,5 +15,12 @@
 		$arr=$dbh->query("SELECT * FROM `t_car_user` WHERE 1")->fetchAll();
 		echo json_encode($arr);
 		break;
-		
+	case "userper":
+		$arr=$dbh->query("SELECT * FROM `t_user` WHERE 1")->fetchAll();
+		echo json_encode($arr);
+		break;
+	case "income" :
+		$arr=$dbh->query("SELECT `time`, `money` FROM `t_history` WHERE  `timestatus`=1")->fetchAll();
+		echo json_encode($arr);
+		break;
  }

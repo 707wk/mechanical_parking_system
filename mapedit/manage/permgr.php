@@ -44,18 +44,19 @@ table{
 <script>
 function init(){
 $('#table1').bootstrapTable({
-				url: 'ajaxapi.php?cmd=yhlb',
+				url: 'ajaxapi.php?cmd=userper',
+				striped: true,        
 				columns: [
 				{
 					field: 'ra1',
 					checkbox: true
 				},
 				{
-					field: 'phone',
-					title: '手机号'
+					field: 'name',
+					title: '用户名'
 				}, 
 				{
-					field: 'plate',
+					field: 'type',
 					title: '权限'
 				}
 				/*, {

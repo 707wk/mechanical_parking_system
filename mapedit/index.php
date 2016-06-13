@@ -5,6 +5,7 @@
  *EMAIL   :dksx@qq.com
  *************************************/
 require_once "config.php";
+date_default_timezone_set('PRC');
 $dbh=null;
 header("Content-type: text/html; charset=utf-8");
 try
@@ -64,9 +65,20 @@ switch(@$_POST['type']){
 		else {
 			exit(json_encode(array('code'=>0,"msg"=>"手机号或密码错误!")));
 		}
-	
-	
+	case "reserve":
+		exit(json_encode(array('code'=>1,"msg"=>"预约成功","savetime"=>date("Y-m-d H:i:s",strtotime("+140 min")),"token"=>session_id())));
+	case "cancel_reserve":
+		exit(json_encode(array('code'=>1,"msg"=>"取消预约成功","token"=>session_id())));
+	case "getfreecarport":
+		exit(json_encode(array('code'=>1,"msg"=>rand(0,20),"token"=>session_id())));
+	case "gethistory":
+		if(empty($_SESSION['user']))exit(json_encode(array('code'=>0,"msg"=>"身份已过期,请重新登陆!")));
+		$result=$dbh->prepare("SELECT * FROM `t_history` WHERE 1 order by time");
+		$sth=$result->execute(array($_SESSION['user']));
+		$info=$result->fetchAll();
+		exit(json_encode(array('code'=>1,"msg"=>"success","data"=>$info,"token"=>session_id())));
 	
 	default:
+	 echo date("Y-m-d H:i:s",strtotime("+20 min"));
 		exit(json_encode(array('code'=>0,"msg"=>"invalid parameter!")));
 }
