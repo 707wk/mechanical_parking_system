@@ -26,15 +26,11 @@ extern CCarbarnInfo* garage;
 
 extern CWayFinding* mapinfo;
 
-extern int reservation;
-
 extern int* idtoindex;
 
 extern int maxindex;
 
 extern int sumgarage;
-
-extern int link;
 
 DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 {
@@ -57,7 +53,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 			continue;
 			printf(">%d<end\n",index);//*/
 		}
-
+		serverinfo.activeThread++;
 		/* First check to see if an error has occured on the socket and if so
 		   then close the socket and cleanup the SOCKET_INFORMATION structure
 		   associated with the socket.	//*/
@@ -65,6 +61,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 		if (BytesTransferred == 0)
 		{
 			printf("[%s:%u] is closed!!\n",PerIoData->ip,PerIoData->port);	 
+			serverinfo.activeThread--;
 			if (closesocket(PerHandleData->Socket) == SOCKET_ERROR)
 			{
 				printf("closesocket() failed with error %d\n", WSAGetLastError());
@@ -162,7 +159,7 @@ DWORD WINAPI iocpstartserver(LPVOID pParam)
 	WSADATA wsaData;
 	DWORD Ret;
 
-	unsigned int i = 0;
+	int i = 0;
 
 	if ((Ret = WSAStartup(0x0202, &wsaData)) != 0)
 	{
@@ -185,8 +182,9 @@ DWORD WINAPI iocpstartserver(LPVOID pParam)
 
 	// Create worker threads based on the number of processors available on the
 	// system. Create two worker threads for each processor.
-
-	for(i = 0; i < SystemInfo.dwNumberOfProcessors * 2; i++)
+	serverinfo.Threadsum=SystemInfo.dwNumberOfProcessors * 2;
+	
+	for(i = 0; i < serverinfo.Threadsum; i++)
 	{
 		HANDLE ThreadHandle;
 

@@ -36,15 +36,11 @@ CCarbarnInfo* garage;
 
 CWayFinding* mapinfo;
 
-int reservation = 0;
-
 int* idtoindex;
 
 int maxindex = 0;
 
 int sumgarage;
-
-int link = 0;
 
 CMFCAppDlg *dlg;
 
@@ -197,6 +193,10 @@ CMFCAppApp::CMFCAppApp()
 {
 	// TODO:  在此处添加构造代码，
 	// 将所有重要的初始化放置在 InitInstance 中
+	serverinfo.Threadsum = 0;
+	serverinfo.activeThread = 0;
+	serverinfo.runstate = 0;
+	serverinfo.lockflage = 0;
 }
 
 

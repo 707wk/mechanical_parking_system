@@ -26,8 +26,8 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV Ö§³Ö
 
-	int sumcar;
-	int spendcar;
+	//int sumcar;
+	//int spendcar;
 	//char sendstr[255];
 	HANDLE thread01;
 	HANDLE thread02;
@@ -57,9 +57,7 @@ public:
 	CEdit m_sumcar;
 	CEdit m_freecar;
 	CComboBox m_list_input;
-	CButton m_startend;
 	CStatic m_stateico;
-	afx_msg void OnBnClickedButton3();
 	CEdit m_carplate;
 	afx_msg void OnBnClickedButton1();
 	CListCtrl m_list_passageway;

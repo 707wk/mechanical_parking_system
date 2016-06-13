@@ -30,15 +30,11 @@ extern CCarbarnInfo* garage;
 
 extern CWayFinding* mapinfo;
 
-extern int reservation;
-
 extern int* idtoindex;
 
 extern int maxindex;
 
 extern int sumgarage;
-
-extern int link;
 
 // CMFCAppDlg 对话框
 
@@ -50,8 +46,8 @@ CMFCAppDlg::CMFCAppDlg(CWnd* pParent /*=NULL*/)
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_pAutoProxy = NULL;
 
-	sumcar = 0;
-	spendcar = 0;
+	serverinfo.sumcar = 0;
+	serverinfo.spendcar = 0;
 }
 
 CMFCAppDlg::~CMFCAppDlg()
@@ -71,7 +67,6 @@ void CMFCAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT1, m_sumcar);
 	DDX_Control(pDX, IDC_EDIT2, m_freecar);
 	DDX_Control(pDX, IDC_COMBO1, m_list_input);
-	DDX_Control(pDX, IDC_BUTTON3, m_startend);
 	DDX_Control(pDX, IDC_STATE_ICO, m_stateico);
 	DDX_Control(pDX, IDC_EDIT3, m_carplate);
 	DDX_Control(pDX, IDC_LIST3, m_list_passageway);
@@ -84,7 +79,6 @@ BEGIN_MESSAGE_MAP(CMFCAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CMFCAppDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &CMFCAppDlg::OnBnClickedCancel)
 	ON_WM_TIMER()
-	ON_BN_CLICKED(IDC_BUTTON3, &CMFCAppDlg::OnBnClickedButton3)
 	ON_BN_CLICKED(IDC_BUTTON1, &CMFCAppDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CMFCAppDlg::OnBnClickedButton2)
 	ON_COMMAND(ID_32774, &CMFCAppDlg::On32774)
@@ -235,9 +229,10 @@ BOOL CMFCAppDlg::OnInitDialog()
 	PurgeComm(hCom, PURGE_TXCLEAR | PURGE_RXCLEAR);
 */	//////////////////////////////////////////////////////////////////////////
 
-	m_startend.SetWindowText(_T("暂停"));
+//	m_startend.SetWindowText(_T("暂停"));
 	//	m_link_info.SetWindowText("已连接");
-	link = 1;
+//	link = 1;
+	serverinfo.runstate = 1;
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDI_ICON_GREEN);
 	m_stateico.SetIcon(hIcon);
@@ -351,7 +346,7 @@ void CMFCAppDlg::OnTimer(UINT_PTR nIDEvent)
 	switch (nIDEvent)
 	{
 	case 1:
-		if (link)
+		if (serverinfo.runstate)
 		{
 			for (int i = 0; i<sumgarage; i++)
 				garage[i].accspendtime();
@@ -372,8 +367,8 @@ void CMFCAppDlg::update_list()
 	m_list_garage.DeleteAllItems();
 	m_list_error.DeleteAllItems();
 
-	sumcar = 0;
-	spendcar = 0;
+	serverinfo.sumcar = 0;
+	serverinfo.spendcar = 0;
 
 	//////////////////////////////////////////////////////////////////////////
 	//根据车库模块数量以及查询间隔确定超时时间
@@ -404,8 +399,8 @@ void CMFCAppDlg::update_list()
 		}
 		else
 		{
-			sumcar += garage[i].getsumcar();
-			spendcar += garage[i].getspendcar();
+			serverinfo.sumcar += garage[i].getsumcar();
+			serverinfo.spendcar += garage[i].getspendcar();
 
 			switch (garage[i].getnowstatus())
 			{
@@ -444,15 +439,15 @@ void CMFCAppDlg::update_list()
 		tmp.Format(_T("%d"), garage[i].getspendcar());
 		m_list_garage.SetItemText(index, 5, tmp);
 
-		tmp.Format(_T("%d"), sumcar);
+		tmp.Format(_T("%d"), serverinfo.sumcar);
 		m_sumcar.SetWindowText(tmp);
 
-		tmp.Format(_T("%d"), sumcar - spendcar);
+		tmp.Format(_T("%d"), serverinfo.sumcar - serverinfo.spendcar);
 		m_freecar.SetWindowText(tmp);
 	}
 }
 
-
+/*
 void CMFCAppDlg::OnBnClickedButton3()
 {
 	// TODO:  在此添加控件通知处理程序代码
@@ -519,7 +514,7 @@ void CMFCAppDlg::OnBnClickedButton3()
 		SetCommState(hCom,&dcb);
 
 		PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);*/
-
+/*
 		m_startend.SetWindowText(_T("暂停"));
 		//		m_link_info.SetWindowText("已连接");
 		link = 1;
@@ -543,7 +538,7 @@ void CMFCAppDlg::OnBnClickedButton3()
 
 		KillTimer(1);
 	}
-}
+}//*/
 
 
 void CMFCAppDlg::OnBnClickedButton1()
@@ -565,7 +560,7 @@ void CMFCAppDlg::OnBnClickedButton1()
 
 	if (strinput == "")return;
 
-	if (sumcar == spendcar)
+	if (serverinfo.sumcar == serverinfo.spendcar)
 	{
 		MessageBox(_T("车位已满"));
 		return;
@@ -780,16 +775,10 @@ void CMFCAppDlg::On32771()
 void CMFCAppDlg::On32772()
 {
 	// TODO:  在此添加命令处理程序代码
-	if (!link)
-	{
-		return;
-	}
-
-	int tmp = link;
-	link = 0;
+	serverinfo.runstate = 0;
 
 	debugmodel dlg;
 	dlg.DoModal();
 
-	link = tmp;
+	serverinfo.runstate = 1;
 }

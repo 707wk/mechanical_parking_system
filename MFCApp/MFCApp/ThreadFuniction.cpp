@@ -57,15 +57,12 @@ extern DCB dcb;
 
 extern CCarbarnInfo* garage;
 
-extern int reservation;
-
 extern int* idtoindex;
 
 extern int maxindex;
 
 extern int sumgarage;
 
-extern int link;
 
 extern CMFCAppDlg *dlg;
 
@@ -181,18 +178,18 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 	struct tm local;
 //	char qwe1[255];
 
-	for(;link!=-1;index=(index+1)%sumgarage)
+	for(;;index=(index+1)%sumgarage)
 	{
 		char str[]="1234567";
 
 		str[0] = ADDFIRST;
 		str[2] = ADDEND;
 
-		if(!link)
+		if(!serverinfo.runstate)
 		{
 			Sleep(1000);
 			continue;
-		}
+		}//*/
 
 		garage[index].getcommand(strtmp);
 		if(strtmp[0]=='\0')//ÃüÁîÎª¿Õ

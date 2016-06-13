@@ -135,27 +135,24 @@
 /*////////////////////////////////////////////////////////////////////////
 sock
 
-00000000 控制码
-{
-	0x01 入口存车
-	0x02 出口出车
-	0x03 车库模块取车
-	0x04 预约存车
-	0x05 取消预约
-}
-
-00000000 数据
-{
-
-}
 接收数据
 {
-
+	INPUTSAVE      请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 校验
+	OUTPUTDELE     请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 校验
+	OUTPUTGARAGE   请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 校验
+	RESERVATION    请求码[unsigned char] 校验
+	UNRESERVATION  请求码[unsigned char] 校验
+	GETGARAGEINFO  请求码[unsigned char] 校验
 }
 
 发送数据
 {
-
+	INPUTSAVE      返回码[unsigned char] 最近车库编号[int]
+	OUTPUTDELE     返回码[unsigned char]
+	OUTPUTGARAGE   返回码[unsigned char]
+	RESERVATION    返回码[unsigned char] 剩余时间[int]
+	UNRESERVATION  返回码[unsigned char]
+	GETGARAGEINFO  返回码[unsigned char] 剩余车位[int] 剩余时间[int]
 }
 ////////////////////////////////////////////////////////////////////////*/
 //////////////////////////////////////////////////////////////////////////
@@ -172,4 +169,5 @@ sock
 #define NOCAR          0x02         //车位已满
 #define GARAGEBUSY     0x03         //无空闲模块
 #define NOTFOUND       0x04         //未找到车辆
+#define TASKFAIL       0xff         //请求失败
 //////////////////////////////////////////////////////////////////////////

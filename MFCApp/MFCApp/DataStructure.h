@@ -64,6 +64,16 @@ struct serverset
 	int    StopBits;                   //两个停止位
 
 	int    intervaltime;               //查询间隔
+
+	int    sumcar;                     //总车位
+	int    spendcar;                   //已存车辆数
+	int    reservation;                //预约车辆数
+
+	int    Threadsum;                  //工作线程数
+	int    activeThread;               //活动线程
+
+	int    runstate;                   //运行状态
+	int    lockflage;                  //读写锁
 	
 	MYSQL  mysql;                      //mysql数据库
 };

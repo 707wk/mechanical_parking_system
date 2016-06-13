@@ -13,17 +13,11 @@ extern struct serverset serverinfo;
 
 extern HANDLE hCom;  //全局变量，串口句柄
 
-//extern CCarbarnInfo* garage;
-
-//extern CWayFinding* mapinfo;
-
 extern int* idtoindex;
 
 extern int maxindex;
 
 extern int sumgarage;
-
-extern int link;
 
 // debugmodel 对话框
 
