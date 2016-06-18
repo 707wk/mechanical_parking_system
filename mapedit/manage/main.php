@@ -4,7 +4,9 @@
  *TEXT    :立体车库管理后台全局文件
  *EMAIL   :dksx@qq.com
  *************************************/
- require_once "../config.php";
+
+require_once "../config.php";
+session_start();
 $dbh=null;
 try
 {
@@ -15,4 +17,10 @@ catch (PDOException $e)
 {
 	echo 'Connection failed: ' . $e->getMessage();
 	die;
+}
+function needLogin(){
+	if($_SESSION['auth']!=1){
+		header("Location:login.php");
+		exit(json_encode(array("code"=>0,"msg"=>"身份已过期!")));
+	}
 }

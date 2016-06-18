@@ -5,6 +5,7 @@
  *EMAIL   :dksx@qq.com
  *************************************/
  require_once "main.php";
+  needLogin();
 ?>
 <!DOCTYPE html >
 <html >
@@ -34,6 +35,9 @@ body{
 a{
 	cursor:default;
 	color:#fff;
+}
+a{
+	cursor:pointer;
 }
 </style>
 </head>

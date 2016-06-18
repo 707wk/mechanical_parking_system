@@ -5,7 +5,7 @@
  *EMAIL   :dksx@qq.com
  *************************************/
  require_once "main.php";
-
+ needLogin();
 ?>
 <!DOCTYPE html >
 <html >
@@ -44,7 +44,7 @@ document.oncontextmenu=function(e){return false;}
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right" id="logandreg">
-              <li><a onclick="window.parent.parent.document.getElementById('mainFrame').src='mapedit.php'" style="color:#fff;"><span class="glyphicon glyphicon-off"></span>&nbsp;安全退出</a></li>
+              <li><a onclick="window.top.location.href='login.php?logout=true'" style="color:#fff;cursor:pointer;"><span class="glyphicon glyphicon-off"></span>&nbsp;安全退出</a></li>
             </ul>
           </div>
         </div>

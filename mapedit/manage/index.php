@@ -5,6 +5,7 @@
  *EMAIL   :dksx@qq.com
  *************************************/
  require_once "main.php";
+ needLogin();
 ?>
 <!DOCTYPE html >
 <html >

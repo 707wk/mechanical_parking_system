@@ -5,7 +5,7 @@
  *EMAIL   :dksx@qq.com
  *************************************/
 require_once "main.php";
-
+ needLogin();
 switch(@$_GET['do']){
 	case "wipemap":
 	$dbh->exec('delete from t_map where 1');
@@ -205,6 +205,9 @@ h3{
 }
 .modal{
 	margin:5% 10% 5% 10%;overflow-x:hidden;overflow-y:hidden;
+}
+td{
+	cursor:pointer;
 }
 </style>
 </head>
