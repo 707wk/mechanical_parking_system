@@ -2,6 +2,8 @@
 // MFCAppDlg.h : 头文件
 //
 
+#include "OScopeCtrl.h"
+
 #pragma once
 #include "afxwin.h"
 #include "afxcmn.h"
@@ -29,11 +31,13 @@ public:
 	//int sumcar;
 	//int spendcar;
 	//char sendstr[255];
+	COScopeCtrl m_Osc;
 	HANDLE thread01;
 	HANDLE thread02;
 
 // 实现
 protected:
+	void init_list();
 	void update_list();
 	CMFCAppDlgAutoProxy* m_pAutoProxy;
 	HICON m_hIcon;
@@ -57,7 +61,6 @@ public:
 	CEdit m_sumcar;
 	CEdit m_freecar;
 	CComboBox m_list_input;
-	CStatic m_stateico;
 	CEdit m_carplate;
 	afx_msg void OnBnClickedButton1();
 	CListCtrl m_list_passageway;

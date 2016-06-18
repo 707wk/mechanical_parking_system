@@ -48,6 +48,10 @@ CMFCAppDlg::CMFCAppDlg(CWnd* pParent /*=NULL*/)
 
 	serverinfo.sumcar = 0;
 	serverinfo.spendcar = 0;
+	serverinfo.activeThreadtime = 0;
+
+	serverinfo.runstate = 0;
+	serverinfo.lockflage = 0;
 }
 
 CMFCAppDlg::~CMFCAppDlg()
@@ -67,7 +71,6 @@ void CMFCAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT1, m_sumcar);
 	DDX_Control(pDX, IDC_EDIT2, m_freecar);
 	DDX_Control(pDX, IDC_COMBO1, m_list_input);
-	DDX_Control(pDX, IDC_STATE_ICO, m_stateico);
 	DDX_Control(pDX, IDC_EDIT3, m_carplate);
 	DDX_Control(pDX, IDC_LIST3, m_list_passageway);
 }
@@ -105,6 +108,19 @@ BOOL CMFCAppDlg::OnInitDialog()
 
 	MYSQL_RES *res;                    //查询结果集
 	MYSQL_ROW column;                  //数据行的列
+
+	//初始化曲线控件
+	CRect rt;
+	GetDlgItem(IDC_CUSTOM1)->GetWindowRect(rt);
+	ScreenToClient(rt);
+	m_Osc.Create(WS_VISIBLE | WS_CHILD, rt, this);
+	m_Osc.SetRange(0.0, serverinfo.Threadsum*100, 1);
+	m_Osc.SetYUnits(_T(""));
+	m_Osc.SetXUnits(_T("服务使用率"));
+	m_Osc.SetBackgroundColor(RGB(0, 0, 64));
+	m_Osc.SetGridColor(RGB(192, 192, 255));
+	m_Osc.SetPlotColor(RGB(0, 255, 255));
+	m_Osc.AppendPoint(0.0);
 
 	//设置列表主题
 	m_list_garage.SetExtendedStyle(
@@ -181,7 +197,8 @@ BOOL CMFCAppDlg::OnInitDialog()
 	CEdit* pedit = (CEdit*)m_list_input.GetWindow(GW_CHILD);
 	pedit->SetReadOnly(true);
 
-	update_list();
+	//update_list();
+	init_list();
 
 	thread01 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ThreadPoll, NULL, 0, NULL);
 	thread02 =CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)iocpstartserver, NULL, 0, NULL);
@@ -235,9 +252,11 @@ BOOL CMFCAppDlg::OnInitDialog()
 	serverinfo.runstate = 1;
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDI_ICON_GREEN);
-	m_stateico.SetIcon(hIcon);
+	//m_stateico.SetIcon(hIcon);
 
 	SetTimer(1, 1000, NULL);
+	SetTimer(2, 1000, NULL);
+	SetTimer(3, 60*1000 , NULL);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -343,6 +362,9 @@ void CMFCAppDlg::OnBnClickedCancel()
 void CMFCAppDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO:  在此添加消息处理程序代码和/或调用默认值
+	MYSQL_RES *res;                    //查询结果集
+//	MYSQL_ROW column;                  //数据行的列
+
 	switch (nIDEvent)
 	{
 	case 1:
@@ -353,9 +375,69 @@ void CMFCAppDlg::OnTimer(UINT_PTR nIDEvent)
 			update_list();
 		}
 		break;
+	case 2:
+		if (serverinfo.runstate)
+		{
+			m_Osc.AppendPoint(serverinfo.activeThreadtime/10.0);
+			//printf("[%ld]", serverinfo.activeThread);
+			serverinfo.activeThreadtime = 0;
+		}
+		break;
+	case 3:
+		mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
+
+		if (mysql_query(&serverinfo.mysql, "delete from t_reservation where now()>endtime") != NULL)
+		{
+			AfxMessageBox(_T("time:32数据库连接失败"));
+		}
+		//else AfxMessageBox(_T("delete successful"));
+
+		if (mysql_query(&serverinfo.mysql, "select plate from t_reservation") == NULL)
+		{
+			res = mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
+			serverinfo.reservation = (int)mysql_num_rows(res);
+			//printf("[reservation=%d]", serverinfo.reservation);
+		}
+		else
+		{
+			AfxMessageBox(_T("time:31数据库连接失败"));
+		}
+
+		break;
 	}
 
 	CDialogEx::OnTimer(nIDEvent);
+}
+
+void CMFCAppDlg::init_list()
+{
+	CString tmp;
+
+	m_list_garage.DeleteAllItems();
+	m_list_error.DeleteAllItems();
+
+	for (int index = 0; index<sumgarage; index++)
+	{
+		tmp.Format(_T("%d"), garage[index].getcarbarnid());
+		m_list_garage.InsertItem(index, tmp);
+		tmp = garage[index].getname().c_str();
+		m_list_garage.SetItemText(index, 1, tmp);
+		m_list_garage.SetItemText(index, 2, _T("未知"));
+
+		m_list_garage.SetItemText(index, 3, _T("00:00:00"));
+
+		tmp.Format(_T("%d"), garage[index].getsumcar());
+		m_list_garage.SetItemText(index, 4, tmp);
+
+		tmp.Format(_T("%d"), garage[index].getspendcar());
+		m_list_garage.SetItemText(index, 5, tmp);
+
+		tmp.Format(_T("%d"), serverinfo.sumcar);
+		m_sumcar.SetWindowText(tmp);
+
+		tmp.Format(_T("%d"), serverinfo.sumcar - serverinfo.spendcar - serverinfo.reservation);
+		m_freecar.SetWindowText(tmp);
+	}
 }
 
 void CMFCAppDlg::update_list()
@@ -364,7 +446,8 @@ void CMFCAppDlg::update_list()
 	int errorindex = 0;
 	int overtime = 0;
 	CString tmp;
-	m_list_garage.DeleteAllItems();
+
+	//m_list_garage.DeleteAllItems();
 	m_list_error.DeleteAllItems();
 
 	serverinfo.sumcar = 0;
@@ -383,7 +466,8 @@ void CMFCAppDlg::update_list()
 		index = i;
 		//////////////////////////////////////////////////////////////////////////
 		tmp.Format(_T("%d"), garage[i].getcarbarnid());
-		m_list_garage.InsertItem(index, tmp);
+		//m_list_garage.InsertItem(index, tmp);
+		m_list_garage.SetItemText(index, 0, tmp);
 		tmp = garage[i].getname().c_str();
 		m_list_garage.SetItemText(index, 1, tmp);
 		if (garage[i].getspendtime()>overtime)
@@ -442,7 +526,7 @@ void CMFCAppDlg::update_list()
 		tmp.Format(_T("%d"), serverinfo.sumcar);
 		m_sumcar.SetWindowText(tmp);
 
-		tmp.Format(_T("%d"), serverinfo.sumcar - serverinfo.spendcar);
+		tmp.Format(_T("%d"), serverinfo.sumcar - serverinfo.spendcar - serverinfo.reservation);
 		m_freecar.SetWindowText(tmp);
 	}
 }
@@ -553,6 +637,9 @@ void CMFCAppDlg::OnBnClickedButton1()
 	char pValue[COMLEN];
 	DWORD dwNum;
 
+	DWORD start;
+	DWORD stop;
+	
 	m_carplate.GetWindowText(strplate);
 	m_list_input.GetWindowText(strinput);
 
@@ -569,6 +656,8 @@ void CMFCAppDlg::OnBnClickedButton1()
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, NULL, 0, NULL, FALSE);
 	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
+
+start = GetTickCount();
 
 //	strtmp.Format(
 	sprintf_s(strtmp, COMLEN, "select * from t_reservation where plate='%s'", pValue);
@@ -592,9 +681,14 @@ void CMFCAppDlg::OnBnClickedButton1()
 		exit(1);
 	}
 
+stop = GetTickCount();
+printf("<1<%ld>", stop - start);
+
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, NULL, 0, NULL, FALSE);
 	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
+
+start = GetTickCount();
 
 //	strtmp.Format(
 	sprintf_s(strtmp, COMLEN, "select * from t_carinfo where plate='%s'", pValue);
@@ -612,15 +706,21 @@ void CMFCAppDlg::OnBnClickedButton1()
 		}
 	}
 
+stop = GetTickCount();
+printf("<2<%ld>", stop - start);
+
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strinput, -1, NULL, 0, NULL, FALSE);
 	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strinput, -1, pValue, dwNum, NULL, FALSE);
 	
+start = GetTickCount();
+
 	int garageid = mapinfo->nearestcarport(atoi(pValue));
 
+stop = GetTickCount();
+printf("<3<%ld>", stop - start);
+
 //	delete pValue;
-
-
 	if (garageid == -1)
 	{
 		MessageBox(_T("未找到空闲模块,请稍后再试!"));
@@ -638,6 +738,8 @@ void CMFCAppDlg::OnBnClickedButton1()
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, NULL, 0, NULL, FALSE);
 	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
+
+start = GetTickCount();
 
 //	strtmp.Format(
 	sprintf_s(strtmp, COMLEN, "insert into t_carinfo(plate,start) values('%s',now())", pValue);
@@ -665,6 +767,11 @@ void CMFCAppDlg::OnBnClickedButton1()
 	garage[index].setsqlcommand(strtmp);
 
 	garage[index].savecar();
+
+	stop = GetTickCount();
+	printf("<4<%ld>", stop - start);
+
+	serverinfo.spendcar++;
 }
 
 
@@ -747,6 +854,8 @@ void CMFCAppDlg::OnBnClickedButton2()
 	garage[index].setsqlcommand(strtmp);
 
 	garage[index].deletecar(num);
+
+	serverinfo.spendcar--;
 }
 
 

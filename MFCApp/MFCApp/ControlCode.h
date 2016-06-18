@@ -137,22 +137,22 @@ sock
 
 接收数据
 {
-	INPUTSAVE      请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 校验
-	OUTPUTDELE     请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 校验
-	OUTPUTGARAGE   请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 校验
-	RESERVATION    请求码[unsigned char] 校验
-	UNRESERVATION  请求码[unsigned char] 校验
-	GETGARAGEINFO  请求码[unsigned char] 校验
+	INPUTSAVE      请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 校验[unsigned char]
+	OUTPUTDELE     请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 校验[unsigned char]
+	OUTPUTGARAGE   请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 校验[unsigned char]
+	RESERVATION    请求码[unsigned char] 校验[unsigned char]
+	UNRESERVATION  请求码[unsigned char] 校验[unsigned char]
+	GETGARAGEINFO  请求码[unsigned char] 校验[unsigned char]
 }
 
 发送数据
 {
-	INPUTSAVE      返回码[unsigned char] 最近车库编号[int]
+	INPUTSAVE      返回码[unsigned char] 分隔符 最近车库编号[int]
 	OUTPUTDELE     返回码[unsigned char]
 	OUTPUTGARAGE   返回码[unsigned char]
-	RESERVATION    返回码[unsigned char] 剩余时间[int]
+	RESERVATION    返回码[unsigned char]
 	UNRESERVATION  返回码[unsigned char]
-	GETGARAGEINFO  返回码[unsigned char] 剩余车位[int] 剩余时间[int]
+	GETGARAGEINFO  返回码[unsigned char] 分隔符 剩余车位[int] 分隔符 剩余时间[int]
 }
 ////////////////////////////////////////////////////////////////////////*/
 //////////////////////////////////////////////////////////////////////////
@@ -169,5 +169,6 @@ sock
 #define NOCAR          0x02         //车位已满
 #define GARAGEBUSY     0x03         //无空闲模块
 #define NOTFOUND       0x04         //未找到车辆
+#define NOTDEFINE      0x05         //未定义的请求
 #define TASKFAIL       0xff         //请求失败
 //////////////////////////////////////////////////////////////////////////

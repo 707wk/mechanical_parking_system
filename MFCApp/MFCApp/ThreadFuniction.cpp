@@ -77,6 +77,7 @@ void OnSendBit(char* str,int length)
 	COMSTAT ComStat;
 	DWORD dwErrorFlags;
 	BOOL bWriteStat;
+
 	ClearCommError(hCom,&dwErrorFlags,&ComStat);
 	bWriteStat=WriteFile(hCom,str,
 		dwBytesWrite,& dwBytesWrite,&m_osWrite);
@@ -98,8 +99,16 @@ void OnSendBit(char* str,int length)
 void OnSend(char* str,int length) 
 {
 	// TODO: Add your control notification handler code here
+	/*#define NOPARITY            0
+	#define ODDPARITY           1
+	#define EVENPARITY          2
+	#define MARKPARITY          3
+	#define SPACEPARITY         4
 
-	printf("send:%02X-%02X-%02X-%02X-%02X\t",
+	#define ONESTOPBIT          0
+	#define ONE5STOPBITS        1
+	#define TWOSTOPBITS         2*/
+/*	printf("send:%02X-%02X-%02X-%02X-%02X\t",
 		//(unsigned char)str[0], 
 		(unsigned char)str[1],
 		//(unsigned char)str[2], 
@@ -216,13 +225,13 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			nowtime = time(NULL);  
 			localtime_s(&local,&nowtime);
 			
-			printf("[%02d:%02d:%02d] sen:%02X-%02X-%02X-%02X-%02X\n",
+/*			printf("[%02d:%02d:%02d] sen:%02X-%02X-%02X-%02X-%02X\n",
 				local.tm_hour,local.tm_min,local.tm_sec,
 				(unsigned char)str[1],
 				(unsigned char)str[3],
 				(unsigned char)str[4],
 				(unsigned char)str[5],
-				(unsigned char)str[6]);
+				(unsigned char)str[6]);//*/
 //			dlg->setinfo(qwe1);
 
 			command_flage=1;
@@ -239,14 +248,14 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		//判断接收是否合法
 		if(recstr[0]==0)
 		{
-			printf("\r");
+			//printf("E");
 			continue;
 		}
 		
 		nowtime = time(NULL);  
 		localtime_s(&local,&nowtime);
 		
-		printf("[%02d:%02d:%02d] rev:%02X-%02X-%02X-%02X\n",
+/*		printf("[%02d:%02d:%02d] rev:%02X-%02X-%02X-%02X\n",
 			local.tm_hour,local.tm_min,local.tm_sec,
 			(unsigned char)recstr[0],
 			(unsigned char)recstr[1],

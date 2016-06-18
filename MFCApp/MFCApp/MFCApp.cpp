@@ -165,10 +165,10 @@ void readserverset()
 		exit(1);
 	}
 
-	fscanf(fp, "server=%s\nusername=%s\npwd=%s\ndatabase=%s\ndataport=%d\niocpport=%d\ncost=%lf\nmscomm=%s\nBaudRate=%d\nByteSize=%d\nParity=%d\nStopBits=%d\nintervalTime=%d",
+	fscanf(fp, "server=%s\nusername=%s\npwd=%s\ndatabase=%s\ndataport=%d\niocpport=%d\ncost=%lf\nreservationtime=%d\nmscomm=%s\nBaudRate=%d\nByteSize=%d\nParity=%d\nStopBits=%d\nintervalTime=%d",
 		serverinfo.ip, serverinfo.name, serverinfo.password, serverinfo.database,
-		&serverinfo.dataport,&serverinfo.iocpport, 
-		&serverinfo.cost, 
+		&serverinfo.dataport, &serverinfo.iocpport,
+		&serverinfo.cost, &serverinfo.reservationtime,
 		serverinfo.mscomm, &serverinfo.BaudRate, &serverinfo.ByteSize, &serverinfo.Parity, &serverinfo.StopBits,
 		&serverinfo.intervaltime);
 
@@ -178,6 +178,11 @@ void readserverset()
 		AfxMessageBox(_T("start:本地数据库无法连接!"));
 		exit(1);
 	}
+
+	SYSTEM_INFO SystemInfo;
+	GetSystemInfo(&SystemInfo);
+	serverinfo.Threadsum = SystemInfo.dwNumberOfProcessors*2;
+
 }
 
 // CMFCAppApp
@@ -193,8 +198,10 @@ CMFCAppApp::CMFCAppApp()
 {
 	// TODO:  在此处添加构造代码，
 	// 将所有重要的初始化放置在 InitInstance 中
+	serverinfo.sumcar = 0;
+	serverinfo.spendcar = 0;
 	serverinfo.Threadsum = 0;
-	serverinfo.activeThread = 0;
+	serverinfo.activeThreadtime = 0;
 	serverinfo.runstate = 0;
 	serverinfo.lockflage = 0;
 }
@@ -394,6 +401,10 @@ BOOL CMFCAppApp::InitInstance()
 		{
 			int tmpid = atoi(column[0]);
 			garage[index].readdate(tmpid);
+
+			serverinfo.sumcar += garage[index].getsumcar();
+			serverinfo.spendcar += garage[index].getspendcar();
+
 			idtoindex[tmpid] = index;
 			index++;
 		}
@@ -404,6 +415,20 @@ BOOL CMFCAppApp::InitInstance()
 		AfxMessageBox(_T("init:002 数据库连接失败"));
 		exit(1);
 	}
+
+	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
+
+	if (mysql_query(&serverinfo.mysql, "select plate from t_reservation") == NULL)
+	{
+		res = mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
+		serverinfo.reservation = (int)mysql_num_rows(res);
+	}
+	else
+	{
+		AfxMessageBox(_T("init:003 数据库连接失败"));
+		exit(1);
+	}
+
 	mapinfo = new CWayFinding;
 
 	CMFCAppDlg maindlg;

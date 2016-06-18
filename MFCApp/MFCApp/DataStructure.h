@@ -55,6 +55,7 @@ struct serverset
 	int    dataport;                   //数据库端口
 	int    iocpport;                   //socket端口
 	double cost;                       //费用(元/小时)(保留)
+	int    reservationtime;            //预约时间
 
 	char   mscomm[255];                //端口号
 	char   mscommini[100];             //连接参数
@@ -70,7 +71,7 @@ struct serverset
 	int    reservation;                //预约车辆数
 
 	int    Threadsum;                  //工作线程数
-	int    activeThread;               //活动线程
+	DWORD  activeThreadtime;           //线程运行时间
 
 	int    runstate;                   //运行状态
 	int    lockflage;                  //读写锁
