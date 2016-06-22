@@ -6,7 +6,7 @@
 
 
  /* File created by MIDL compiler version 8.00.0603 */
-/* at Sat Jun 18 17:35:39 2016
+/* at Wed Jun 22 16:46:32 2016
  */
 /* Compiler settings for MFCApp.idl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.00.0603 

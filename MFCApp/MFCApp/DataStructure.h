@@ -32,8 +32,8 @@
         ##       ####        ####              
 ***************************************/
 
-#ifndef _DataStructure_h_
-#define _DataStructure_h_
+#ifndef _DATASTRUCTURE_H_
+#define _DATASTRUCTURE_H_
 
 #include "StdAfx.h"
 #include <string>

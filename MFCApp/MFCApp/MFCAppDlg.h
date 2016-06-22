@@ -63,7 +63,6 @@ public:
 	CComboBox m_list_input;
 	CEdit m_carplate;
 	afx_msg void OnBnClickedButton1();
-	CListCtrl m_list_passageway;
 	afx_msg void OnBnClickedButton2();
 	afx_msg void On32774();
 	afx_msg void On32773();

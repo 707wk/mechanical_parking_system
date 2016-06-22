@@ -137,7 +137,7 @@ sock
 
 接收数据
 {
-	INPUTSAVE      请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 校验[unsigned char]
+	INPUTSAVE      请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 入口id 分隔符 校验[unsigned char]
 	OUTPUTDELE     请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 校验[unsigned char]
 	OUTPUTGARAGE   请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 校验[unsigned char]
 	RESERVATION    请求码[unsigned char] 校验[unsigned char]
@@ -148,7 +148,7 @@ sock
 发送数据
 {
 	INPUTSAVE      返回码[unsigned char] 分隔符 最近车库编号[int]
-	OUTPUTDELE     返回码[unsigned char]
+	OUTPUTDELE     返回码[unsigned char] 分隔符 存储时间[double] 分隔符 收费[double]
 	OUTPUTGARAGE   返回码[unsigned char]
 	RESERVATION    返回码[unsigned char]
 	UNRESERVATION  返回码[unsigned char]
@@ -163,13 +163,16 @@ sock
 #define RESERVATION    0x04         //预约存车
 #define UNRESERVATION  0x05         //取消预约
 #define GETGARAGEINFO  0x06         //获取停车场信息
+#define PANTBAG        0x07         //心跳包
 
 //返回码
 #define TASKSUCCEED    0x01         //请求成功
 #define NOCAR          0x02         //车位已满
 #define GARAGEBUSY     0x03         //无空闲模块
 #define NOTFOUND       0x04         //未找到车辆
-#define NOTDEFINE      0x05         //未定义的请求
+#define PLATEREPEAT    0x05         //车牌重复
+#define NOTOUTPUT      0x06         //未找到出口
+#define NOTDEFINE      0x07         //未定义的请求
 #define TASKFAIL       0xff         //请求失败
 //////////////////////////////////////////////////////////////////////////
 

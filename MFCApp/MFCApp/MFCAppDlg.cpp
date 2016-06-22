@@ -72,7 +72,6 @@ void CMFCAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT2, m_freecar);
 	DDX_Control(pDX, IDC_COMBO1, m_list_input);
 	DDX_Control(pDX, IDC_EDIT3, m_carplate);
-	DDX_Control(pDX, IDC_LIST3, m_list_passageway);
 }
 
 BEGIN_MESSAGE_MAP(CMFCAppDlg, CDialogEx)
@@ -147,7 +146,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 	m_list_error.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 70, 0);
 	m_list_error.InsertColumn(2, _T("状态"), LVCFMT_CENTER, 70, 0);
 
-	//设置列表主题
+/*	//设置列表主题
 	m_list_passageway.SetExtendedStyle(
 		LVS_EX_FLATSB				// 扁平风格滚动
 		| LVS_EX_FULLROWSELECT		// 允许正航选中
@@ -156,7 +155,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 
 	m_list_passageway.InsertColumn(0, _T("编号"), LVCFMT_CENTER, 70, 0);
 	m_list_passageway.InsertColumn(1, _T("类型"), LVCFMT_CENTER, 70, 0);
-	m_list_passageway.InsertColumn(2, _T("状态"), LVCFMT_CENTER, 70, 0);
+	m_list_passageway.InsertColumn(2, _T("状态"), LVCFMT_CENTER, 70, 0);//*/
 
 	/*//设置列表主题
 	m_list_reservation.SetExtendedStyle(
@@ -389,6 +388,7 @@ void CMFCAppDlg::OnTimer(UINT_PTR nIDEvent)
 		if (mysql_query(&serverinfo.mysql, "delete from t_reservation where now()>endtime") != NULL)
 		{
 			AfxMessageBox(_T("time:32数据库连接失败"));
+			exit(1);
 		}
 		//else AfxMessageBox(_T("delete successful"));
 
@@ -401,6 +401,7 @@ void CMFCAppDlg::OnTimer(UINT_PTR nIDEvent)
 		else
 		{
 			AfxMessageBox(_T("time:31数据库连接失败"));
+			exit(1);
 		}
 
 		break;
@@ -637,8 +638,8 @@ void CMFCAppDlg::OnBnClickedButton1()
 	char pValue[COMLEN];
 	DWORD dwNum;
 
-	DWORD start;
-	DWORD stop;
+	//DWORD start;
+	//DWORD stop;
 	
 	m_carplate.GetWindowText(strplate);
 	m_list_input.GetWindowText(strinput);
@@ -657,10 +658,10 @@ void CMFCAppDlg::OnBnClickedButton1()
 	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
 
-start = GetTickCount();
+//start = GetTickCount();
 
 //	strtmp.Format(
-	sprintf_s(strtmp, COMLEN, "select * from t_reservation where plate='%s'", pValue);
+	sprintf_s(strtmp, COMLEN, "select plate from t_reservation where plate='%s'", pValue);
 
 	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
@@ -681,17 +682,17 @@ start = GetTickCount();
 		exit(1);
 	}
 
-stop = GetTickCount();
-printf("<1<%ld>", stop - start);
+//stop = GetTickCount();
+//printf("<1<%ld>", stop - start);
 
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, NULL, 0, NULL, FALSE);
 	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
 
-start = GetTickCount();
+//start = GetTickCount();
 
 //	strtmp.Format(
-	sprintf_s(strtmp, COMLEN, "select * from t_carinfo where plate='%s'", pValue);
+	sprintf_s(strtmp, COMLEN, "select plate from t_carinfo where plate='%s'", pValue);
 
 	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
@@ -706,19 +707,19 @@ start = GetTickCount();
 		}
 	}
 
-stop = GetTickCount();
-printf("<2<%ld>", stop - start);
+//stop = GetTickCount();
+//printf("<2<%ld>", stop - start);
 
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, strinput, -1, NULL, 0, NULL, FALSE);
 	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strinput, -1, pValue, dwNum, NULL, FALSE);
 	
-start = GetTickCount();
+//start = GetTickCount();
 
 	int garageid = mapinfo->nearestcarport(atoi(pValue));
 
-stop = GetTickCount();
-printf("<3<%ld>", stop - start);
+//stop = GetTickCount();
+//printf("<3<%ld>", stop - start);
 
 //	delete pValue;
 	if (garageid == -1)
@@ -739,7 +740,7 @@ printf("<3<%ld>", stop - start);
 	memset(pValue, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, strplate, -1, pValue, dwNum, NULL, FALSE);
 
-start = GetTickCount();
+//start = GetTickCount();
 
 //	strtmp.Format(
 	sprintf_s(strtmp, COMLEN, "insert into t_carinfo(plate,start) values('%s',now())", pValue);
@@ -768,8 +769,8 @@ start = GetTickCount();
 
 	garage[index].savecar();
 
-	stop = GetTickCount();
-	printf("<4<%ld>", stop - start);
+	//stop = GetTickCount();
+	//printf("<4<%ld>", stop - start);
 
 	serverinfo.spendcar++;
 }
