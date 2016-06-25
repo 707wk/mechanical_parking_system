@@ -32,6 +32,8 @@ extern int maxindex;
 
 extern int sumgarage;
 
+//int qweasd = 1;
+
 int inputParking(char* strplate, int inputId)
 {
 	MYSQL_RES *res;                    //查询结果集
@@ -258,6 +260,8 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 	DWORD start;
 	DWORD stop;
 
+//	int index = qweasd++;
+
 	CString str;
 
 	WSABUF DataBuf;
@@ -279,6 +283,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 			continue;
 			printf(">%d<end\n",index);//*/
 		}
+//		printf("[index=%d]", index);
 		start = GetTickCount();
 		//InterlockedIncrement(&serverinfo.activeThread);
 /*		if (stateflage == 0)
@@ -294,8 +299,8 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 
 		if (BytesTransferred == 0)
 		{
-//			printf("[%s:%u] is closed!!\n",PerIoData->ip,PerIoData->port);
-			printf("[%s:%u] 已断开\n", PerIoData->ip, PerIoData->port);
+			printf(" closed\n");
+			//printf("[%s:%u] 已断开\n", PerIoData->ip, PerIoData->port);
 			//printf("C");
 			//stateflage = 0;
 			//--serverinfo.activeThread;
@@ -303,9 +308,9 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 			
 			if (closesocket(PerHandleData->Socket) == SOCKET_ERROR)
 			{
-				str.Format(_T("closesocket() failed with error %d"), WSAGetLastError());
-				AfxMessageBox(str);
-				exit(1);
+				printf("closesocket() failed with error %d", WSAGetLastError());
+				//AfxMessageBox(str);
+				//exit(1);
 			}
 
 			GlobalFree(PerHandleData);
@@ -338,7 +343,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 		{
 			PerIoData->BytesSEND += BytesTransferred;
 		}
-
+//		printf(" 1 ");
 		if (PerIoData->BytesRECV > PerIoData->BytesSEND)
 		{
 /*			if (stateflage == 0)
@@ -348,7 +353,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 				//++serverinfo.activeThread;
 				InterlockedIncrement(&serverinfo.activeThread);
 			}//*/
-
+//			printf(" 2.1 ");
 			/* Post another WSASend() request.
 			   Since WSASend() is not gauranteed to send all of the bytes requested,
 			   continue posting WSASend() calls until all received bytes are sent.	//*/
@@ -358,13 +363,14 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 			PerIoData->DataBuf.buf = PerIoData->Buffer + PerIoData->BytesSEND;
 			PerIoData->DataBuf.len = PerIoData->BytesRECV - PerIoData->BytesSEND;
 
-//			printf("[%s:%u]->{%d %d %d}\n",PerIoData->ip,PerIoData->port, PerIoData->DataBuf.buf[0], PerIoData->DataBuf.buf[3], PerIoData->DataBuf.buf[2]);
-
+//			printf("[%s:%u]->{%d %s}\n",PerIoData->ip,PerIoData->port, PerIoData->DataBuf.buf[0], PerIoData->DataBuf.buf+2);
+//			printf("[%d]", PerIoData->DataBuf.len);
 			switch (PerIoData->DataBuf.buf[0])
 			{
 			case INPUTSAVE:
 				printf("入口存车");
 				sscanf_s(PerIoData->DataBuf.buf + 1, " %s %d", strplate, COMLEN, &ioputId);
+				//printf("plate=%s id=%d ", strplate, ioputId);
 				result = inputParking(strplate, ioputId);
 				switch (result)
 				{
@@ -376,11 +382,15 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 					sendstr[0] = result;
 					sendstr[1] = sendstr[0] % CHECKMOD;
 					sendstr[2] = '\0';
-				}
+				}//*/
+				sendstr[0] = TASKSUCCEED;
+				sendstr[1] = sendstr[0] % CHECKMOD;
+				sendstr[2] = '\0';
 				break;
 			case OUTPUTDELE:
 				printf("出口出车");
 				sscanf_s(PerIoData->DataBuf.buf + 1, " %s", strplate, COMLEN);
+				//printf("plate=%s ", strplate);
 				result = outputDrawOut(strplate);
 				switch (result)
 				{
@@ -392,11 +402,15 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 					sendstr[0] = result;
 					sendstr[1] = sendstr[0] % CHECKMOD;
 					sendstr[2] = '\0';
-				}
+				}//*/
+				sendstr[0] = TASKSUCCEED;
+				sendstr[1] = sendstr[0] % CHECKMOD;
+				sendstr[2] = '\0';
 				break;
 			case OUTPUTGARAGE:
 				printf("模块取车");
 				sscanf_s(PerIoData->DataBuf.buf + 1, " %s", strplate, COMLEN);
+				//printf("plate=%s ", strplate);
 				result = carRetrieval(strplate);
 				switch (result)
 				{
@@ -407,10 +421,13 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 					sendstr[0] = result;
 					sendstr[1] = sendstr[0] % CHECKMOD;
 					sendstr[2] = '\0';
-				}
+				}//*/
+				sendstr[0] = TASKSUCCEED;
+				sendstr[1] = sendstr[0] % CHECKMOD;
+				sendstr[2] = '\0';
 				break;
 			case RESERVATION:
-//				printf("预约");
+				printf("预约");
 				if (serverinfo.sumcar - serverinfo.spendcar - serverinfo.reservation < 1)
 				{
 					sendstr[0] = (unsigned char) NOCAR;
@@ -424,30 +441,37 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 				sendstr[2] = '\0';
 				break;
 			case UNRESERVATION:
-//				printf("取消");
+				printf("取消");
 				serverinfo.reservation--;
 				sendstr[0] = TASKSUCCEED;
 				sendstr[1] = sendstr[0] % CHECKMOD;
 				sendstr[2] = '\0';
 				break;
 			case GETGARAGEINFO:
-//				printf("获取信息");
+				printf("获取信息");
 				memset(sendstr, '\0', COMLEN);
 				sendstr[0] = TASKSUCCEED;
-				sprintf_s(sendstr + 1, COMLEN-1, " %d %d", serverinfo.sumcar - serverinfo.spendcar -serverinfo.reservation,serverinfo.reservationtime);
+				sprintf_s(sendstr + 1, COMLEN-1, " %d %d", 
+					serverinfo.sumcar - serverinfo.spendcar -serverinfo.reservation,
+					serverinfo.reservationtime);
 				break;
 			case PANTBAG:
-				sendstr[0] = PANTBAG;
-				sendstr[1] = sendstr[0] % CHECKMOD;
-				sendstr[2] = '\0';
+				printf("心跳包");
+				sscanf_s(PerIoData->DataBuf.buf + 1, " %d", &ioputId);
+				printf("[id=%d]", ioputId);
+				memset(sendstr, '\0', COMLEN);
+				sendstr[0] = TASKSUCCEED;
+				sprintf_s(sendstr + 1, COMLEN - 1, " %d %d",
+					serverinfo.sumcar,
+					serverinfo.sumcar - serverinfo.spendcar - serverinfo.reservation);
 				break;
 			default:
-				printf("未定义");
+				//printf("未定义");
 				sendstr[0] = NOTDEFINE;
 				sendstr[1] = sendstr[0] % CHECKMOD;
 				sendstr[2] = '\0';
 			}
-			printf("<%d>", DataBuf.buf[0]);
+			//printf("#");
 			DataBuf.len=strlen(sendstr)+1;
 
 			if (WSASend(PerHandleData->Socket, &(DataBuf), 1, &SendBytes, 0,
@@ -455,17 +479,18 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 			{
 				if (WSAGetLastError() != ERROR_IO_PENDING)
 				{
-					str.Format(_T("WSASend() failed with error %d"), WSAGetLastError());
-					AfxMessageBox(str);
-					exit(1);
+					printf("WSASend() failed with error %d", WSAGetLastError());
+					//AfxMessageBox(str);
+					//exit(1);
 				}
 			}
 			ZeroMemory(PerIoData->DataBuf.buf,PerIoData->DataBuf.len);
 		}
 		else
 		{
+//			printf(" 2.2 ");
 			PerIoData->BytesRECV = 0;
-
+			//printf("*");
 			// Now that there are no more bytes to send post another WSARecv() request.
 			Flags = 0;
 			ZeroMemory(&(PerIoData->Overlapped), sizeof(OVERLAPPED));
@@ -478,9 +503,9 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 			{
 				if (WSAGetLastError() != ERROR_IO_PENDING)
 				{
-					str.Format(_T("WSARecv() failed with error %d"), WSAGetLastError());
-					AfxMessageBox(str);
-					exit(1);
+					printf("WSARecv() failed with error %d", WSAGetLastError());
+					//AfxMessageBox(str);
+					//exit(1);
 				}
 			}
 		}
@@ -622,8 +647,8 @@ DWORD WINAPI iocpstartserver(LPVOID pParam)
 		PerIoData->DataBuf.len = DATA_BUFSIZE;
 		PerIoData->DataBuf.buf = PerIoData->Buffer;
 
-//		printf("[%s:%u] has established!!\n",PerIoData->ip,PerIoData->port);
-		printf("[%s:%u] 已连接\n", PerIoData->ip, PerIoData->port);
+		printf("established ");
+		//printf("[%s:%u] 已连接\n", PerIoData->ip, PerIoData->port);
 
 		Flags = 0;
 		if (WSARecv(Accept, &(PerIoData->DataBuf), 1, &RecvBytes, &Flags,
@@ -631,10 +656,7 @@ DWORD WINAPI iocpstartserver(LPVOID pParam)
 		{
 			if (WSAGetLastError() != ERROR_IO_PENDING)
 			{
-				//printf
-				str.Format(_T("WSARecv() failed with error %d"), WSAGetLastError());
-				AfxMessageBox(str);
-				exit(1);
+				printf("WSARecv() failed with error %d", WSAGetLastError());
 			}
 		}//*/
 	}

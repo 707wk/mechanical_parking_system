@@ -1,0 +1,29 @@
+// MFCAppclient.idl : MFCAppclient.exe 的类型库源
+
+// 此文件将由 MIDL 编译器处理以产生
+// 类型库(MFCAppclient.tlb)。
+
+[ uuid(641E72AF-CA6B-4260-AE2A-E07C04CFE0E8), version(1.0) ]
+library MFCAppclient
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	//  CMFCAppclientDoc 的主调度接口
+	
+	[ uuid(2F6BAF5A-4C1D-4790-AD7C-67C8922B14D0) ]
+	dispinterface IMFCAppclient
+	{
+		properties:
+			
+		methods:
+	};
+
+	//  CMFCAppclientDoc 的类信息
+	
+	[ uuid(ACCD5739-C80D-4EE4-A07B-DF737ACE53C5) ]
+	coclass MFCAppclient
+	{
+		[default] dispinterface IMFCAppclient;
+	};
+};
