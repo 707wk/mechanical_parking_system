@@ -81,6 +81,8 @@ private:
 	double speed_cols;                 //纵向移动速度
 	vector <speed_location> map_queue; //位置列表
 
+	int    flage;                      //标记
+
 public:
 	CCarbarnInfo();
 	~CCarbarnInfo();
@@ -165,6 +167,9 @@ public:
 	int    switchid(int index);        //外部坐标转换为内部坐标
 
 	//void putinfo();                  //输出信息[终端用]
+
+	void   setflage(int state);
+	int    getflage();
 };
 #endif
 

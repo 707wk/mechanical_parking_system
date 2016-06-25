@@ -433,12 +433,15 @@ void CMFCAppDlg::init_list()
 		tmp.Format(_T("%d"), garage[index].getspendcar());
 		m_list_garage.SetItemText(index, 5, tmp);
 
-		tmp.Format(_T("%d"), serverinfo.sumcar);
-		m_sumcar.SetWindowText(tmp);
-
-		tmp.Format(_T("%d"), serverinfo.sumcar - serverinfo.spendcar - serverinfo.reservation);
-		m_freecar.SetWindowText(tmp);
+		serverinfo.sumcar += garage[index].getsumcar();
+		serverinfo.spendcar += garage[index].getspendcar();
 	}
+
+	tmp.Format(_T("%d"), serverinfo.sumcar);
+	m_sumcar.SetWindowText(tmp);
+
+	tmp.Format(_T("%d"), serverinfo.sumcar - serverinfo.spendcar - serverinfo.reservation);
+	m_freecar.SetWindowText(tmp);
 }
 
 void CMFCAppDlg::update_list()
@@ -451,8 +454,8 @@ void CMFCAppDlg::update_list()
 	//m_list_garage.DeleteAllItems();
 	m_list_error.DeleteAllItems();
 
-	serverinfo.sumcar = 0;
-	serverinfo.spendcar = 0;
+//	serverinfo.sumcar = 0;
+//	serverinfo.spendcar = 0;
 
 	//////////////////////////////////////////////////////////////////////////
 	//根据车库模块数量以及查询间隔确定超时时间
@@ -473,6 +476,13 @@ void CMFCAppDlg::update_list()
 		m_list_garage.SetItemText(index, 1, tmp);
 		if (garage[i].getspendtime()>overtime)
 		{
+			if (garage[i].getflage() == ONLINE)
+			{
+				serverinfo.sumcar-= garage[i].getsumcar();
+				serverinfo.spendcar-= garage[i].getspendcar();
+				garage[i].setflage(OFFLINE);
+			}
+
 			garage[i].setoffline();
 			tmp.Format(_T("%d"), garage[i].getcarbarnid());
 			m_list_garage.SetItemText(index, 2, _T("离线"));
@@ -484,8 +494,12 @@ void CMFCAppDlg::update_list()
 		}
 		else
 		{
-			serverinfo.sumcar += garage[i].getsumcar();
-			serverinfo.spendcar += garage[i].getspendcar();
+			if (garage[i].getflage() == OFFLINE)
+			{
+				serverinfo.sumcar += garage[i].getsumcar();
+				serverinfo.spendcar += garage[i].getspendcar();
+				garage[i].setflage(ONLINE);
+			}
 
 			switch (garage[i].getnowstatus())
 			{
@@ -523,13 +537,13 @@ void CMFCAppDlg::update_list()
 
 		tmp.Format(_T("%d"), garage[i].getspendcar());
 		m_list_garage.SetItemText(index, 5, tmp);
-
-		tmp.Format(_T("%d"), serverinfo.sumcar);
-		m_sumcar.SetWindowText(tmp);
-
-		tmp.Format(_T("%d"), serverinfo.sumcar - serverinfo.spendcar - serverinfo.reservation);
-		m_freecar.SetWindowText(tmp);
 	}
+
+	tmp.Format(_T("%d"), serverinfo.sumcar);
+	m_sumcar.SetWindowText(tmp);
+
+	tmp.Format(_T("%d"), serverinfo.sumcar - serverinfo.spendcar - serverinfo.reservation);
+	m_freecar.SetWindowText(tmp);
 }
 
 /*

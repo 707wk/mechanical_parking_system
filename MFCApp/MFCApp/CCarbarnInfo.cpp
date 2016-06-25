@@ -62,6 +62,7 @@ CCarbarnInfo::CCarbarnInfo()
 	this->cols=0;
 	this->speed_rows=0;
 	this->speed_cols=0;
+	this->flage= ONLINE;
 }
 
 CCarbarnInfo::~CCarbarnInfo()
@@ -601,3 +602,12 @@ void CCarbarnInfo::deletedate()
 	}
 }
 
+void CCarbarnInfo::setflage(int state)
+{
+	this->flage=state;
+}
+
+int CCarbarnInfo::getflage()
+{
+	return flage;
+}

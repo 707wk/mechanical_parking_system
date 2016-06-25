@@ -402,8 +402,8 @@ BOOL CMFCAppApp::InitInstance()
 			int tmpid = atoi(column[0]);
 			garage[index].readdate(tmpid);
 
-			serverinfo.sumcar += garage[index].getsumcar();
-			serverinfo.spendcar += garage[index].getspendcar();
+//			serverinfo.sumcar += garage[index].getsumcar();
+//			serverinfo.spendcar += garage[index].getspendcar();
 
 			idtoindex[tmpid] = index;
 			index++;
