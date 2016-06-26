@@ -81,7 +81,7 @@ private:
 	double speed_cols;                 //纵向移动速度
 	vector <speed_location> map_queue; //位置列表
 
-	int    flage;                      //标记
+//	int    flage;                      //标记
 
 public:
 	CCarbarnInfo();
@@ -104,7 +104,7 @@ public:
 	void   setname(string name);       //设置模块名
 	int    getnowstatus();             //获取当前状态
 	void   setnowstatus(int status);   //设置当前状态
-	void   setoffline();               //设为离线状态
+	//void   setoffline();             //设为离线状态
 	//int    getoldstatus();           //获取上一状态
 	//void   setoldstatus(int status); //设置上一状态
 	void   getcommand(char* str);              //获取命令
@@ -168,8 +168,8 @@ public:
 
 	//void putinfo();                  //输出信息[终端用]
 
-	void   setflage(int state);
-	int    getflage();
+	//void   setflage(int state);
+	//int    getflage();
 };
 #endif
 

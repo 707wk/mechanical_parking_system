@@ -104,7 +104,7 @@ int inputParking(char* strplate, int inputId)
 
 	garage[index].setnowstatus(BUSY);
 
-	char sendstr[] = "123";
+/*	char sendstr[] = "123";
 	sendstr[0] = SAVECAR;
 	sendstr[1] = garage[index].getrows(garage[index].findemptycarid());
 	sendstr[2] = garage[index].getcols(garage[index].findemptycarid());
@@ -114,7 +114,7 @@ int inputParking(char* strplate, int inputId)
 		garageid, garage[index].findemptycarid(), strplate);
 	garage[index].setsqlcommand(strtmp);
 
-	garage[index].savecar();
+	garage[index].savecar();//*/
 
 	serverinfo.spendcar++;
 
@@ -180,7 +180,8 @@ int outputDrawOut(char* strplate)
 
 	memset(strplate, '\0', COMLEN);
 	strplate[0] = TASKSUCCEED;
-	sprintf_s(strplate + 1, COMLEN - 1, " %.0f %.1f", cost/60, serverinfo.cost);
+	sprintf_s(strplate + 1, COMLEN - 1, " %.0f %.2f", cost/60, serverinfo.cost);
+//	printf("[%s]", strplate);
 	return TASKSUCCEED;
 }
 
@@ -225,7 +226,7 @@ int carRetrieval(char* strplate)
 
 	garage[index].setnowstatus(BUSY);
 
-	char sendstr[] = "123";
+/*	char sendstr[] = "123";
 	sendstr[0] = DELETECAR;
 	sendstr[1] = garage[index].getrows(num);
 	sendstr[2] = garage[index].getcols(num);
@@ -240,7 +241,7 @@ int carRetrieval(char* strplate)
 
 	garage[index].setsqlcommand(strtmp);
 
-	garage[index].deletecar(num);
+	garage[index].deletecar(num);//*/
 
 	memset(strplate, '\0', COMLEN);
 	strplate[0] = TASKSUCCEED;
@@ -383,9 +384,6 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 					sendstr[1] = sendstr[0] % CHECKMOD;
 					sendstr[2] = '\0';
 				}//*/
-				sendstr[0] = TASKSUCCEED;
-				sendstr[1] = sendstr[0] % CHECKMOD;
-				sendstr[2] = '\0';
 				break;
 			case OUTPUTDELE:
 				printf("出口出车");
@@ -403,9 +401,6 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 					sendstr[1] = sendstr[0] % CHECKMOD;
 					sendstr[2] = '\0';
 				}//*/
-				sendstr[0] = TASKSUCCEED;
-				sendstr[1] = sendstr[0] % CHECKMOD;
-				sendstr[2] = '\0';
 				break;
 			case OUTPUTGARAGE:
 				printf("模块取车");
@@ -422,9 +417,6 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 					sendstr[1] = sendstr[0] % CHECKMOD;
 					sendstr[2] = '\0';
 				}//*/
-				sendstr[0] = TASKSUCCEED;
-				sendstr[1] = sendstr[0] % CHECKMOD;
-				sendstr[2] = '\0';
 				break;
 			case RESERVATION:
 				printf("预约");

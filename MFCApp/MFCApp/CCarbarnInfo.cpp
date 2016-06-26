@@ -52,7 +52,7 @@ extern struct serverset serverinfo;
 CCarbarnInfo::CCarbarnInfo()
 {
 	this->carbarnid=0;
-	this->nowstatus=0;
+	this->nowstatus= ONLINE;
 	this->command[0]='\0';
 	this->sqlcommand[0]='\0';
 	this->spendtime=0;
@@ -62,7 +62,7 @@ CCarbarnInfo::CCarbarnInfo()
 	this->cols=0;
 	this->speed_rows=0;
 	this->speed_cols=0;
-	this->flage= ONLINE;
+//	this->flage= ONLINE;
 }
 
 CCarbarnInfo::~CCarbarnInfo()
@@ -258,13 +258,17 @@ int CCarbarnInfo::getnowstatus()
 void CCarbarnInfo::setnowstatus(int status)
 {
 	this->nowstatus=status;
-	spendtime=0;
+
+	if (status != OFFLINE)
+	{
+		spendtime = 0;
+	}
 }
 
-void CCarbarnInfo::setoffline()
+/*void CCarbarnInfo::setoffline()
 {
 	this->nowstatus=OFFLINE;
-}
+}*/
 
 void CCarbarnInfo::getcommand(char* str)
 {
@@ -602,7 +606,7 @@ void CCarbarnInfo::deletedate()
 	}
 }
 
-void CCarbarnInfo::setflage(int state)
+/*void CCarbarnInfo::setflage(int state)
 {
 	this->flage=state;
 }
@@ -610,4 +614,4 @@ void CCarbarnInfo::setflage(int state)
 int CCarbarnInfo::getflage()
 {
 	return flage;
-}
+}*/

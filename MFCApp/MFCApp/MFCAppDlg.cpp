@@ -118,7 +118,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 	m_Osc.SetXUnits(_T("服务使用率"));
 	m_Osc.SetBackgroundColor(RGB(0, 0, 64));
 	m_Osc.SetGridColor(RGB(192, 192, 255));
-	m_Osc.SetPlotColor(RGB(0, 255, 255));
+	m_Osc.SetPlotColor(RGB(255, 255, 0));
 	m_Osc.AppendPoint(0.0);
 
 	//设置列表主题
@@ -476,14 +476,15 @@ void CMFCAppDlg::update_list()
 		m_list_garage.SetItemText(index, 1, tmp);
 		if (garage[i].getspendtime()>overtime)
 		{
-			if (garage[i].getflage() == ONLINE)
+			if (garage[i].getnowstatus() == ONLINE)
 			{
 				serverinfo.sumcar-= garage[i].getsumcar();
 				serverinfo.spendcar-= garage[i].getspendcar();
-				garage[i].setflage(OFFLINE);
+				//garage[i].setnowstatus(OFFLINE);
 			}
 
-			garage[i].setoffline();
+			//garage[i].setoffline();
+			garage[i].setnowstatus(OFFLINE);
 			tmp.Format(_T("%d"), garage[i].getcarbarnid());
 			m_list_garage.SetItemText(index, 2, _T("离线"));
 			m_list_error.InsertItem(errorindex, tmp);
@@ -494,11 +495,11 @@ void CMFCAppDlg::update_list()
 		}
 		else
 		{
-			if (garage[i].getflage() == OFFLINE)
+			if (garage[i].getnowstatus() == OFFLINE)
 			{
 				serverinfo.sumcar += garage[i].getsumcar();
 				serverinfo.spendcar += garage[i].getspendcar();
-				garage[i].setflage(ONLINE);
+				//garage[i].setnowstatus(ONLINE);
 			}
 
 			switch (garage[i].getnowstatus())

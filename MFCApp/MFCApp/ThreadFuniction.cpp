@@ -108,7 +108,7 @@ void OnSend(char* str,int length)
 	#define ONESTOPBIT          0
 	#define ONE5STOPBITS        1
 	#define TWOSTOPBITS         2*/
-/*	printf("send:%02X-%02X-%02X-%02X-%02X\t",
+/*	printf("send:%02X-%02X-%02X-%02X-%02X\n",
 		//(unsigned char)str[0], 
 		(unsigned char)str[1],
 		//(unsigned char)str[2], 
@@ -118,7 +118,7 @@ void OnSend(char* str,int length)
 		(unsigned char)str[6]);//*/
 
 	//	OnSendBit(str,length);
-
+	
 	GetCommState(hCom,&dcb);
 	dcb.Parity = MARKPARITY;//   //ÆæÅ¼Î»Îª1
 	SetCommState(hCom,&dcb);
@@ -134,7 +134,7 @@ void OnSend(char* str,int length)
 	PurgeComm(hCom,PURGE_TXCLEAR|PURGE_RXCLEAR);
 
 	dcb.Parity  =NOPARITY;   //ÆæÅ¼Î»
-	SetCommState(hCom,&dcb);
+	SetCommState(hCom,&dcb);//*/
 }
 
 void OnReceive(char (&str)[COMLEN],int length) 
