@@ -150,7 +150,7 @@ sock
 {
 	INPUTSAVE      返回码[unsigned char] 分隔符 最近车库编号[int]
 	OUTPUTDELE     返回码[unsigned char] 分隔符 存储时间[double] 分隔符 收费[double]
-	OUTPUTGARAGE   返回码[unsigned char]
+	OUTPUTGARAGE   返回码[unsigned char] 分隔符 最近出口编号[int]
 	RESERVATION    返回码[unsigned char]
 	UNRESERVATION  返回码[unsigned char]
 	GETGARAGEINFO  返回码[unsigned char] 分隔符 剩余车位[int] 分隔符 剩余时间[int]

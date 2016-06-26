@@ -63,6 +63,9 @@ struct serverset
 	int    overtime;                   //超时时间
 	int    maxovertime;                //最大超时时间
 
+	int    sumCar;                     //总车位
+	int    freeCar;                    //空闲车位
+
 	queue<struct comNode> command;     //等待队列
 	char   iobuf[COMLEN];              //接收发送字符串
 };

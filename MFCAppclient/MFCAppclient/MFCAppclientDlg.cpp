@@ -54,6 +54,8 @@ void CMFCAppclientDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT1, strplateEDIT);
 	DDX_Control(pDX, IDC_EDIT2, stateEDIT);
 	DDX_Control(pDX, IDC_EDIT3, ioputIdEDIT);
+	DDX_Control(pDX, IDC_EDIT4, sumCarEDIT);
+	DDX_Control(pDX, IDC_EDIT5, freeCarEDIT);
 }
 
 BEGIN_MESSAGE_MAP(CMFCAppclientDlg, CDialogEx)
@@ -66,6 +68,7 @@ BEGIN_MESSAGE_MAP(CMFCAppclientDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CMFCAppclientDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CMFCAppclientDlg::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &CMFCAppclientDlg::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON4, &CMFCAppclientDlg::OnBnClickedButton4)
 END_MESSAGE_MAP()
 
 
@@ -187,6 +190,8 @@ void CMFCAppclientDlg::OnBnClickedCancel()
 void CMFCAppclientDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	CString tmp;
+
 	switch (nIDEvent)
 	{
 	case 1:
@@ -199,6 +204,13 @@ void CMFCAppclientDlg::OnTimer(UINT_PTR nIDEvent)
 		{
 			stateEDIT.SetWindowTextW(_T("正常"));
 		}
+
+		tmp.Format(_T("%4d"), serverinfo.sumCar);
+		sumCarEDIT.SetWindowTextW(tmp);
+
+		tmp.Format(_T("%4d"), serverinfo.freeCar);
+		freeCarEDIT.SetWindowTextW(tmp);
+		
 		break;
 	case 2:
 		struct comNode tmp;
@@ -224,11 +236,15 @@ void CMFCAppclientDlg::OnBnClickedButton1()
 
 	ioputIdEDIT.GetWindowTextW(tmp);
 
+	if (tmp == "")return;
+
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, tmp, -1, NULL, 0, NULL, FALSE);
 	memset(id, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, tmp, -1, id, dwNum, NULL, FALSE);
 
 	strplateEDIT.GetWindowTextW(tmp);
+
+	if (tmp == "")return;
 
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, tmp, -1, NULL, 0, NULL, FALSE);
 	memset(plate, 0, COMLEN);
@@ -239,6 +255,8 @@ void CMFCAppclientDlg::OnBnClickedButton1()
 	sprintf_s(qwe.strplate, COMLEN, "%s", plate);
 	qwe.ioputid = atoi(id);
 	serverinfo.command.push(qwe);
+
+	MessageBox(_T("已接收"));
 }
 
 
@@ -252,6 +270,8 @@ void CMFCAppclientDlg::OnBnClickedButton2()
 
 	strplateEDIT.GetWindowTextW(tmp);
 
+	if (tmp == "")return;
+
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, tmp, -1, NULL, 0, NULL, FALSE);
 	memset(plate, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, tmp, -1, plate, dwNum, NULL, FALSE);
@@ -261,6 +281,8 @@ void CMFCAppclientDlg::OnBnClickedButton2()
 	sprintf_s(qwe.strplate, COMLEN, "%s", plate);
 	qwe.ioputid = 0;
 	serverinfo.command.push(qwe);
+
+	MessageBox(_T("已接收"));
 }
 
 
@@ -274,6 +296,8 @@ void CMFCAppclientDlg::OnBnClickedButton3()
 
 	strplateEDIT.GetWindowTextW(tmp);
 
+	if (tmp == "")return;
+
 	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, tmp, -1, NULL, 0, NULL, FALSE);
 	memset(plate, 0, COMLEN);
 	WideCharToMultiByte(CP_OEMCP, NULL, tmp, -1, plate, dwNum, NULL, FALSE);
@@ -283,4 +307,28 @@ void CMFCAppclientDlg::OnBnClickedButton3()
 	sprintf_s(qwe.strplate, COMLEN, "%s", plate);
 	qwe.ioputid = 0;
 	serverinfo.command.push(qwe);
+
+	MessageBox(_T("已接收"));
+}
+
+
+void CMFCAppclientDlg::OnBnClickedButton4()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	DWORD dwNum;
+	CString tmp;
+
+	char id[COMLEN];
+
+	ioputIdEDIT.GetWindowTextW(tmp);
+
+	if (tmp == "")return;
+
+	dwNum = WideCharToMultiByte(CP_OEMCP, NULL, tmp, -1, NULL, 0, NULL, FALSE);
+	memset(id, 0, COMLEN);
+	WideCharToMultiByte(CP_OEMCP, NULL, tmp, -1, id, dwNum, NULL, FALSE);
+
+	serverinfo.ioId = atoi(id);
+
+	MessageBox(_T("已修改"));
 }

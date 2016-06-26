@@ -147,22 +147,20 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			switch (tmp.IOCTL)
 			{
 			case INPUTSAVE:
-				printf("最近的车位 %2d\n", atoi(recstr+2));
+				printf("最近的模块编号是:%2d\n", atoi(recstr+2));
 				break;
 			case OUTPUTDELE:
 				double times;
 				double spend;
 				sscanf(recstr + 1, "%lf %lf", &times, &spend);
-				printf("已存 %.0f分钟 每分钟收费 %.1f元\n", times, spend);
+				printf("已存 %.0f分钟 每分钟收费 %.1f元 收费 %.f元\n", times, spend,times*spend);
 				break;
 			case OUTPUTGARAGE:
-				printf("正在取车\n");
+				printf("最近的出口编号是:%2d\n", atoi(recstr + 2));
 				break;
 			case PANTBAG:
-				int sumCar;
-				int freeCar;
-				sscanf(recstr + 1, "%d %d", &sumCar, &freeCar);
-				printf("总车位 %3d 空闲车位 %3d\n", sumCar, freeCar);
+				sscanf(recstr + 1, "%d %d", &serverinfo.sumCar, &serverinfo.freeCar);
+				//printf("总车位 %3d 空闲车位 %3d\n", serverinfo.sumCar, serverinfo.freeCar);
 				break;
 			default:
 				printf("未定义\n");
