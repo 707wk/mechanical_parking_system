@@ -154,16 +154,22 @@ switch(@$_POST['type']){
 		//var_dump($data);
 		exit(json_encode(array('code'=>0,"msg"=>"取消预约失败","token"=>session_id())));
 	case "getfreecarport":
-		$sth=$dbh->prepare("SELECT endtime from `t_reservation` where plate=?");
+		$sth=$dbh->prepare("SELECT * FROM `t_carinfo` WHERE `plate`=?");
 		$sth->execute(array($_SESSION['plate']));
-		if($sth->rowCount()>0){
-			$row=$sth->fetch();
-			exit(json_encode(array('code'=>2,"savetime"=>$row['endtime'],"token"=>session_id())));
-		}
-		else {
-			getinfo();
-			$xx=getinfo();
-			exit(json_encode(array('code'=>1,"msg"=>$xx[0],"token"=>session_id())));
+		if($sth->rowCount()>0){//是否已存
+			exit(json_encode(array('code'=>3,"msg"=>'已存',"token"=>session_id())));
+		}else{
+			$sth=$dbh->prepare("SELECT endtime from `t_reservation` where plate=?");
+			$sth->execute(array($_SESSION['plate']));
+			if($sth->rowCount()>0){//是否已经预约
+				$row=$sth->fetch();
+				exit(json_encode(array('code'=>2,"savetime"=>$row['endtime'],"token"=>session_id())));
+			}
+			else {
+				getinfo();
+				$xx=getinfo();
+				exit(json_encode(array('code'=>1,"msg"=>$xx[0],"token"=>session_id())));
+			}
 		}
 	case "gethistory":
 		if(empty($_SESSION['user']))exit(json_encode(array('code'=>0,"msg"=>"身份已过期,请重新登陆!")));

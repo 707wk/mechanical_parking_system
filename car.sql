@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2016-06-12 18:06:42
+Date: 2016-06-26 16:15:57
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -33,7 +33,7 @@ CREATE TABLE `t_carinfo` (
 -- ----------------------------
 -- Records of t_carinfo
 -- ----------------------------
-INSERT INTO `t_carinfo` VALUES ('1', '2016-05-23 10:35:10', '2016-05-23 10:35:10', '2', '1', null, null);
+INSERT INTO `t_carinfo` VALUES ('1', '2016-06-12 21:53:45', '2016-05-23 10:35:10', '0', '0', null, null);
 INSERT INTO `t_carinfo` VALUES ('3', '2016-05-23 10:36:41', '2016-05-23 10:36:41', '2', '5', null, null);
 INSERT INTO `t_carinfo` VALUES ('4', '2016-05-23 10:37:15', '2016-05-23 10:37:15', '2', '3', null, null);
 
@@ -45,15 +45,15 @@ CREATE TABLE `t_car_user` (
   `phone` varchar(255) NOT NULL COMMENT '手机号',
   `passwd` varchar(255) DEFAULT NULL COMMENT '密码',
   `plate` varchar(255) DEFAULT NULL COMMENT '车牌号',
-  `money` double DEFAULT NULL COMMENT '余额',
+  `money` double(11,1) DEFAULT NULL COMMENT '余额',
   PRIMARY KEY (`phone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_car_user
 -- ----------------------------
-INSERT INTO `t_car_user` VALUES ('123', '202cb962ac59075b964b07152d234b70', '123', '0');
-INSERT INTO `t_car_user` VALUES ('18888888888', 'c9f0f895fb98ab9159f51fd0297e236d', '湘A88888', '0');
+INSERT INTO `t_car_user` VALUES ('123', '202cb962ac59075b964b07152d234b70', '123', '0.0');
+INSERT INTO `t_car_user` VALUES ('18888888888', 'c9f0f895fb98ab9159f51fd0297e236d', '湘A88888', '0.0');
 
 -- ----------------------------
 -- Table structure for `t_garageinfo`
@@ -81,7 +81,7 @@ CREATE TABLE `t_garageinfo` (
 -- Records of t_garageinfo
 -- ----------------------------
 INSERT INTO `t_garageinfo` VALUES ('1', '1号车库', null, null, null, '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ');
-INSERT INTO `t_garageinfo` VALUES ('2', '2', '6', null, null, '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '65537 2 65541 65539 6 9 7 10 13 4 11 14 17 8 15 18 12 19 16 20 ');
+INSERT INTO `t_garageinfo` VALUES ('2', '2测试中文qwe', '6', null, '', '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '1 2 65539 4 65541 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ');
 INSERT INTO `t_garageinfo` VALUES ('3', '3', null, null, null, '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '');
 INSERT INTO `t_garageinfo` VALUES ('4', '4', null, null, null, '-1', '-1', '-1', '-1', '5', '4', '1.000', '1.000', '');
 
@@ -99,8 +99,8 @@ CREATE TABLE `t_history` (
   `num` int(11) DEFAULT NULL COMMENT '车位号',
   `rows` int(11) DEFAULT NULL COMMENT '第几行',
   `cols` int(11) DEFAULT NULL COMMENT '第几列',
-  `money` double DEFAULT NULL COMMENT '充值/扣除费用',
-  `balance` double unsigned zerofill DEFAULT NULL COMMENT '余额',
+  `money` double(11,2) DEFAULT NULL COMMENT '充值/扣除费用',
+  `balance` double(11,2) unsigned zerofill DEFAULT NULL COMMENT '余额',
   KEY `plate` (`plate`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -155,7 +155,7 @@ INSERT INTO `t_map` VALUES ('331', '4', '7', '4', '0', '');
 INSERT INTO `t_map` VALUES ('332', '4', '8', '4', '0', '');
 INSERT INTO `t_map` VALUES ('345', '2', '6', '4', '0', '');
 INSERT INTO `t_map` VALUES ('346', '2', '7', '3', '1', '');
-INSERT INTO `t_map` VALUES ('347', '5', '5', '3', '2', null);
+INSERT INTO `t_map` VALUES ('347', '5', '5', '3', '2', '');
 INSERT INTO `t_map` VALUES ('348', '4', '9', '3', '3', null);
 INSERT INTO `t_map` VALUES ('349', '1', '5', '3', '4', null);
 

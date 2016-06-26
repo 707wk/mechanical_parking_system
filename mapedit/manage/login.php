@@ -38,10 +38,10 @@ html,body {
 	margin-top: -200px;
 	
 }
-@media screen and (min-width:500px){
+@media screen and (min-width:400px){
 	.login-box {
 		left: 50%;
-		margin-left: -250px;
+		margin-left: -200px;
 	}
 }	
 
