@@ -156,6 +156,20 @@ int check()
 	return 0;
 }
 
+void checkserver()
+{
+	SYSTEM_INFO info;        //用SYSTEM_INFO结构判断64位AMD处理器 
+	GetSystemInfo(&info);    //调用GetSystemInfo函数填充结构 
+	OSVERSIONINFOEX os;
+	os.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+	GetVersionEx((OSVERSIONINFO *)&os);
+
+	if (os.wProductType == VER_NT_WORKSTATION || info.wProcessorArchitecture == 32)
+	{
+		AfxMessageBox(_T("建议在 64位 Windows Server 操作系统中运行本程序"));
+	}
+}
+
 void readserverset()
 {
 	FILE* fp = fopen("serverSet.ini", "r");
@@ -314,7 +328,8 @@ BOOL CMFCAppApp::InitInstance()
 	_tfreopen_s(&fpDebugIn, _T("CONIN$"), _T("r"), stdin);
 	_tsetlocale(LC_ALL, _T("chs"));     //这是必要的，否则unicode模式下使用C库函数控制台输出不了中文
 	///////////////////////////////////////////////////////////////////////////
-
+	//检测系统版本号
+	checkserver();
 	//////////////////////////////////////////////////////////////////////////
 	//这写的,把自己恶心到了
 	//check();

@@ -25,6 +25,20 @@ using namespace std;
 
 struct serverset serverinfo;
 
+void checkserver()
+{
+	SYSTEM_INFO info;        //用SYSTEM_INFO结构判断64位AMD处理器 
+	GetSystemInfo(&info);    //调用GetSystemInfo函数填充结构 
+	OSVERSIONINFOEX os;
+	os.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+	GetVersionEx((OSVERSIONINFO *)&os);
+
+	if (os.wProductType == VER_NT_WORKSTATION||info.wProcessorArchitecture==32)
+	{
+		AfxMessageBox(_T("建议在 64位 Windows Server 操作系统中运行本程序"));
+	}
+}
+
 void readserverset()
 {
 	FILE* fp = fopen("serverSet.ini", "r");
@@ -169,6 +183,9 @@ BOOL CMFCAppclientApp::InitInstance()
 		WSACleanup();
 		exit(1);
 	}
+	///////////////////////////////////////////////////////////////////////////
+	//检测系统版本
+	checkserver();
 	///////////////////////////////////////////////////////////////////////////
 	//读取配置文件
 	readserverset();
