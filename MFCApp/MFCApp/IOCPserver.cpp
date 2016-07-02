@@ -104,7 +104,7 @@ int inputParking(char* strplate, int inputId)
 
 	garage[index].setnowstatus(BUSY);
 
-/*	char sendstr[] = "123";
+	char sendstr[] = "123";
 	sendstr[0] = SAVECAR;
 	sendstr[1] = garage[index].getrows(garage[index].findemptycarid());
 	sendstr[2] = garage[index].getcols(garage[index].findemptycarid());
@@ -175,6 +175,11 @@ int outputDrawOut(char* strplate)
 	tt10912= mktime(&tm10912);*/
 
 	sprintf_s(strtmp, COMLEN, "delete from t_carinfo where plate='%s'", strplate);
+	if (mysql_query(&serverinfo.mysql, strtmp) != NULL)
+	{
+		AfxMessageBox(_T("数据库连接失败"));
+		exit(1);
+	}
 
 	serverinfo.spendcar--;
 
@@ -226,7 +231,7 @@ int carRetrieval(char* strplate)
 
 	garage[index].setnowstatus(BUSY);
 
-/*	char sendstr[] = "123";
+	char sendstr[] = "123";
 	sendstr[0] = DELETECAR;
 	sendstr[1] = garage[index].getrows(num);
 	sendstr[2] = garage[index].getcols(num);
