@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <style>
+		.area {
+			margin: 20px auto 0px auto;
+		}
+		.mui-input-group:first-child {
+			margin-top: 20px;
+		}
+		.mui-input-group label {
+			width: 22%;
+		}
+		.mui-input-row label~input,
+		.mui-input-row label~select,
+		.mui-input-row label~textarea {
+			width: 78%;
+		}
+		.mui-checkbox input[type=checkbox],
+		.mui-radio input[type=radio] {
+			top: 6px;
+		}
+		.mui-content-padded {
+			margin-top: 25px;
+		}
+		.mui-btn {
+			padding: 10px;
+		}
+			
+	</style>
+</head>
+<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">注册</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>手机</label>
+					<input id='account' type="number" class="mui-input-clear mui-input" placeholder="请输入手机号码">
+				</div>
+				<div class="mui-input-row">
+					<label>车牌</label>
+					<input id='email' type="email" class="mui-input-clear mui-input" placeholder="请输入车牌号码">
+				</div>
+				<div class="mui-input-row">
+					<label>密码</label>
+					<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+				</div>
+				<div class="mui-input-row">
+					<label>确认</label>
+					<input id='password_confirm' type="password" class="mui-input-clear mui-input" placeholder="请确认密码">
+				</div>
+				
+			</form>
+			<div class="mui-content-padded">
+				<button id='reg' class="mui-btn mui-btn-block mui-btn-primary">注册</button>
+			</div>
+			<div class="mui-content-padded">
+				<p>请使用真实信息注册</p>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/md5.js"></script>
+		<script src="js/app.js"></script>
+		<script>
+			(function($, doc) {
+				$.init();
+				$.plusReady(function() {
+					var settings = app.getSettings();
+					var regButton = doc.getElementById('reg');
+					var accountBox = doc.getElementById('account');
+					var passwordBox = doc.getElementById('password');
+					var passwordConfirmBox = doc.getElementById('password_confirm');
+					var palteBox = doc.getElementById('email');
+					regButton.addEventListener('tap', function(event) {
+						var login_info={
+							phone:accountBox.value,
+							passwd:passwordBox.value
+						};
+						if(accountBox.value==''){
+							plus.nativeUI.toast('手机号不能为空');
+							return;
+						}
+						if(palteBox.value==''){
+							plus.nativeUI.toast('亲,你还没填写车牌号码哦');
+							return;
+						}
+						if(passwordBox.value==''){
+							plus.nativeUI.toast('亲,你还没填写密码哦');
+							return;
+						}
+						
+						var passwordConfirm = passwordConfirmBox.value;
+						if (passwordConfirm != passwordBox.value) {
+							plus.nativeUI.toast('密码两次输入不一致');
+							return;
+						}
+						var srvip=app.getsrvip();
+						mui.ajax(srvip,{
+							data:{
+								type:'reg',
+								phone:accountBox.value,
+								passwd:hex_md5(passwordBox.value),
+								plate:palteBox.value
+							},
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							//headers:{'Content-Type','application/json'}         
+							success:function(data){
+								//服务器返回响应，根据响应结果，分析是否登录成功；
+								if(data.code){
+										var sett={
+											rempwd:1,
+											logininfo:login_info
+										};
+										app.setSettings(sett);
+									
+									$.openWindow({
+										url: 'login.html',
+										id: 'login',
+										});
+									plus.nativeUI.toast(data.msg);
+								}
+								else plus.nativeUI.toast(data.msg);
+							},
+							error:function(xhr,type,errorThrown){
+								//异常处理；
+								//console.log(type);
+								plus.nativeUI.toast('连接失败,请检查服务器和网络设置。');
+							},
+						});
+						//plus.nativeUI.toast('注册成功');
+					});
+				});
+			}(mui, document));
+		</script>
+</body>
+
+</html>

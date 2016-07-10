@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title">网络设置</h1>
+	</header>
+	<div class="mui-content">
+		<div style="padding:5px;">
+	    	<h5>&nbsp;&nbsp;服务器地址：</h5>
+	        <div class="mui-input-row">
+	            <input type="text" id="server_ip_address" class="mui-input-clear" placeholder="服务器地址">
+	        </div>
+	        <button type="button" class="mui-btn mui-btn-success mui-btn-block" id="set_setting">保存设置</button>
+		</div>
+	</div>
+<script src="js/mui.min.js"></script>
+<script src="js/app.js"></script>	
+<script>
+
+(function($, doc) {
+		$.init({
+			statusBarBackground: '#f7f7f7'
+		});
+		$.plusReady(function() {
+			var srvipid=document.getElementById('server_ip_address');
+			srvipid.value=app.getsrvip();
+			document.getElementById("set_setting").addEventListener('tap', function(event) {
+					var srvip=srvipid.value;
+					app.setsrvip(srvip);
+					plus.nativeUI.toast('设置成功，1秒后返回。');
+					setTimeout("mui.back()",1000);
+				}, false); 
+				
+		});
+}(mui, document));
+</script>
+</body>
+</html>

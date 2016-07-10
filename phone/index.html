@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+ 	<link href="css/mui.min.css" rel="stylesheet"/>
+  <style>
+			
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			
+			.oa-contact-cell.mui-table .mui-table-cell {
+				padding: 11px 0;
+				vertical-align: middle;
+			}
+			
+			.oa-contact-cell {
+				position: relative;
+				margin: -11px 0;
+			}
+	
+			.oa-contact-avatar {
+				width: 75px;
+			}
+			.oa-contact-avatar img {
+				border-radius: 50%;
+			}
+			.oa-contact-content {
+				width: 100%;
+			}
+			.oa-contact-name {
+				margin-right: 20px;
+			}
+			.oa-contact-name, oa-contact-position {
+				float: left;
+			}
+			.yy-border{
+				box-shadow: 0 5px 20px 0 gray;
+				//border:3px solid green;
+				padding:10px;
+				border-radius: 10px;
+				margin:8px;
+				position: relative;
+			}
+			.yy-button{
+				padding:0 50px;
+				//padding:20px;
+				margin-bottom:30px;
+			}
+			.yy-text{
+				padding:15px 0px;
+				margin: 20px auto;
+				line-height:1.8;
+				width:160px;
+				font-size: 18px;;
+			//	border: 1px solid red;
+			}
+		</style>
+	<script type="text/javascript" src="http://gc.kis.scr.kaspersky-labs.com/6A494463-40A1-384D-9777-CF01BD32CE70/main.js" charset="UTF-8"></script></head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
+			<h1 class="mui-title">立体车库客户端</h1>
+		</header>
+		<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item mui-active" href="#tabbar">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a class="mui-tab-item" href="#tabbar-with-chat" id="historyButton">
+				<span class="mui-icon mui-icon-bars"></span>
+				<span class="mui-tab-label">记录</span>
+			</a>
+			<a class="mui-tab-item" href="#tabbar-with-map">
+				<span class="mui-icon mui-icon-gear"></span>
+				<span class="mui-tab-label">设置</span>
+			</a>
+		</nav>
+		<div class="mui-content">
+			<div id="tabbar" class="mui-control-content mui-active">
+				<!--<div class="title">预约存车</div>-->
+				<div class="yy-border">
+					<div class="yy-text"  id="yyTextBox">
+						空闲车位：0个<br>
+						预约情况：未预约
+					</div>
+					<div class="yy-button" >
+						<button id="yyButton" class="mui-btn mui-btn-primary mui-btn-block">预约</button>
+					</div>
+				</div>
+			</div>
+			<div id="tabbar-with-chat" class="mui-control-content ">
+				<ul class="mui-table-view " id="historyUL">
+					
+				</ul>
+			</div>
+			<div id="tabbar-with-map" class="mui-control-content">
+				<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					手机号码：<span id="phoneText"></span>
+				</li>
+				<li class="mui-table-view-cell">
+					车牌号码：<span id="plateText"></span>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" id="netSetting">
+						网络设置
+					</a>
+				</li>
+
+			</ul>
+			<ul class="mui-table-view" style="margin-top: 25px;">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" id="about"> 
+						关于
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view" style="margin-top: 25px;">
+				<li class="mui-table-view-cell">
+					<a style="text-align: center;color: #FF3B30;" id="logout">
+						退出
+					</a>
+				</li>
+			</ul>
+			</div>
+		</div>
+	</body>
+<script src="js/mui.min.js"></script>
+<script src="js/app.js"></script>
+
+<script type="text/javascript" charset="UTF-8">
+var isyy=false;
+	(function($, doc) {
+			$.init({
+				statusBarBackground: '#f7f7f7'
+			});
+			$.plusReady()(function() {
+				var phoneText = doc.getElementById('phoneText');
+				var plateText = doc.getElementById('plateText');
+				var netSetting = doc.getElementById('netSetting');
+				var about = doc.getElementById('about');
+				var logout = doc.getElementById('logout');
+				var yyTextBox = doc.getElementById('yyTextBox');
+				var yyButton = doc.getElementById('yyButton');
+				var historyButton = doc.getElementById('historyButton');
+				var historyUL = doc.getElementById('historyUL');
+				var srvip=app.getsrvip();
+				mui.ajax(srvip,{
+					data:{
+						type:'getinfo',
+						token:app.getToken(),
+					},
+					dataType:'json',//服务器返回json格式数据
+					type:'post',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；
+					//headers:{'Content-Type','application/json'}         
+					success:function(data){
+						//alert(data); 
+						if(data.code){
+							app.setToken(data.token);
+							//plus.nativeUI.toast(data.info.phone+"plate");
+							phoneText.innerHTML =data.info.phone;
+							plateText.innerHTML =data.info.plate;
+						}
+						else plus.nativeUI.toast(data.msg);
+						 
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						console.log(type);
+						plus.nativeUI.toast('获取用户信息失败,请检查服务器和网络设置。');
+					},
+				});
+				updateFreeCarport();
+				yyButton.addEventListener('tap', function(event) {
+					if(isyy==false){
+						//plus.nativeUI.toast("预约成功");
+						//yyButton.value=
+						plus.nativeUI.showWaiting();
+						mui.ajax(srvip,{
+							data:{
+								type:'reserve',
+								token:app.getToken(),
+							},
+							dataType:'json',
+							type:'post',
+							timeout:10000,
+							success:function(data){
+								plus.nativeUI.closeWaiting();
+								//alert(data); 
+								if(data.code){
+									app.setToken(data.token);
+									//plus.nativeUI.toast(data.savetime);
+									isyy=true;
+									timer(data.savetime);
+									yyButton.innerHTML="取消预约";
+								}
+								else plus.nativeUI.toast(data.msg);
+							},
+							error:function(xhr,type,errorThrown){
+								plus.nativeUI.closeWaiting();
+								console.log(type);
+								plus.nativeUI.toast('连接失败,请检查服务器和网络设置。');
+							},
+						});
+						
+						
+					}else {
+						//plus.nativeUI.toast("取消成功");
+						plus.nativeUI.showWaiting();
+						mui.ajax(srvip,{
+							data:{
+								type:'cancel_reserve',
+								token:app.getToken(),
+							},
+							dataType:'json',
+							type:'post',
+							timeout:10000,
+							success:function(data){
+								plus.nativeUI.closeWaiting();
+								//alert(data); 
+								if(data.code){
+									app.setToken(data.token);
+									plus.nativeUI.toast(data.msg);
+									yyTextBox.innerHTML="空闲车位：12个<br>预约情况：未预约";
+									isyy=false;
+									yyButton.innerText="预约";
+									updateFreeCarport();
+								}
+								else plus.nativeUI.toast(data.msg);
+							},
+							error:function(xhr,type,errorThrown){
+								plus.nativeUI.closeWaiting();
+								console.log(type);
+								plus.nativeUI.toast('连接失败,请检查服务器和网络设置。');
+							},
+						});
+					}
+				}, false);
+					
+				netSetting.addEventListener('tap', function(event) {
+					$.openWindow({
+						url: 'login_setting.html',
+						id: 'login_setting',
+						preload: true,
+						show: {
+							aniShow: 'pop-in'
+						},
+						styles: {
+							popGesture: 'hide'
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				}, false);
+				
+				historyButton.addEventListener('tap', function(event) {
+					mui.ajax(app.getsrvip(),{
+					data:{
+						type:'gethistory',
+						token:app.getToken(),
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,       
+					success:function(data){
+						//alert(data.data);
+						if(data.code){
+							app.setToken(data.token);	
+							var str="";
+							for(i in data.data)
+								str+=hisinfo(data.data[i]);
+							historyUL.innerHTML=str;
+						}
+						else plus.nativeUI.toast(data.msg);
+						 
+					},
+					error:function(xhr,type,errorThrown){
+						console.log(type);
+						plus.nativeUI.toast('获取记录失败,请检查服务器和网络设置。');
+					},
+				});
+			
+				}, false);
+				about.addEventListener('tap', function(event) {
+					$.openWindow({
+						url: 'about.html',
+						id: 'about',
+						preload: true,
+						show: {
+							aniShow: 'pop-out'
+						},
+						styles: {
+							popGesture: 'hide'
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				}, false);
+				
+				logout.addEventListener('tap', function(event) {
+//					var ws=plus.webview.currentWebview();
+//					plus.webview.close(ws); 
+					plus.runtime.quit();
+					//mui.close();
+				}, false);
+
+				var backButtonPress = 0;
+				$.back = function(event) {
+					backButtonPress++;
+					if (backButtonPress > 1) {
+						plus.runtime.quit();
+					} else {
+						plus.nativeUI.toast('再按一次退出应用');
+					}
+					setTimeout(function() {
+						backButtonPress = 0;
+					}, 1000);
+					return false;
+				};
+			});
+	}(mui, document));
+function timer(savetime)
+{
+	if(ts<0||isyy==false)return ;
+	var time2=savetime;
+	var regEx = new RegExp("\\-","gi");
+    time2=time2.replace(regEx,"/");
+	var ts = (new Date(Date.parse(time2))) - (new Date());
+	var hh = parseInt(ts / 1000 / 60 / 60 % 24, 10);
+	var mm = parseInt(ts / 1000 / 60 % 60, 10);
+	document.getElementById('yyTextBox').innerHTML =  "预约状态：已预约<br>剩余时间：" + hh + "时" + mm + "分";
+	setTimeout(function() {timer(savetime);}, 1000);
+} 
+function updateFreeCarport()
+{
+	if(isyy)return ; 
+	mui.ajax(app.getsrvip(),{
+		data:{
+			type:'getfreecarport',
+			token:app.getToken(),
+		},
+		dataType:'json',
+		type:'post',
+		timeout:10000,       
+		success:function(data){
+			app.setToken(data.token); 
+			if(data.code=='2'){
+				//plus.nativeUI.toast(data.savetime);
+				isyy=true;
+				yyButton.style.display='block';
+				timer(data.savetime);
+				yyButton.innerHTML="取消预约";
+			}
+			else if(data.code=='1'){
+				//plus.nativeUI.toast(data.msg);
+				yyButton.style.display='block';
+				document.getElementById('yyTextBox').innerHTML =  "空闲车位："+data.msg+"个<br>预约情况：未预约";
+			}else if(data.code=='3'){
+				//plus.nativeUI.toast(data.msg);
+				yyButton.style.display='none';
+				document.getElementById('yyTextBox').innerHTML = "预约情况：已存";
+				
+			}
+			//else plus.nativeUI.toast(data.msg);
+			//setInterval("updateFreeCarport()",10000);
+			setTimeout(function() {updateFreeCarport();}, 10000);
+		},
+		error:function(xhr,type,errorThrown){
+		//	plus.nativeUI.toast('连接失败,请检查服务器和网络设置。');
+		},
+	});
+	
+}
+function hisinfo(data){
+	var tmp='<li class="mui-table-view-cell mui-collapse">'+
+			'<a class="mui-navigate-right" href="#">'+data.time+' ';
+	switch(data.timestatus){
+		case '1':
+			tmp+="存车";
+			break;
+		case '2':
+			tmp+="取车&nbsp;&nbsp;<font color=red>"+data.money+'元</font>';
+			break;	
+		case '3':
+			tmp+="充值&nbsp;&nbsp;<font color=green>+"+data.money+'元</font>';
+			break;	
+	}
+	tmp+='<div class="mui-collapse-content">';
+	if(data.timestatus!='3'){
+		tmp+='<table border="0"><tr><td>车牌号：'+data.plate+'</td><td>　姓名：'+data.name+'</td></tr>'+
+			'<tr><td>车库名：'+data.carbarnname+'</td><td>　余额：'+data.balance+'元</td></tr>';
+	}else {
+		tmp+='充值后余额：'+data.balance+'元';
+	}
+	tmp+='</table></div></li>';
+	return tmp;
+}
+
+	</script>
+</html>
