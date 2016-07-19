@@ -40,11 +40,11 @@ int inputParking(char* strplate, int inputId)
 	//MYSQL_ROW column;                //数据行的列
 	char strtmp[COMLEN];
 
-	if (serverinfo.sumcar == serverinfo.spendcar + serverinfo.reservation)
+/*	if (serverinfo.sumcar == serverinfo.spendcar + serverinfo.reservation)
 	{
 		//MessageBox(_T("车位已满"));
 		return NOCAR;
-	}
+	}//*/
 
 	sprintf_s(strtmp, COMLEN, "select plate from t_reservation where plate='%s'", strplate);
 
@@ -58,6 +58,15 @@ int inputParking(char* strplate, int inputId)
 		{
 			sprintf_s(strtmp, COMLEN, "delete from t_reservation where plate='%s'", strplate);
 			mysql_query(&serverinfo.mysql, strtmp);
+			serverinfo.reservation--;
+		}
+		else
+		{
+			if (serverinfo.sumcar == serverinfo.spendcar + serverinfo.reservation)
+			{
+				//MessageBox(_T("车位已满"));
+				return NOCAR;
+			}
 		}
 	}
 	else
@@ -89,7 +98,7 @@ int inputParking(char* strplate, int inputId)
 		return GARAGEBUSY;
 	}
 
-	printf("最近的车库是第%d号车库\n", garageid);
+	//printf("最近的车库是第%d号车库\n", garageid);
 
 	sprintf_s(strtmp, COMLEN, "insert into t_carinfo(plate,start) values('%s',now())", strplate);
 	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
@@ -305,7 +314,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 
 		if (BytesTransferred == 0)
 		{
-			printf(" closed\n");
+			//printf(" closed\n");
 			//printf("[%s:%u] 已断开\n", PerIoData->ip, PerIoData->port);
 			//printf("C");
 			//stateflage = 0;
@@ -322,7 +331,8 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 			GlobalFree(PerHandleData);
 			GlobalFree(PerIoData);
 
-			//InterlockedDecrement(&serverinfo.activeThread);
+			InterlockedDecrement(&serverinfo.Threadwork);
+
 			stop = GetTickCount();
 			serverinfo.activeThreadtime = serverinfo.activeThreadtime + stop - start;
 			//printf(":%ld-%ld:", stop - start, serverinfo.activeThread);
@@ -374,7 +384,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 			switch (PerIoData->DataBuf.buf[0])
 			{
 			case INPUTSAVE:
-				printf("入口存车");
+				//printf("入口存车");
 				sscanf_s(PerIoData->DataBuf.buf + 1, " %s %d", strplate, COMLEN, &ioputId);
 				//printf("plate=%s id=%d ", strplate, ioputId);
 				result = inputParking(strplate, ioputId);
@@ -382,7 +392,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 				{
 				case TASKSUCCEED:
 					strcpy_s(sendstr, COMLEN, strplate);
-					serverinfo.spendcar++;
+					//serverinfo.spendcar++;
 					break;
 				default:
 					sendstr[0] = result;
@@ -391,7 +401,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 				}//*/
 				break;
 			case OUTPUTDELE:
-				printf("出口出车");
+				//printf("出口出车");
 				sscanf_s(PerIoData->DataBuf.buf + 1, " %s", strplate, COMLEN);
 				//printf("plate=%s ", strplate);
 				result = outputDrawOut(strplate);
@@ -399,7 +409,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 				{
 				case TASKSUCCEED:
 					strcpy_s(sendstr, COMLEN, strplate);
-					serverinfo.spendcar--;
+					//serverinfo.spendcar--;
 					break;
 				default:
 					sendstr[0] = result;
@@ -408,7 +418,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 				}//*/
 				break;
 			case OUTPUTGARAGE:
-				printf("模块取车");
+				//printf("模块取车");
 				sscanf_s(PerIoData->DataBuf.buf + 1, " %s", strplate, COMLEN);
 				//printf("plate=%s ", strplate);
 				result = carRetrieval(strplate);
@@ -424,7 +434,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 				}//*/
 				break;
 			case RESERVATION:
-				printf("预约");
+				//printf("预约");
 				if (serverinfo.sumcar - serverinfo.spendcar - serverinfo.reservation < 1)
 				{
 					sendstr[0] = (unsigned char) NOCAR;
@@ -438,14 +448,14 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 				sendstr[2] = '\0';
 				break;
 			case UNRESERVATION:
-				printf("取消");
+				//printf("取消");
 				serverinfo.reservation--;
 				sendstr[0] = TASKSUCCEED;
 				sendstr[1] = sendstr[0] % CHECKMOD;
 				sendstr[2] = '\0';
 				break;
 			case GETGARAGEINFO:
-				printf("获取信息");
+				//printf("获取信息");
 				memset(sendstr, '\0', COMLEN);
 				sendstr[0] = TASKSUCCEED;
 				sprintf_s(sendstr + 1, COMLEN-1, " %d %d", 
@@ -453,9 +463,9 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 					serverinfo.reservationtime);
 				break;
 			case PANTBAG:
-				printf("心跳包");
+				//printf("心跳包");
 				sscanf_s(PerIoData->DataBuf.buf + 1, " %d", &ioputId);
-				printf("[id=%d]", ioputId);
+				//printf("[id=%d]", ioputId);
 				memset(sendstr, '\0', COMLEN);
 				sendstr[0] = TASKSUCCEED;
 				sprintf_s(sendstr + 1, COMLEN - 1, " %d %d",
@@ -644,7 +654,7 @@ DWORD WINAPI iocpstartserver(LPVOID pParam)
 		PerIoData->DataBuf.len = DATA_BUFSIZE;
 		PerIoData->DataBuf.buf = PerIoData->Buffer;
 
-		printf("established ");
+		//printf("established ");
 		//printf("[%s:%u] 已连接\n", PerIoData->ip, PerIoData->port);
 
 		Flags = 0;
@@ -656,6 +666,8 @@ DWORD WINAPI iocpstartserver(LPVOID pParam)
 				printf("WSARecv() failed with error %d", WSAGetLastError());
 			}
 		}//*/
+
+		InterlockedIncrement(&serverinfo.Threadwork);
 	}
 }
 

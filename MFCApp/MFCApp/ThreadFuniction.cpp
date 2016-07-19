@@ -201,7 +201,8 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		}//*/
 
 		garage[index].getcommand(strtmp);
-		if(strtmp[0]=='\0')//命令为空
+if(1)
+		//if(strtmp[0]=='\0')//命令为空
 		{
 			str[1]=garage[index].getcarbarnid();
 			str[3]=GETSTATE;
@@ -252,7 +253,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			continue;
 		}
 		
-		nowtime = time(NULL);  
+		nowtime = time(NULL);
 		localtime_s(&local,&nowtime);
 		
 /*		printf("[%02d:%02d:%02d] rev:%02X-%02X-%02X-%02X\n",
@@ -296,6 +297,11 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			garage[idtoindex[recstr[0]]].getsqlcommand(strtmp);
 			if(mysql_query(&serverinfo.mysql,strtmp)!=NULL)
 			{
+				FILE* fp;
+				fopen_s(&fp, "log.txt", "a");
+				fprintf(fp, "%s\n", strtmp);
+				fclose(fp);
+
 				AfxMessageBox(_T("ThreadPoll:数据库连接失败"));
 				exit(1);
 			}

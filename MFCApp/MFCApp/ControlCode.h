@@ -137,13 +137,13 @@ sock
 
 接收数据
 {
-	INPUTSAVE      请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 入口id
+	INPUTSAVE      请求码[unsigned char] 分隔符 车牌号[char 40] 分隔符 入口id[int]
 	OUTPUTDELE     请求码[unsigned char] 分隔符 车牌号[char 40]
 	OUTPUTGARAGE   请求码[unsigned char] 分隔符 车牌号[char 40]
 	RESERVATION    请求码[unsigned char] 校验[unsigned char]
 	UNRESERVATION  请求码[unsigned char] 校验[unsigned char]
 	GETGARAGEINFO  请求码[unsigned char] 校验[unsigned char]
-	PANTBAG        请求码[unsigned char] 分隔符 id
+	PANTBAG        请求码[unsigned char] 分隔符 id[int]
 }
 
 发送数据

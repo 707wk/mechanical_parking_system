@@ -175,7 +175,8 @@ void readserverset()
 	FILE* fp = fopen("serverSet.ini", "r");
 	if (fp == NULL)
 	{
-		printf("未找到配置文件!");
+		AfxMessageBox(_T("未找到配置文件!"));
+		//printf("未找到配置文件!");
 		exit(1);
 	}
 
@@ -215,6 +216,7 @@ CMFCAppApp::CMFCAppApp()
 	serverinfo.sumcar = 0;
 	serverinfo.spendcar = 0;
 	serverinfo.Threadsum = 0;
+	serverinfo.Threadwork = 0;
 	serverinfo.activeThreadtime = 0;
 	serverinfo.runstate = 0;
 	serverinfo.lockflage = 0;

@@ -70,8 +70,8 @@ void CMFCAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST2, m_list_error);
 	DDX_Control(pDX, IDC_EDIT1, m_sumcar);
 	DDX_Control(pDX, IDC_EDIT2, m_freecar);
-	DDX_Control(pDX, IDC_COMBO1, m_list_input);
-	DDX_Control(pDX, IDC_EDIT3, m_carplate);
+	DDX_Control(pDX, IDC_EDIT3, m_reservationcar);
+	DDX_Control(pDX, IDC_EDIT4, m_Threadinfo);
 }
 
 BEGIN_MESSAGE_MAP(CMFCAppDlg, CDialogEx)
@@ -81,8 +81,6 @@ BEGIN_MESSAGE_MAP(CMFCAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CMFCAppDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &CMFCAppDlg::OnBnClickedCancel)
 	ON_WM_TIMER()
-	ON_BN_CLICKED(IDC_BUTTON1, &CMFCAppDlg::OnBnClickedButton1)
-	ON_BN_CLICKED(IDC_BUTTON2, &CMFCAppDlg::OnBnClickedButton2)
 	ON_COMMAND(ID_32774, &CMFCAppDlg::On32774)
 	ON_COMMAND(ID_32773, &CMFCAppDlg::On32773)
 	ON_COMMAND(ID_32771, &CMFCAppDlg::On32771)
@@ -105,8 +103,8 @@ BOOL CMFCAppDlg::OnInitDialog()
 
 	// TODO:  在此添加额外的初始化代码
 
-	MYSQL_RES *res;                    //查询结果集
-	MYSQL_ROW column;                  //数据行的列
+//	MYSQL_RES *res;                    //查询结果集
+//	MYSQL_ROW column;                  //数据行的列
 
 	//初始化曲线控件
 	CRect rt;
@@ -129,7 +127,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 		);
 
 	m_list_garage.InsertColumn(0, _T("编号"), LVCFMT_CENTER, 40, 0);
-	m_list_garage.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 70, 0);
+	m_list_garage.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 87, 0);
 	m_list_garage.InsertColumn(2, _T("状态"), LVCFMT_CENTER, 70, 0);
 	m_list_garage.InsertColumn(3, _T("命令耗时"), LVCFMT_CENTER, 70, 0);
 	m_list_garage.InsertColumn(4, _T("容量"), LVCFMT_CENTER, 50, 0);
@@ -142,20 +140,21 @@ BOOL CMFCAppDlg::OnInitDialog()
 		| LVS_EX_GRIDLINES			// 画出网格线
 		);
 
-	m_list_error.InsertColumn(0, _T("编号"), LVCFMT_CENTER, 70, 0);
-	m_list_error.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 70, 0);
+	m_list_error.InsertColumn(0, _T("编号"), LVCFMT_CENTER, 40, 0);
+	m_list_error.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 87, 0);
 	m_list_error.InsertColumn(2, _T("状态"), LVCFMT_CENTER, 70, 0);
 
 /*	//设置列表主题
-	m_list_passageway.SetExtendedStyle(
+	m_list_ioput.SetExtendedStyle(
 		LVS_EX_FLATSB				// 扁平风格滚动
 		| LVS_EX_FULLROWSELECT		// 允许正航选中
 		| LVS_EX_GRIDLINES			// 画出网格线
 		);
 
-	m_list_passageway.InsertColumn(0, _T("编号"), LVCFMT_CENTER, 70, 0);
-	m_list_passageway.InsertColumn(1, _T("类型"), LVCFMT_CENTER, 70, 0);
-	m_list_passageway.InsertColumn(2, _T("状态"), LVCFMT_CENTER, 70, 0);//*/
+	m_list_ioput.InsertColumn(0, _T("编号"), LVCFMT_CENTER, 40, 0);
+	m_list_ioput.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 87, 0);
+	m_list_ioput.InsertColumn(2, _T("类型"), LVCFMT_CENTER, 70, 0);
+	m_list_ioput.InsertColumn(3, _T("状态"), LVCFMT_CENTER, 70, 0);//*/
 
 	/*//设置列表主题
 	m_list_reservation.SetExtendedStyle(
@@ -176,7 +175,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 	spendcar+=garage[i].getspendcar();
 	}*/
 
-	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
+	/*mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
 	if (mysql_query(&serverinfo.mysql, "select type_id from t_map where type=1") == NULL)
 	{
@@ -194,7 +193,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 		exit(1);
 	}
 	CEdit* pedit = (CEdit*)m_list_input.GetWindow(GW_CHILD);
-	pedit->SetReadOnly(true);
+	pedit->SetReadOnly(true);*/
 
 	//update_list();
 	init_list();
@@ -442,6 +441,12 @@ void CMFCAppDlg::init_list()
 
 	tmp.Format(_T("%d"), serverinfo.sumcar - serverinfo.spendcar - serverinfo.reservation);
 	m_freecar.SetWindowText(tmp);
+
+	tmp.Format(_T("%d"), serverinfo.reservation);
+	m_reservationcar.SetWindowText(tmp);
+
+	tmp.Format(_T("%d/%d"), serverinfo.Threadwork,serverinfo.Threadsum);
+	m_Threadinfo.SetWindowText(tmp);
 }
 
 void CMFCAppDlg::update_list()
@@ -545,6 +550,12 @@ void CMFCAppDlg::update_list()
 
 	tmp.Format(_T("%d"), serverinfo.sumcar - serverinfo.spendcar - serverinfo.reservation);
 	m_freecar.SetWindowText(tmp);
+
+	tmp.Format(_T("%d"), serverinfo.reservation);
+	m_reservationcar.SetWindowText(tmp);
+
+	tmp.Format(_T("%d/%d"), serverinfo.Threadwork, serverinfo.Threadsum);
+	m_Threadinfo.SetWindowText(tmp);
 }
 
 /*
@@ -640,7 +651,7 @@ void CMFCAppDlg::OnBnClickedButton3()
 	}
 }//*/
 
-
+/*
 void CMFCAppDlg::OnBnClickedButton1()
 {
 	// TODO:  存车
@@ -789,8 +800,8 @@ void CMFCAppDlg::OnBnClickedButton1()
 
 	serverinfo.spendcar++;
 }
-
-
+//*/
+/*
 void CMFCAppDlg::OnBnClickedButton2()
 {
 	// TODO:  取车
@@ -873,7 +884,7 @@ void CMFCAppDlg::OnBnClickedButton2()
 
 	serverinfo.spendcar--;
 }
-
+//*/
 
 void CMFCAppDlg::On32774()
 {

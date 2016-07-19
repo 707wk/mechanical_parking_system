@@ -71,6 +71,7 @@ struct serverset
 	int    reservation;                //预约车辆数
 
 	int    Threadsum;                  //工作线程数
+	DWORD  Threadwork;                 //异常线程数
 	DWORD  activeThreadtime;           //线程运行时间
 
 	int    runstate;                   //运行状态

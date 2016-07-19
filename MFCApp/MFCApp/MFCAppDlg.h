@@ -60,12 +60,10 @@ public:
 	CListCtrl m_list_error;
 	CEdit m_sumcar;
 	CEdit m_freecar;
-	CComboBox m_list_input;
-	CEdit m_carplate;
-	afx_msg void OnBnClickedButton1();
-	afx_msg void OnBnClickedButton2();
 	afx_msg void On32774();
 	afx_msg void On32773();
 	afx_msg void On32771();
 	afx_msg void On32772();
+	CEdit m_reservationcar;
+	CEdit m_Threadinfo;
 };
