@@ -35,7 +35,8 @@ void checkserver()
 
 	if (os.wProductType == VER_NT_WORKSTATION||info.wProcessorArchitecture==32)
 	{
-		AfxMessageBox(_T("建议在 64位 Windows Server 操作系统中运行本程序"));
+		//AfxMessageBox(_T("建议在 64位 Windows 操作系统中运行本程序"));
+		printf("建议在 64位 Windows 操作系统中运行本程序");
 	}
 }
 

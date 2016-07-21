@@ -481,15 +481,15 @@ void CMFCAppDlg::update_list()
 		m_list_garage.SetItemText(index, 1, tmp);
 		if (garage[i].getspendtime()>overtime)
 		{
-			if (garage[i].getnowstatus() == ONLINE)
+			/*if (garage[i].getnowstatus() == ONLINE)
 			{
 				serverinfo.sumcar-= garage[i].getsumcar();
 				serverinfo.spendcar-= garage[i].getspendcar();
 				//garage[i].setnowstatus(OFFLINE);
-			}
+			}//*/
 
 			//garage[i].setoffline();
-			garage[i].setnowstatus(OFFLINE);
+			//garage[i].setnowstatus(OFFLINE);
 			tmp.Format(_T("%d"), garage[i].getcarbarnid());
 			m_list_garage.SetItemText(index, 2, _T("¿Îœﬂ"));
 			m_list_error.InsertItem(errorindex, tmp);
@@ -500,12 +500,12 @@ void CMFCAppDlg::update_list()
 		}
 		else
 		{
-			if (garage[i].getnowstatus() == OFFLINE)
+			/*if (garage[i].getnowstatus() == OFFLINE)
 			{
 				serverinfo.sumcar += garage[i].getsumcar();
 				serverinfo.spendcar += garage[i].getspendcar();
 				//garage[i].setnowstatus(ONLINE);
-			}
+			}//*/
 
 			switch (garage[i].getnowstatus())
 			{

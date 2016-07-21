@@ -201,8 +201,8 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 		}//*/
 
 		garage[index].getcommand(strtmp);
-if(1)
-		//if(strtmp[0]=='\0')//命令为空
+
+		if(strtmp[0]=='\0')//命令为空
 		{
 			str[1]=garage[index].getcarbarnid();
 			str[3]=GETSTATE;
@@ -249,8 +249,28 @@ if(1)
 		//判断接收是否合法
 		if(recstr[0]==0)
 		{
-			//printf("E");
+			if (garage[index].getnowstatus() != OFFLINE)
+			{
+				printf("E2 ");
+				serverinfo.sumcar -= garage[index].getsumcar();
+				serverinfo.spendcar -= garage[index].getspendcar();
+				//garage[i].setnowstatus(OFFLINE);
+			}
+
+			//garage[i].setoffline();
+			garage[index].setnowstatus(OFFLINE);
+
 			continue;
+		}
+		else
+		{
+			if (garage[index].getnowstatus() == OFFLINE)
+			{
+				printf("E4 ");
+				serverinfo.sumcar += garage[index].getsumcar();
+				serverinfo.spendcar += garage[index].getspendcar();
+				//garage[i].setnowstatus(ONLINE);
+			}
 		}
 		
 		nowtime = time(NULL);
