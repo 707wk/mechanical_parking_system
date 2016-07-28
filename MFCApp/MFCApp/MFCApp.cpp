@@ -9,6 +9,7 @@
 #include "IOCPserver.h"
 #include "CCarbarnInfo.h"
 #include "CWayFinding.h"
+#include "ioClient.h"
 #include "md5.h"
 #include "DataStructure.h"
 #include "ControlCode.h"
@@ -36,11 +37,19 @@ CCarbarnInfo* garage;
 
 CWayFinding* mapinfo;
 
-int* idtoindex;
+struct ioClient* ioClient_list;
 
-int maxindex = 0;
+int* idtoindex_garage;
 
-int sumgarage;
+int* idtoindex_ioClient;
+
+int maxindex_garage = 0;
+
+int maxindex_ioClient = 0;
+
+int sumgarage=0;
+
+int sumioClient=0;
 
 CMFCAppDlg *dlg;
 
@@ -382,7 +391,7 @@ BOOL CMFCAppApp::InitInstance()
 
 	PurgeComm(hCom, PURGE_TXCLEAR | PURGE_RXCLEAR);
 	//////////////////////////////////////////////////////////////////////////
-
+	//读取车库模块列表
 	MYSQL_RES *res;                    //查询结果集
 	MYSQL_ROW column;                  //数据行的列
 	CString str;
@@ -394,8 +403,8 @@ BOOL CMFCAppApp::InitInstance()
 		res = mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
 		column = mysql_fetch_row(res);              //获取具体的数据
 
-		maxindex = atoi(column[0]);
-		idtoindex = new int[maxindex + 1];
+		maxindex_garage = atoi(column[0]);
+		idtoindex_garage = new int[maxindex_garage + 1];
 	}
 	else
 	{
@@ -403,14 +412,14 @@ BOOL CMFCAppApp::InitInstance()
 		exit(1);
 	}
 
-	for (int i = 0; i<maxindex + 1; i++)
+	for (int i = 0; i<maxindex_garage + 1; i++)
 	{
-		idtoindex[i] = -1;
+		idtoindex_garage[i] = -1;
 	}
 
 	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
-	if (mysql_query(&serverinfo.mysql, "select id from t_garageinfo") == NULL)
+	if (mysql_query(&serverinfo.mysql, "select id from t_garageinfo ORDER BY id ASC") == NULL)
 	{
 		res = mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
 		int index = 0;
@@ -420,10 +429,10 @@ BOOL CMFCAppApp::InitInstance()
 			int tmpid = atoi(column[0]);
 			garage[index].readdate(tmpid);
 
-//			serverinfo.sumcar += garage[index].getsumcar();
-//			serverinfo.spendcar += garage[index].getspendcar();
+//			serverinfo.sumcar += garage[index].getsumcar();读取异常
+//			serverinfo.spendcar += garage[index].getspendcar();读取异常
 
-			idtoindex[tmpid] = index;
+			idtoindex_garage[tmpid] = index;
 			index++;
 		}
 		sumgarage = index;
@@ -433,6 +442,76 @@ BOOL CMFCAppApp::InitInstance()
 		AfxMessageBox(_T("init:002 数据库连接失败"));
 		exit(1);
 	}
+	////////////////////////////////////////////////////////////////////////*/
+
+	//////////////////////////////////////////////////////////////////////////
+	//读取出入客户端列表
+	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
+
+	if (mysql_query(&serverinfo.mysql, "select max(type_id) from t_map where type in (1,2)") == NULL)
+	{
+		res = mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
+		column = mysql_fetch_row(res);              //获取具体的数据
+
+		maxindex_ioClient = atoi(column[0]);
+		idtoindex_ioClient = new int[maxindex_ioClient + 1];
+	}
+	else
+	{
+		AfxMessageBox(_T("init:003 数据库连接失败"));
+		exit(1);
+	}
+
+	for (int i = 0; i<maxindex_ioClient + 1; i++)
+	{
+		idtoindex_ioClient[i] = -1;
+	}
+
+	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
+
+	if (mysql_query(&serverinfo.mysql, "select type_id,type,value from t_map where type in (1,2) ORDER BY type_id ASC") == NULL)
+	{
+		res = mysql_store_result(&serverinfo.mysql);//保存查询到的数据到result
+		int index = 0;
+		sumioClient = (unsigned int)mysql_num_rows(res);
+		ioClient_list = new struct ioClient[sumioClient];
+
+		for (int i = 0; i<sumioClient; i++)//对于下标越界，我确实没话说 2016-07-28
+		{
+			ioClient_list[i].type = 0;
+			ioClient_list[index].nowstatus = ONLINE;
+			ioClient_list[index].spendtime = 0;
+		}
+
+		while (column = mysql_fetch_row(res))        //获取具体的数据
+		{
+			//AfxMessageBox(_T("1"));
+			int tmpid = atoi(column[0]);
+			//ioClient_list[index].readdate(tmpid);
+
+			if(idtoindex_ioClient[tmpid]==-1)
+			{
+				idtoindex_ioClient[tmpid] = index;
+
+				ioClient_list[index].id = tmpid;
+				ioClient_list[index].type = ioClient_list[index].type | atoi(column[1]);
+				ioClient_list[index].name = column[2];
+
+				index++;
+			}
+			else
+			{
+				ioClient_list[idtoindex_ioClient[tmpid]].type = ioClient_list[idtoindex_ioClient[tmpid]].type | atoi(column[1]);
+			}
+		}
+		sumioClient = index;
+	}
+	else
+	{
+		AfxMessageBox(_T("init:004 数据库连接失败"));
+		exit(1);
+	}
+	////////////////////////////////////////////////////////////////////////*/
 
 	mysql_query(&serverinfo.mysql, "SET NAMES 'GB2312'");
 
@@ -443,7 +522,7 @@ BOOL CMFCAppApp::InitInstance()
 	}
 	else
 	{
-		AfxMessageBox(_T("init:003 数据库连接失败"));
+		AfxMessageBox(_T("init:005 数据库连接失败"));
 		exit(1);
 	}
 

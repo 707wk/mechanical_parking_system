@@ -63,6 +63,9 @@
     <ClInclude Include="OScopeCtrl.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ioClient.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MFCApp.cpp">
@@ -96,6 +99,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="OScopeCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ioClient.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

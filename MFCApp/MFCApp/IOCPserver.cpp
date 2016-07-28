@@ -26,9 +26,9 @@ extern CCarbarnInfo* garage;
 
 extern CWayFinding* mapinfo;
 
-extern int* idtoindex;
+extern int* idtoindex_garage;
 
-extern int maxindex;
+extern int maxindex_garage;
 
 extern int sumgarage;
 
@@ -113,7 +113,7 @@ int inputParking(char* strplate, int inputId)
 		exit(1);
 	}
 
-	int index = idtoindex[garageid];
+	int index = idtoindex_garage[garageid];
 
 	garage[index].setnowstatus(BUSY);
 
@@ -240,7 +240,7 @@ int carRetrieval(char* strplate)
 
 	//	printf("最近的出口是第%d号出口\n", nearoutput);
 
-	int index = idtoindex[garageid];
+	int index = idtoindex_garage[garageid];
 
 	garage[index].setnowstatus(BUSY);
 

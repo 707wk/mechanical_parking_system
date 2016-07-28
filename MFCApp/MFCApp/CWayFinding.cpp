@@ -50,7 +50,7 @@ extern struct serverset serverinfo;
 
 extern CCarbarnInfo* garage;
 
-extern int* idtoindex;
+extern int* idtoindex_garage;
 
 CWayFinding::CWayFinding()
 {
@@ -223,40 +223,40 @@ int CWayFinding::nearestcarport(int id)
 		{
 			tmpid=maplocation[tmpx-1][tmpy].id;
 
-			if(garage[idtoindex[tmpid]].getsumcar()==garage[idtoindex[tmpid]].getspendcar())
+			if(garage[idtoindex_garage[tmpid]].getsumcar()==garage[idtoindex_garage[tmpid]].getspendcar())
 				return -1;
 			
-			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
+			if(garage[idtoindex_garage[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}
 		if(maplocation[tmpx][tmpy+1].type==MODULE)
 		{
 			tmpid=maplocation[tmpx][tmpy+1].id;
 
-			if(garage[idtoindex[tmpid]].getsumcar()==garage[idtoindex[tmpid]].getspendcar())
+			if(garage[idtoindex_garage[tmpid]].getsumcar()==garage[idtoindex_garage[tmpid]].getspendcar())
 				return -1;
 
-			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
+			if(garage[idtoindex_garage[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}			
 		if(maplocation[tmpx+1][tmpy].type==MODULE)
 		{
 			tmpid=maplocation[tmpx+1][tmpy].id;
 			
-			if(garage[idtoindex[tmpid]].getsumcar()==garage[idtoindex[tmpid]].getspendcar())
+			if(garage[idtoindex_garage[tmpid]].getsumcar()==garage[idtoindex_garage[tmpid]].getspendcar())
 				return -1;
 			
-			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
+			if(garage[idtoindex_garage[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}
 		if(maplocation[tmpx][tmpy-1].type==MODULE)
 		{
 			tmpid=maplocation[tmpx][tmpy-1].id;
 			
-			if(garage[idtoindex[tmpid]].getsumcar()==garage[idtoindex[tmpid]].getspendcar())
+			if(garage[idtoindex_garage[tmpid]].getsumcar()==garage[idtoindex_garage[tmpid]].getspendcar())
 				return -1;
 			
-			if(garage[idtoindex[tmpid]].getnowstatus()==STATEFREE)
+			if(garage[idtoindex_garage[tmpid]].getnowstatus()==STATEFREE)
 				return tmpid;
 		}
 

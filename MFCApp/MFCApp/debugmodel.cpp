@@ -13,9 +13,9 @@ extern struct serverset serverinfo;
 
 extern HANDLE hCom;  //全局变量，串口句柄
 
-extern int* idtoindex;
+extern int* idtoindex_garage;
 
-extern int maxindex;
+extern int maxindex_garage;
 
 extern int sumgarage;
 

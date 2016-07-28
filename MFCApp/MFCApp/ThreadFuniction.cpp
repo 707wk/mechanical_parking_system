@@ -57,9 +57,9 @@ extern DCB dcb;
 
 extern CCarbarnInfo* garage;
 
-extern int* idtoindex;
+extern int* idtoindex_garage;
 
-extern int maxindex;
+extern int maxindex_garage;
 
 extern int sumgarage;
 
@@ -304,27 +304,27 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			continue;
 		}
 
-		if(recstr[0]>maxindex)
+		if(recstr[0]>maxindex_garage)
 		{
 			continue;
 		}
 
-		if(idtoindex[recstr[0]]==-1)
+		if(idtoindex_garage[recstr[0]]==-1)
 		{
 			continue;
 		}
 		//////////////////////////////////////////////////////////////////////////
 
 		/////////////////////////////////////////////////////////////////////////////
-		//int index=idtoindex[recstr[0]];
+		//int index=idtoindex_garage[recstr[0]];
 		char strtmp[COMLEN]="";
-		garage[idtoindex[recstr[0]]].getsqlcommand(strtmp);
-		garage[idtoindex[recstr[0]]].setnowstatus(recstr[1]);
+		garage[idtoindex_garage[recstr[0]]].getsqlcommand(strtmp);
+		garage[idtoindex_garage[recstr[0]]].setnowstatus(recstr[1]);
 
-		if(strtmp[0]!='\0'&&garage[idtoindex[recstr[0]]].getnowstatus()==STATEFREE)
+		if(strtmp[0]!='\0'&&garage[idtoindex_garage[recstr[0]]].getnowstatus()==STATEFREE)
 		{
 			mysql_query(&serverinfo.mysql,"SET NAMES 'GB2312'");
-			garage[idtoindex[recstr[0]]].getsqlcommand(strtmp);
+			garage[idtoindex_garage[recstr[0]]].getsqlcommand(strtmp);
 			if(mysql_query(&serverinfo.mysql,strtmp)!=NULL)
 			{
 				FILE* fp;
@@ -335,7 +335,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 				AfxMessageBox(_T("ThreadPoll:数据库连接失败"));
 				exit(1);
 			}
-			garage[idtoindex[recstr[0]]].setsqlcommand("");
+			garage[idtoindex_garage[recstr[0]]].setsqlcommand("");
 		}
 		/////////////////////////////////////////////////////////////////////////////
 		//Sleep(serverinfo.intervaltime);

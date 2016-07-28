@@ -57,7 +57,6 @@ public:
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CListCtrl m_list_garage;
-	CListCtrl m_list_error;
 	CEdit m_sumcar;
 	CEdit m_freecar;
 	afx_msg void On32774();

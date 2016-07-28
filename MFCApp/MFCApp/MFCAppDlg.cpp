@@ -10,6 +10,7 @@
 #include "afxdialogex.h"
 #include "CCarbarnInfo.h"
 #include "CWayFinding.h"
+#include "ioClient.h"
 #include "DataStructure.h"
 #include "ControlCode.h"
 #include "ThreadFuniction.h"
@@ -30,11 +31,19 @@ extern CCarbarnInfo* garage;
 
 extern CWayFinding* mapinfo;
 
-extern int* idtoindex;
+extern struct ioClient* ioClient_list;
 
-extern int maxindex;
+extern int* idtoindex_garage;
 
-extern int sumgarage;
+extern int* idtoindex_ioClient;
+
+extern int maxindex_garage ;
+
+extern int maxindex_ioClient ;
+
+extern int sumgarage ;
+
+extern int sumioClient ;
 
 // CMFCAppDlg 对话框
 
@@ -67,7 +76,6 @@ void CMFCAppDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_list_garage);
-	DDX_Control(pDX, IDC_LIST2, m_list_error);
 	DDX_Control(pDX, IDC_EDIT1, m_sumcar);
 	DDX_Control(pDX, IDC_EDIT2, m_freecar);
 	DDX_Control(pDX, IDC_EDIT3, m_reservationcar);
@@ -135,7 +143,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 	m_list_garage.InsertColumn(4, _T("容量"), LVCFMT_CENTER, 50, 0);
 	m_list_garage.InsertColumn(5, _T("已存"), LVCFMT_CENTER, 50, 0);
 
-	//设置列表主题
+/*	//设置列表主题
 	m_list_error.SetExtendedStyle(
 		LVS_EX_FLATSB				// 扁平风格滚动
 		| LVS_EX_FULLROWSELECT		// 允许正航选中
@@ -144,7 +152,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 
 	m_list_error.InsertColumn(0, _T("编号"), LVCFMT_CENTER, 40, 0);
 	m_list_error.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 70, 0);
-	m_list_error.InsertColumn(2, _T("状态"), LVCFMT_CENTER, 70, 0);
+	m_list_error.InsertColumn(2, _T("状态"), LVCFMT_CENTER, 70, 0);//*/
 
 	//设置列表主题
 	m_list_ioput.SetExtendedStyle(
@@ -254,7 +262,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 	HICON hIcon = AfxGetApp()->LoadIcon(IDI_ICON_GREEN);
 	//m_stateico.SetIcon(hIcon);
 
-	SetTimer(1, 1000, NULL);
+	SetTimer(1, 1500, NULL);
 	SetTimer(2, 1000, NULL);
 	SetTimer(3, 60*1000 , NULL);
 
@@ -416,7 +424,7 @@ void CMFCAppDlg::init_list()
 	CString tmp;
 
 	m_list_garage.DeleteAllItems();
-	m_list_error.DeleteAllItems();
+	m_list_ioput.DeleteAllItems();
 
 	for (int index = 0; index<sumgarage; index++)
 	{
@@ -438,6 +446,28 @@ void CMFCAppDlg::init_list()
 		serverinfo.spendcar += garage[index].getspendcar();
 	}
 
+	for (int index = 0; index<sumioClient; index++)
+	{
+		tmp.Format(_T("%d"), ioClient_list[index].id);
+		m_list_ioput.InsertItem(index, tmp);
+		switch (ioClient_list[index].type)
+		{
+		case 1:
+			m_list_ioput.SetItemText(index, 1, _T("入口"));
+			break;
+		case 2:
+			m_list_ioput.SetItemText(index, 1, _T("出口"));
+			break;
+		case 3:
+			m_list_ioput.SetItemText(index, 1, _T("出入口"));
+			break;
+		default:
+			break;
+		}
+
+		m_list_ioput.SetItemText(index, 2, _T("未知"));
+	}//*/
+
 	tmp.Format(_T("%d"), serverinfo.sumcar);
 	m_sumcar.SetWindowText(tmp);
 
@@ -453,34 +483,34 @@ void CMFCAppDlg::init_list()
 
 void CMFCAppDlg::update_list()
 {
-	int index = 0;
+//	int index = 0;
 	int errorindex = 0;
 	int overtime = 0;
 	CString tmp;
 
 	//m_list_garage.DeleteAllItems();
-	m_list_error.DeleteAllItems();
+	//m_list_error.DeleteAllItems();
 
 //	serverinfo.sumcar = 0;
 //	serverinfo.spendcar = 0;
 
 	//////////////////////////////////////////////////////////////////////////
 	//根据车库模块数量以及查询间隔确定超时时间
-	overtime = ((maxindex + 1)*serverinfo.intervaltime) / 1000;
+	overtime = ((maxindex_garage + 1)*serverinfo.intervaltime) / 1000;
 	if (overtime<1)overtime = 1;
 	//////////////////////////////////////////////////////////////////////////
 
-	for (int i = 0; i<sumgarage; i++)
+	for (int index = 0; index<sumgarage; index++)
 	{
 		//////////////////////////////////////////////////////////////////////////
 		//多定义了一个变量
-		index = i;
+		//index = i;
 		//////////////////////////////////////////////////////////////////////////
-		tmp.Format(_T("%d"), garage[i].getcarbarnid());
+//		tmp.Format(_T("%d"), garage[i].getcarbarnid());
 		//m_list_garage.InsertItem(index, tmp);
-		m_list_garage.SetItemText(index, 0, tmp);
-		tmp = garage[i].getname().c_str();
-		m_list_garage.SetItemText(index, 1, tmp);
+//		m_list_garage.SetItemText(index, 0, tmp);
+//		tmp = garage[i].getname().c_str();
+//		m_list_garage.SetItemText(index, 1, tmp);
 		/*if (garage[i].getspendtime()>overtime)
 		{
 			/*if (garage[i].getnowstatus() == ONLINE)
@@ -509,7 +539,7 @@ void CMFCAppDlg::update_list()
 				//garage[i].setnowstatus(ONLINE);
 			}//*/
 
-			switch (garage[i].getnowstatus())
+			switch (garage[index].getnowstatus())
 			{
 			case STATEFREE:
 				m_list_garage.SetItemText(index, 2, _T("空闲"));
@@ -535,8 +565,8 @@ void CMFCAppDlg::update_list()
 			case OFFLINE:
 				m_list_garage.SetItemText(index, 2, _T("离线"));
 
-				//////////////////////////////////////////////////////////////////////////
-				//忘加了 2016-7-28
+/*				//////////////////////////////////////////////////////////////////////////
+				//忘加了 2016-07-28
 				tmp.Format(_T("%d"), garage[i].getcarbarnid());
 				m_list_garage.SetItemText(index, 2, _T("离线"));
 				m_list_error.InsertItem(errorindex, tmp);
@@ -544,7 +574,7 @@ void CMFCAppDlg::update_list()
 				m_list_error.SetItemText(errorindex, 1, tmp);
 				m_list_error.SetItemText(errorindex, 2, _T("离线"));
 				errorindex++;
-				//////////////////////////////////////////////////////////////////////////
+				////////////////////////////////////////////////////////////////////////*/
 
 				break;
 			default:
@@ -552,13 +582,16 @@ void CMFCAppDlg::update_list()
 			}
 		}
 
-		tmp.Format(_T("%02d:%02d:%02d"), garage[i].getspendtime() / 3600, garage[i].getspendtime() / 60 % 60, garage[i].getspendtime() % 60);
+		tmp.Format(_T("%02d:%02d:%02d"),
+			garage[index].getspendtime() / 3600,
+			garage[index].getspendtime() / 60 % 60,
+			garage[index].getspendtime() % 60);
 		m_list_garage.SetItemText(index, 3, tmp);
 
-		tmp.Format(_T("%d"), garage[i].getsumcar());
-		m_list_garage.SetItemText(index, 4, tmp);
+//		tmp.Format(_T("%d"), garage[i].getsumcar());
+//		m_list_garage.SetItemText(index, 4, tmp);
 
-		tmp.Format(_T("%d"), garage[i].getspendcar());
+		tmp.Format(_T("%d"), garage[index].getspendcar());
 		m_list_garage.SetItemText(index, 5, tmp);
 	}
 
@@ -795,7 +828,7 @@ void CMFCAppDlg::OnBnClickedButton1()
 		exit(1);
 	}
 
-	int index = idtoindex[garageid];
+	int index = idtoindex_garage[garageid];
 
 	garage[index].setnowstatus(BUSY);
 
@@ -874,7 +907,7 @@ void CMFCAppDlg::OnBnClickedButton2()
 //	m_carinfo.SetWindowText(tmp);
 	//spendcar--;
 
-	int index = idtoindex[garageid];
+	int index = idtoindex_garage[garageid];
 
 	garage[index].setnowstatus(BUSY);
 
