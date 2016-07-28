@@ -187,7 +187,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 	struct tm local;
 //	char qwe1[255];
 
-	for(;;index=(index+1)%sumgarage)
+	for(;;index=(index+1)%sumgarage, Sleep(serverinfo.intervaltime))
 	{
 		char str[]="1234567";
 
@@ -247,11 +247,21 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 
 		//////////////////////////////////////////////////////////////////////////
 		//判断接收是否合法
+		/*if(index==1)
+		printf("[%d %d %d %d %d]\n", recstr[0], recstr[1], recstr[2], recstr[3], recstr[4]);//*/
 		if(recstr[0]==0)
 		{
+			/*if (index == 1)
+			{
+				str[1] = 2;
+				str[3] = STOP;
+				str[4] = 0;
+				str[5] = 0;
+				str[6] = (str[1] + str[3] + str[4] + str[5]) % CHECKMOD;
+				OnSend(str, 7);
+			}//*/
 			if (garage[index].getnowstatus() != OFFLINE)
 			{
-				printf("E2 ");
 				serverinfo.sumcar -= garage[index].getsumcar();
 				serverinfo.spendcar -= garage[index].getspendcar();
 				//garage[i].setnowstatus(OFFLINE);
@@ -259,18 +269,18 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 
 			//garage[i].setoffline();
 			garage[index].setnowstatus(OFFLINE);
-
+			//*/
 			continue;
 		}
 		else
 		{
+			//printf("[%d %d %d %d %d]\n", recstr[0], recstr[1], recstr[2], recstr[3], recstr[4]);
 			if (garage[index].getnowstatus() == OFFLINE)
 			{
-				printf("E4 ");
 				serverinfo.sumcar += garage[index].getsumcar();
 				serverinfo.spendcar += garage[index].getspendcar();
 				//garage[i].setnowstatus(ONLINE);
-			}
+			}//*/
 		}
 		
 		nowtime = time(NULL);
@@ -328,7 +338,7 @@ DWORD WINAPI ThreadPoll(LPVOID pParam)
 			garage[idtoindex[recstr[0]]].setsqlcommand("");
 		}
 		/////////////////////////////////////////////////////////////////////////////
-		Sleep(serverinfo.intervaltime);
+		//Sleep(serverinfo.intervaltime);
 
 		//index=(index+1)%sumgarage;
 		//Sleep(200);

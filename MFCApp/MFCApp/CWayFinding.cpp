@@ -198,14 +198,16 @@ int CWayFinding::nearestcarport(int id)
 		}
 		else
 		{
-			AfxMessageBox(_T("map:未找到数据"));
-			exit(1) ;
+			//AfxMessageBox(_T("map:未找到数据"));
+			//exit(1) ;
+			return -1;
 		}
 	}
 	else
 	{
 		AfxMessageBox(_T("数据库连接失败"));
 		exit(1) ;
+		//return -1;
 	}
 	
 	pathanalysis.push(tmp);
@@ -286,6 +288,7 @@ int CWayFinding::nearestcarport(int id)
 		maplocation[tmpx][tmpy].flage=1;
 		pathanalysis.pop();
 	}
+	
 	return -1;
 }
 
@@ -316,14 +319,16 @@ int CWayFinding::nearestexit(int id)
 		}
 		else
 		{
-			AfxMessageBox(_T("map:未找到数据"));
-			exit(1) ;
+			//AfxMessageBox(_T("map:未找到数据"));
+			//exit(1) ;
+			return -1;
 		}
 	}
 	else
 	{
 		AfxMessageBox(_T("数据库连接失败"));
 		exit(1) ;
+		//return -1;
 	}
 
 	pathanalysis.push(tmp);
@@ -379,6 +384,7 @@ int CWayFinding::nearestexit(int id)
 		maplocation[tmpx][tmpy].flage=1;
 		pathanalysis.pop();
 	}
+
 	return -1;
 }
 

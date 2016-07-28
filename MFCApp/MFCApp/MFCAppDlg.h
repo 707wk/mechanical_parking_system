@@ -66,4 +66,6 @@ public:
 	afx_msg void On32772();
 	CEdit m_reservationcar;
 	CEdit m_Threadinfo;
+	CListCtrl m_list_ioput;
+	afx_msg void On32775();
 };

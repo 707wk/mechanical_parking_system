@@ -72,6 +72,7 @@ void CMFCAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT2, m_freecar);
 	DDX_Control(pDX, IDC_EDIT3, m_reservationcar);
 	DDX_Control(pDX, IDC_EDIT4, m_Threadinfo);
+	DDX_Control(pDX, IDC_LIST3, m_list_ioput);
 }
 
 BEGIN_MESSAGE_MAP(CMFCAppDlg, CDialogEx)
@@ -85,6 +86,7 @@ BEGIN_MESSAGE_MAP(CMFCAppDlg, CDialogEx)
 	ON_COMMAND(ID_32773, &CMFCAppDlg::On32773)
 	ON_COMMAND(ID_32771, &CMFCAppDlg::On32771)
 	ON_COMMAND(ID_32772, &CMFCAppDlg::On32772)
+	ON_COMMAND(ID_32775, &CMFCAppDlg::On32775)
 END_MESSAGE_MAP()
 
 
@@ -127,7 +129,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 		);
 
 	m_list_garage.InsertColumn(0, _T("编号"), LVCFMT_CENTER, 40, 0);
-	m_list_garage.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 87, 0);
+	m_list_garage.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 70, 0);
 	m_list_garage.InsertColumn(2, _T("状态"), LVCFMT_CENTER, 70, 0);
 	m_list_garage.InsertColumn(3, _T("命令耗时"), LVCFMT_CENTER, 70, 0);
 	m_list_garage.InsertColumn(4, _T("容量"), LVCFMT_CENTER, 50, 0);
@@ -141,10 +143,10 @@ BOOL CMFCAppDlg::OnInitDialog()
 		);
 
 	m_list_error.InsertColumn(0, _T("编号"), LVCFMT_CENTER, 40, 0);
-	m_list_error.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 87, 0);
+	m_list_error.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 70, 0);
 	m_list_error.InsertColumn(2, _T("状态"), LVCFMT_CENTER, 70, 0);
 
-/*	//设置列表主题
+	//设置列表主题
 	m_list_ioput.SetExtendedStyle(
 		LVS_EX_FLATSB				// 扁平风格滚动
 		| LVS_EX_FULLROWSELECT		// 允许正航选中
@@ -152,9 +154,9 @@ BOOL CMFCAppDlg::OnInitDialog()
 		);
 
 	m_list_ioput.InsertColumn(0, _T("编号"), LVCFMT_CENTER, 40, 0);
-	m_list_ioput.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 87, 0);
-	m_list_ioput.InsertColumn(2, _T("类型"), LVCFMT_CENTER, 70, 0);
-	m_list_ioput.InsertColumn(3, _T("状态"), LVCFMT_CENTER, 70, 0);//*/
+	//m_list_ioput.InsertColumn(1, _T("备注"), LVCFMT_CENTER, 87, 0);
+	m_list_ioput.InsertColumn(1, _T("类型"), LVCFMT_CENTER, 70, 0);
+	m_list_ioput.InsertColumn(2, _T("状态"), LVCFMT_CENTER, 70, 0);//*/
 
 	/*//设置列表主题
 	m_list_reservation.SetExtendedStyle(
@@ -479,14 +481,14 @@ void CMFCAppDlg::update_list()
 		m_list_garage.SetItemText(index, 0, tmp);
 		tmp = garage[i].getname().c_str();
 		m_list_garage.SetItemText(index, 1, tmp);
-		if (garage[i].getspendtime()>overtime)
+		/*if (garage[i].getspendtime()>overtime)
 		{
 			/*if (garage[i].getnowstatus() == ONLINE)
 			{
 				serverinfo.sumcar-= garage[i].getsumcar();
 				serverinfo.spendcar-= garage[i].getspendcar();
 				//garage[i].setnowstatus(OFFLINE);
-			}//*/
+			}//
 
 			//garage[i].setoffline();
 			//garage[i].setnowstatus(OFFLINE);
@@ -498,7 +500,7 @@ void CMFCAppDlg::update_list()
 			m_list_error.SetItemText(errorindex, 2, _T("离线"));
 			errorindex++;
 		}
-		else
+		else//*/
 		{
 			/*if (garage[i].getnowstatus() == OFFLINE)
 			{
@@ -529,6 +531,21 @@ void CMFCAppDlg::update_list()
 				break;
 			case BUSY:
 				m_list_garage.SetItemText(index, 2, _T("运行中"));
+				break;
+			case OFFLINE:
+				m_list_garage.SetItemText(index, 2, _T("离线"));
+
+				//////////////////////////////////////////////////////////////////////////
+				//忘加了 2016-7-28
+				tmp.Format(_T("%d"), garage[i].getcarbarnid());
+				m_list_garage.SetItemText(index, 2, _T("离线"));
+				m_list_error.InsertItem(errorindex, tmp);
+				tmp = garage[i].getname().c_str();
+				m_list_error.SetItemText(errorindex, 1, tmp);
+				m_list_error.SetItemText(errorindex, 2, _T("离线"));
+				errorindex++;
+				//////////////////////////////////////////////////////////////////////////
+
 				break;
 			default:
 				m_list_garage.SetItemText(index, 2, _T("未知"));
@@ -892,13 +909,11 @@ void CMFCAppDlg::On32774()
 	ShellExecute(NULL, _T("open"), _T("http://gxy.hunnu.edu.cn/"), NULL, NULL, SW_SHOWNORMAL);
 }
 
-
 void CMFCAppDlg::On32773()
 {
-	// TODO:  在此添加命令处理程序代码
+	// TODO:  Web端
 	ShellExecute(NULL, _T("open"), _T("http://127.0.0.1/manage/"), NULL, NULL, SW_SHOWNORMAL);
 }
-
 
 void CMFCAppDlg::On32771()
 {
@@ -906,7 +921,6 @@ void CMFCAppDlg::On32771()
 	if (CanExit())
 		CDialog::OnCancel();
 }
-
 
 void CMFCAppDlg::On32772()
 {
@@ -917,4 +931,9 @@ void CMFCAppDlg::On32772()
 	dlg.DoModal();
 
 	serverinfo.runstate = 1;
+}
+
+void CMFCAppDlg::On32775()
+{
+	// TODO: 设置
 }

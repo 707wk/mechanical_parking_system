@@ -40,6 +40,10 @@ int inputParking(char* strplate, int inputId)
 	//MYSQL_ROW column;                //数据行的列
 	char strtmp[COMLEN];
 
+	//DWORD start;
+	//DWORD stop;
+
+	//start = GetTickCount();
 /*	if (serverinfo.sumcar == serverinfo.spendcar + serverinfo.reservation)
 	{
 		//MessageBox(_T("车位已满"));
