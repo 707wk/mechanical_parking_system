@@ -262,7 +262,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 	HICON hIcon = AfxGetApp()->LoadIcon(IDI_ICON_GREEN);
 	//m_stateico.SetIcon(hIcon);
 
-	SetTimer(1, 1500, NULL);
+	SetTimer(1, 1000, NULL);
 	SetTimer(2, 1000, NULL);
 	SetTimer(3, 60*1000 , NULL);
 
@@ -380,6 +380,8 @@ void CMFCAppDlg::OnTimer(UINT_PTR nIDEvent)
 		{
 			for (int i = 0; i<sumgarage; i++)
 				garage[i].accspendtime();
+			for (int i = 0; i < sumioClient; i++)
+				ioClient_list[i].spendtime++;
 			update_list();
 		}
 		break;
@@ -594,6 +596,20 @@ void CMFCAppDlg::update_list()
 		tmp.Format(_T("%d"), garage[index].getspendcar());
 		m_list_garage.SetItemText(index, 5, tmp);
 	}
+
+	for (int index = 0; index<sumioClient; index++)
+	{
+//		printf("%d ", ioClient_list[index].spendtime);
+		if (ioClient_list[index].spendtime > 10)
+		{
+			m_list_ioput.SetItemText(index, 2, _T("¿Îœﬂ"));
+		}
+		else
+		{
+			m_list_ioput.SetItemText(index, 2, _T("‘⁄œﬂ"));
+		}
+	}//*/
+//	printf("\n");
 
 	tmp.Format(_T("%d"), serverinfo.sumcar);
 	m_sumcar.SetWindowText(tmp);

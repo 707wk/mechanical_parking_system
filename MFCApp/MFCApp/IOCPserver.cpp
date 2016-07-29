@@ -2,6 +2,7 @@
 #include "IOCPserver.h"
 #include "CCarbarnInfo.h"
 #include "CWayFinding.h"
+#include "ioClient.h"
 #include "DataStructure.h"
 #include "ControlCode.h"
 #include "ThreadFuniction.h"
@@ -26,11 +27,19 @@ extern CCarbarnInfo* garage;
 
 extern CWayFinding* mapinfo;
 
+extern struct ioClient* ioClient_list;
+
 extern int* idtoindex_garage;
 
-extern int maxindex_garage;
+extern int* idtoindex_ioClient;
 
-extern int sumgarage;
+extern int maxindex_garage ;
+
+extern int maxindex_ioClient ;
+
+extern int sumgarage ;
+
+extern int sumioClient ;
 
 //int qweasd = 1;
 
@@ -470,6 +479,8 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 				//printf("ÐÄÌø°ü");
 				sscanf_s(PerIoData->DataBuf.buf + 1, " %d", &ioputId);
 				//printf("[id=%d]", ioputId);
+				ioClient_list[idtoindex_ioClient[ioputId]].spendtime = 0;
+
 				memset(sendstr, '\0', COMLEN);
 				sendstr[0] = TASKSUCCEED;
 				sprintf_s(sendstr + 1, COMLEN - 1, " %d %d",

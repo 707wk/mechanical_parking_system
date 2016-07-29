@@ -479,8 +479,8 @@ BOOL CMFCAppApp::InitInstance()
 		for (int i = 0; i<sumioClient; i++)//对于下标越界，我确实没话说 2016-07-28
 		{
 			ioClient_list[i].type = 0;
-			ioClient_list[index].nowstatus = ONLINE;
-			ioClient_list[index].spendtime = 0;
+			ioClient_list[i].nowstatus = ONLINE;
+			ioClient_list[i].spendtime = 0;
 		}
 
 		while (column = mysql_fetch_row(res))        //获取具体的数据
