@@ -75,7 +75,8 @@ struct serverset
 	DWORD  activeThreadtime;           //线程运行时间
 
 	int    runstate;                   //运行状态
-	int    lockflage;                  //读写锁
+	//int  lockflage;                  //读写锁
+	char   locationip[40];             //本机ip
 	
 	MYSQL  mysql;                      //mysql数据库
 };

@@ -44,9 +44,13 @@
 
 #include "mysql/mysql.h"
 
+#define HAVE_STRUCT_TIMESPEC    //mysql与pthread共同使用会重定义 2016-07-29
+#include "pthreads.2/pthread.h"
+
 #pragma comment(lib,"ws2_32.lib")
 #pragma comment(lib,"ws2_32.lib")
 #pragma comment(lib, "libmysql.lib")
+#pragma comment(lib, "pthreadVC2.lib")
 #pragma comment(lib, "Wininet.lib")
 
 

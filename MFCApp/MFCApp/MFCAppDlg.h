@@ -67,4 +67,5 @@ public:
 	CEdit m_Threadinfo;
 	CListCtrl m_list_ioput;
 	afx_msg void On32775();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

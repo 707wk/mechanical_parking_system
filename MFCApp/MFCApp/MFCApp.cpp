@@ -29,6 +29,8 @@ using namespace std;
 
 struct serverset serverinfo;
 
+pthread_mutex_t work_mutex; //全局互斥锁对象
+
 HANDLE hCom;  //全局变量，串口句柄
 
 DCB dcb;
@@ -210,6 +212,32 @@ void readserverset()
 
 }
 
+void getlocationip()
+{
+	WSADATA wsadata;
+	WORD dwVersionRequested=0;
+	int err;
+	err = WSAStartup(dwVersionRequested, &wsadata);
+	char hostname[128];
+	if (gethostname(hostname, 128) == 0)
+	{
+		printf("%s\n", hostname);
+		//计算机名字
+	}
+	//char buf[20];
+	memset(serverinfo.locationip,0,40);
+	struct hostent*pHost = gethostbyname(hostname);
+	for (int i = 0;pHost != NULL&&pHost->h_addr_list[i] != NULL;i++)
+	{
+		//将它放入字符数组中便于应用
+		strcpy(serverinfo.locationip, inet_ntoa(*(struct in_addr*)pHost->h_addr_list[i]));
+		//inet_ntoa(*(struct in_addr *)pHost->h_addr_list[i]);
+		//IP地址
+		printf("%s\n", serverinfo.locationip);
+	}
+	WSACleanup();
+}
+
 // CMFCAppApp
 
 BEGIN_MESSAGE_MAP(CMFCAppApp, CWinApp)
@@ -229,7 +257,7 @@ CMFCAppApp::CMFCAppApp()
 	serverinfo.Threadwork = 0;
 	serverinfo.activeThreadtime = 0;
 	serverinfo.runstate = 0;
-	serverinfo.lockflage = 0;
+	//serverinfo.lockflage = 0;
 }
 
 
@@ -349,7 +377,8 @@ BOOL CMFCAppApp::InitInstance()
 	//读取配置文件
 	readserverset();
 	//////////////////////////////////////////////////////////////////////////
-
+	//获取本机ip
+	getlocationip();
 	//////////////////////////////////////////////////////////////////////////
 	CString tmp(serverinfo.mscomm);
 	hCom = CreateFile(tmp,//COM1口

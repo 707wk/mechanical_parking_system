@@ -135,5 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="libmysql.lib" />
+    <Library Include="pthreadVC2.lib" />
   </ItemGroup>
 </Project>

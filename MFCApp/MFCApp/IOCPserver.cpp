@@ -19,6 +19,8 @@ using namespace std;
 
 extern struct serverset serverinfo;
 
+extern pthread_mutex_t work_mutex; //全局互斥锁对象
+
 extern HANDLE hCom;  //全局变量，串口句柄
 
 extern DCB dcb;
@@ -103,7 +105,9 @@ int inputParking(char* strplate, int inputId)
 		}
 	}
 
+	pthread_mutex_lock(&work_mutex);//上锁 [2016-07-29:707wk]
 	int garageid = mapinfo->nearestcarport(inputId);
+	pthread_mutex_unlock(&work_mutex);//解锁 [2016-07-29:707wk]
 
 	if (garageid == -1)
 	{
@@ -240,7 +244,10 @@ int carRetrieval(char* strplate)
 	int garageid = atoi(column[0]);
 	int num = atoi(column[1]);
 
+	pthread_mutex_lock(&work_mutex);//上锁 [2016-07-29:707wk]
 	int nearoutput = mapinfo->nearestexit(garageid);
+	pthread_mutex_unlock(&work_mutex);//解锁 [2016-07-29:707wk]
+
 	if (nearoutput == -1)
 	{
 		//MessageBox(_T("未找到出口,请检查地图设置!"));
@@ -400,7 +407,11 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 				//printf("入口存车");
 				sscanf_s(PerIoData->DataBuf.buf + 1, " %s %d", strplate, COMLEN, &ioputId);
 				//printf("plate=%s id=%d ", strplate, ioputId);
+
+				//pthread_mutex_lock(&work_mutex);//上锁 [2016-07-29:707wk]
 				result = inputParking(strplate, ioputId);
+				//pthread_mutex_unlock(&work_mutex);//解锁 [2016-07-29:707wk]
+				
 				switch (result)
 				{
 				case TASKSUCCEED:
@@ -434,7 +445,11 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 				//printf("模块取车");
 				sscanf_s(PerIoData->DataBuf.buf + 1, " %s", strplate, COMLEN);
 				//printf("plate=%s ", strplate);
+
+				//pthread_mutex_lock(&work_mutex);//上锁 [2016-07-29:707wk]
 				result = carRetrieval(strplate);
+				//pthread_mutex_unlock(&work_mutex);//解锁 [2016-07-29:707wk]
+
 				switch (result)
 				{
 				case TASKSUCCEED:
@@ -616,6 +631,8 @@ DWORD WINAPI iocpstartserver(LPVOID pParam)
 		AfxMessageBox(str);
 		exit(1);
 	}
+
+	pthread_mutex_init(&work_mutex, NULL);//初始化 互斥锁 NULL 默认属性 [2016-07-29:707wk]
 
 	// Accept connections and assign to the completion port.
 	sockaddr_in client;
