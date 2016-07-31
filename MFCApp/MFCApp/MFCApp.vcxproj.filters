@@ -132,6 +132,9 @@
     <Image Include="res\red.ico">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\bg.png">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Library Include="libmysql.lib" />

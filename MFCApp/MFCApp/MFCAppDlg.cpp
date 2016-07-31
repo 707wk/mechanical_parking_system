@@ -108,6 +108,32 @@ BEGIN_MESSAGE_MAP(CMFCAppDlg, CDialogEx)
 	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
+BOOL ImageFromIDResource(UINT nID, LPCTSTR sTR, Image*&pImg)
+{
+	HINSTANCE hInst = AfxGetResourceHandle();
+	HRSRC hRsrc = ::FindResource(hInst, MAKEINTRESOURCE(nID), sTR);
+	// type
+	if (!hRsrc)
+		return FALSE;
+	// load resource into memory
+	DWORD len = SizeofResource(hInst, hRsrc);
+	BYTE*lpRsrc = (BYTE*)LoadResource(hInst, hRsrc);
+	if (!lpRsrc)
+		return FALSE;
+	// Allocate global memory on which to create stream
+	HGLOBAL m_hMem = GlobalAlloc(GMEM_FIXED, len);
+	BYTE*pmem = (BYTE*)GlobalLock(m_hMem);
+	memcpy(pmem, lpRsrc, len);
+	IStream*pstm;
+	CreateStreamOnHGlobal(m_hMem, FALSE, &pstm);
+	// load from stream
+	pImg = Gdiplus::Image::FromStream(pstm);
+	// free/release stuff
+	GlobalUnlock(m_hMem);
+	pstm->Release();
+	FreeResource(lpRsrc);
+	return TRUE;
+}
 
 // CMFCAppDlg ÏûÏ¢´¦Àí³ÌÐò
 
@@ -131,7 +157,8 @@ BOOL CMFCAppDlg::OnInitDialog()
 	//CT2CW strFileName( _T("I:\\±à³ÌÁ·Ï°\\CommonFiles\\Test02.png") );  
 	//m_pImage = new Image( _T("I:\\±à³ÌÁ·Ï°\\CommonFiles\\Test02.png") );  
 	//m_pImage=Image::FromFile(_T("I:\\±à³ÌÁ·Ï°\\CommonFiles\\Test02.png"));  
-	m_pImage = Image::FromFile(_T("bg.png"));
+	//m_pImage = Image::FromFile(_T("bg.png"));
+	ImageFromIDResource(IDB_PNG_BG, _T("png"), (Image*&)m_pImage);
 
 	//´íÎóÅÐ¶Ï  
 	if ((m_pImage == NULL) || (m_pImage->GetLastStatus() != Ok))

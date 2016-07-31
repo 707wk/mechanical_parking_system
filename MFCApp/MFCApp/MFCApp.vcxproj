@@ -155,6 +155,7 @@
     <ResourceCompile Include="MFCApp.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\bg.png" />
     <Image Include="res\green.ico" />
     <Image Include="res\MFCApp.ico" />
     <Image Include="res\red.ico" />
