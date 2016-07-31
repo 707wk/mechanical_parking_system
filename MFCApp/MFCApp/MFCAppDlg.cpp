@@ -51,6 +51,10 @@ static UINT BASED_CODE indicators[] =
 	ID_INDICATOR_02
 };
 
+Gdiplus::GdiplusStartupInput    m_gdiplusStartupInput;
+ULONG_PTR                       m_gdiplusToken;
+Image*                          m_pImage;                           //图片对象
+
 // CMFCAppDlg 对话框
 
 IMPLEMENT_DYNAMIC(CMFCAppDlg, CDialogEx);
@@ -120,6 +124,26 @@ BOOL CMFCAppDlg::OnInitDialog()
 
 	// TODO:  在此添加额外的初始化代码
 
+	//初始化GDI+.  
+	GdiplusStartup(&m_gdiplusToken, &m_gdiplusStartupInput, NULL);
+
+	//加载文件  
+	//CT2CW strFileName( _T("I:\\编程练习\\CommonFiles\\Test02.png") );  
+	//m_pImage = new Image( _T("I:\\编程练习\\CommonFiles\\Test02.png") );  
+	//m_pImage=Image::FromFile(_T("I:\\编程练习\\CommonFiles\\Test02.png"));  
+	m_pImage = Image::FromFile(_T("bg.png"));
+
+	//错误判断  
+	if ((m_pImage == NULL) || (m_pImage->GetLastStatus() != Ok))
+	{
+		if (m_pImage)
+		{
+			delete m_pImage;
+			m_pImage = NULL;
+		}
+		return FALSE;
+	}
+
 //	MYSQL_RES *res;                    //查询结果集
 //	MYSQL_ROW column;                  //数据行的列
 
@@ -185,6 +209,9 @@ BOOL CMFCAppDlg::OnInitDialog()
 
 void CMFCAppDlg::OnPaint()
 {
+	Graphics graphics(GetDC()->GetSafeHdc());
+	graphics.DrawImage(m_pImage, 0, 0, m_pImage->GetWidth(), m_pImage->GetHeight());
+	//printf("%d %d\n", m_pImage->GetWidth(), m_pImage->GetHeight());
 	if (IsIconic())
 	{
 		CPaintDC dc(this); // 用于绘制的设备上下文

@@ -53,10 +53,10 @@
 #pragma comment(lib, "pthreadVC2.lib")
 #pragma comment(lib, "Wininet.lib")
 
-
-
-
-
+#include <GdiPlus.h>  
+//#include <AtlImage.h> //此头文件里面包括#pragma comment(lib, "gdiplus.lib")  
+#pragma comment(lib, "gdiplus.lib")  
+using namespace Gdiplus;
 
 // 除要将 bMultiInstance 参数的 TRUE 
 // 传递给 COleObjectFactory 构造函数之外，此宏与 IMPLEMENT_OLECREATE 相同。
