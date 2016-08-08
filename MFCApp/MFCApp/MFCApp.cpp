@@ -348,7 +348,7 @@ BOOL CMFCAppApp::InitInstance()
 	}
 
 	HWND wnd;
-	wnd = ::FindWindow(NULL, _T("堆垛式立体车库管理 v1.3"));
+	wnd = ::FindWindow(NULL, _T("堆垛式立体车库管理系统"));
 	if (wnd)
 	{
 		AfxMessageBox(_T("程序已运行"));
@@ -367,7 +367,7 @@ BOOL CMFCAppApp::InitInstance()
 	_tfreopen_s(&fpDebugOut, _T("CONOUT$"), _T("w"), stdout);
 	_tfreopen_s(&fpDebugIn, _T("CONIN$"), _T("r"), stdin);
 	_tsetlocale(LC_ALL, _T("chs"));     //这是必要的，否则unicode模式下使用C库函数控制台输出不了中文
-	///////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////*/
 	//检测系统版本号
 	checkserver();
 	//////////////////////////////////////////////////////////////////////////

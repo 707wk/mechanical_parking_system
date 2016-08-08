@@ -109,6 +109,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="About.h" />
     <ClInclude Include="CCarbarnInfo.h" />
     <ClInclude Include="ControlCode.h" />
     <ClInclude Include="CWayFinding.h" />
@@ -127,6 +128,7 @@
     <ClInclude Include="ThreadFuniction.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="About.cpp" />
     <ClCompile Include="CCarbarnInfo.cpp" />
     <ClCompile Include="CWayFinding.cpp" />
     <ClCompile Include="debugmodel.cpp" />
@@ -155,6 +157,7 @@
     <ResourceCompile Include="MFCApp.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\about.png" />
     <Image Include="res\bg.png" />
     <Image Include="res\green.ico" />
     <Image Include="res\MFCApp.ico" />

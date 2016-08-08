@@ -6,6 +6,7 @@
 #include "MFCApp.h"
 #include "MFCAppDlg.h"
 #include "debugmodel.h"
+#include "About.h"
 #include "DlgProxy.h"
 #include "afxdialogex.h"
 #include "CCarbarnInfo.h"
@@ -51,9 +52,9 @@ static UINT BASED_CODE indicators[] =
 	ID_INDICATOR_02
 };
 
-Gdiplus::GdiplusStartupInput    m_gdiplusStartupInput;
-ULONG_PTR                       m_gdiplusToken;
-Image*                          m_pImage;                           //图片对象
+//Gdiplus::GdiplusStartupInput    m_gdiplusStartupInput;
+//ULONG_PTR                       m_gdiplusToken;
+//Image*                          m_pImage;                           //图片对象
 
 // CMFCAppDlg 对话框
 
@@ -105,7 +106,9 @@ BEGIN_MESSAGE_MAP(CMFCAppDlg, CDialogEx)
 	ON_COMMAND(ID_32771, &CMFCAppDlg::On32771)
 	ON_COMMAND(ID_32772, &CMFCAppDlg::On32772)
 	ON_COMMAND(ID_32775, &CMFCAppDlg::On32775)
+	ON_MESSAGE(WM_NOTI , &CMFCAppDlg::OnTrayNotify)
 	ON_WM_SIZE()
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 BOOL ImageFromIDResource(UINT nID, LPCTSTR sTR, Image*&pImg)
@@ -150,6 +153,30 @@ BOOL CMFCAppDlg::OnInitDialog()
 
 	// TODO:  在此添加额外的初始化代码
 
+	//ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);隐藏任务栏图标
+
+	/* 托盘图标的初始化工作 ************************************************************************/
+	//初始化 m_NotifyIconData 内存空间
+	memset(&m_NotifyIconData, 0, sizeof(NOTIFYICONDATA));
+	//使托盘中图标对应于本窗体,这样它便可以把托盘图标的事件发送给窗体程序
+	m_NotifyIconData.hWnd = GetSafeHwnd();
+	ASSERT(m_NotifyIconData.hWnd != NULL);
+	//定托盘图标产生事件时候发出的事件
+	m_NotifyIconData.uCallbackMessage = WM_NOTI;
+	//填充结构体的大小
+	m_NotifyIconData.cbSize = sizeof(NOTIFYICONDATA);
+	//加载托盘图标(这里以默认的资源图标)
+	m_NotifyIconData.hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	//设置鼠标移动到托盘图标时候的提示文字
+	memcpy(m_NotifyIconData.szTip, L"堆垛式立体车库管理系统", sizeof(L"堆垛式立体车库管理系统"));
+	//设置托盘图标的属性
+	m_NotifyIconData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+	//设置托盘图标的图标资源 ID
+	m_NotifyIconData.uID = IDR_MAINFRAME;
+
+	/* 显示托盘图标 *********************************************************************************/
+	Shell_NotifyIcon(NIM_ADD, &m_NotifyIconData);
+
 	//初始化GDI+.  
 	GdiplusStartup(&m_gdiplusToken, &m_gdiplusStartupInput, NULL);
 
@@ -157,8 +184,8 @@ BOOL CMFCAppDlg::OnInitDialog()
 	//CT2CW strFileName( _T("I:\\编程练习\\CommonFiles\\Test02.png") );  
 	//m_pImage = new Image( _T("I:\\编程练习\\CommonFiles\\Test02.png") );  
 	//m_pImage=Image::FromFile(_T("I:\\编程练习\\CommonFiles\\Test02.png"));  
-	//m_pImage = Image::FromFile(_T("bg.png"));
-	ImageFromIDResource(IDB_PNG_BG, _T("png"), (Image*&)m_pImage);
+	m_pImage = Image::FromFile(_T("res\\bg.png"));
+	//ImageFromIDResource(IDB_PNG_BG, _T("png"), (Image*&)m_pImage);
 
 	//错误判断  
 	if ((m_pImage == NULL) || (m_pImage->GetLastStatus() != Ok))
@@ -168,7 +195,8 @@ BOOL CMFCAppDlg::OnInitDialog()
 			delete m_pImage;
 			m_pImage = NULL;
 		}
-		return FALSE;
+		exit(1);
+		//return FALSE;
 	}
 
 //	MYSQL_RES *res;                    //查询结果集
@@ -225,7 +253,8 @@ BOOL CMFCAppDlg::OnInitDialog()
 
 	SetTimer(1, 1000, NULL);
 	SetTimer(2, 1000, NULL);
-	SetTimer(3, 60*1000 , NULL);
+	SetTimer(3, 60 * 1000, NULL);
+	SetTimer(4, 100, NULL);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -277,20 +306,23 @@ HCURSOR CMFCAppDlg::OnQueryDragIcon()
 
 void CMFCAppDlg::OnClose()
 {
-	if (CanExit())
-		CDialogEx::OnClose();
+//	AfxMessageBox(_T("1"));
+//	if (CanExit())
+//		CDialogEx::OnClose();
 }
 
 void CMFCAppDlg::OnOK()
 {
-	if (CanExit())
-		CDialogEx::OnOK();
+//	AfxMessageBox(_T("2"));
+//	if (CanExit())
+//		CDialogEx::OnOK();
 }
 
 void CMFCAppDlg::OnCancel()
 {
-	if (CanExit())
-		CDialogEx::OnCancel();
+//	AfxMessageBox(_T("3"));
+//	if (CanExit())
+//		CDialogEx::OnCancel();
 }
 
 BOOL CMFCAppDlg::CanExit()
@@ -334,7 +366,7 @@ void CMFCAppDlg::OnTimer(UINT_PTR nIDEvent)
 				garage[i].accspendtime();
 			for (int i = 0; i < sumioClient; i++)
 				ioClient_list[i].spendtime++;
-			update_list();
+			//update_list();
 		}
 		break;
 	case 2:
@@ -367,6 +399,11 @@ void CMFCAppDlg::OnTimer(UINT_PTR nIDEvent)
 			exit(1);
 		}
 
+		break;
+	case 4:
+		update_list();
+		break;
+	default:
 		break;
 	}
 
@@ -437,8 +474,10 @@ void CMFCAppDlg::init_list()
 
 void CMFCAppDlg::update_list()
 {
-	int errorindex = 0;
-	int overtime = 0;
+	static int gindex = 0;
+	static int cindex = 0;
+//	int errorindex = 0;
+//	int overtime = 0;
 	CString tmp;
 
 	//m_list_garage.DeleteAllItems();
@@ -449,66 +488,69 @@ void CMFCAppDlg::update_list()
 
 	//////////////////////////////////////////////////////////////////////////
 	//根据车库模块数量以及查询间隔确定超时时间
-	overtime = ((maxindex_garage + 1)*serverinfo.intervaltime) / 1000;
-	if (overtime<1)overtime = 1;
+//	overtime = ((maxindex_garage + 1)*serverinfo.intervaltime) / 1000;
+//	if (overtime<1)overtime = 1;
 	//////////////////////////////////////////////////////////////////////////
 
-	for (int index = 0; index<sumgarage; index++)
+	//for (;;)
 	{
-		switch (garage[index].getnowstatus())
+		switch (garage[gindex].getnowstatus())
 		{
 		case STATEFREE:
-			m_list_garage.SetItemText(index, 2, _T("空闲"));
+			m_list_garage.SetItemText(gindex, 2, _T("空闲"));
 			break;
 		case STATESAVE:
-			m_list_garage.SetItemText(index, 2, _T("存车"));
+			m_list_garage.SetItemText(gindex, 2, _T("存车"));
 			break;
 		case STATEDELETE:
-			m_list_garage.SetItemText(index, 2, _T("取车"));
+			m_list_garage.SetItemText(gindex, 2, _T("取车"));
 			break;
 		case STATESTOP:
-			m_list_garage.SetItemText(index, 2, _T("停止"));
+			m_list_garage.SetItemText(gindex, 2, _T("停止"));
 			break;
 		case STATERSET:
-			m_list_garage.SetItemText(index, 2, _T("复位"));
+			m_list_garage.SetItemText(gindex, 2, _T("复位"));
 			break;
 		case ACCEPTED:
-			m_list_garage.SetItemText(index, 2, _T("已接收"));
+			m_list_garage.SetItemText(gindex, 2, _T("已接收"));
 			break;
 		case BUSY:
-			m_list_garage.SetItemText(index, 2, _T("运行中"));
+			m_list_garage.SetItemText(gindex, 2, _T("运行中"));
 			break;
 		case OFFLINE:
-			m_list_garage.SetItemText(index, 2, _T("离线"));
+			m_list_garage.SetItemText(gindex, 2, _T("离线"));
 			break;
 		default:
-			m_list_garage.SetItemText(index, 2, _T("未知"));
+			m_list_garage.SetItemText(gindex, 2, _T("未知"));
 		}
 
 		tmp.Format(_T("%02d:%02d:%02d"),
-			garage[index].getspendtime() / 3600,
-			garage[index].getspendtime() / 60 % 60,
-			garage[index].getspendtime() % 60);
-		m_list_garage.SetItemText(index, 3, tmp);
+			garage[gindex].getspendtime() / 3600,
+			garage[gindex].getspendtime() / 60 % 60,
+			garage[gindex].getspendtime() % 60);
+		m_list_garage.SetItemText(gindex, 3, tmp);
 
 //		tmp.Format(_T("%d"), garage[i].getsumcar());
 //		m_list_garage.SetItemText(index, 4, tmp);
 
-		tmp.Format(_T("%d"), garage[index].getspendcar());
-		m_list_garage.SetItemText(index, 5, tmp);
+		tmp.Format(_T("%d"), garage[gindex].getspendcar());
+		m_list_garage.SetItemText(gindex, 5, tmp);
+
+		gindex = (gindex+1) % sumgarage;
 	}
 
-	for (int index = 0; index<sumioClient; index++)
+	//for (index = 0; index<sumioClient; index++)
 	{
 //		printf("%d ", ioClient_list[index].spendtime);
-		if (ioClient_list[index].spendtime > 10)
+		if (ioClient_list[cindex].spendtime > 10)
 		{
-			m_list_ioput.SetItemText(index, 2, _T("离线"));
+			m_list_ioput.SetItemText(cindex, 2, _T("离线"));
 		}
 		else
 		{
-			m_list_ioput.SetItemText(index, 2, _T("在线"));
+			m_list_ioput.SetItemText(cindex, 2, _T("在线"));
 		}
+		cindex = (cindex+1) % sumioClient;
 	}//*/
 //	printf("\n");
 
@@ -528,7 +570,9 @@ void CMFCAppDlg::update_list()
 void CMFCAppDlg::On32774()
 {
 	// TODO:  在此添加命令处理程序代码
-	ShellExecute(NULL, _T("open"), _T("http://gxy.hunnu.edu.cn/"), NULL, NULL, SW_SHOWNORMAL);
+	CAbout dlg;
+	dlg.DoModal();
+	//ShellExecute(NULL, _T("open"), _T("http://gxy.hunnu.edu.cn/"), NULL, NULL, SW_SHOWNORMAL);
 }
 
 void CMFCAppDlg::On32773()
@@ -570,4 +614,88 @@ void CMFCAppDlg::OnSize(UINT nType, int cx, int cy)
 	RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, 0, 0, &rcClient);
 	RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, reposQuery, &rcClient, &rcClient);//*/
 	//RepositionBars(AFX_IDW_CONTROLBAR_FIRST, AFX_IDW_CONTROLBAR_LAST, 0);
+
+	if (nType == SIZE_MINIMIZED)
+	{
+		ShowWindow(SW_HIDE);
+	}
+
+	CRgn rgn;
+	CRect rc;
+	GetWindowRect(&rc);
+	//获得窗口矩形
+	rc -= rc.TopLeft();
+	rgn.CreateRoundRectRgn(rc.left, rc.top, rc.right, rc.bottom, 15, 15);
+	//根据窗口矩形创建一个圆角矩形最后两个是形成圆角的大小
+	SetWindowRgn(rgn, TRUE);//*/
+}
+
+
+void CMFCAppDlg::OnDestroy()
+{
+	CDialogEx::OnDestroy();
+
+	// TODO: 在此处添加消息处理程序代码
+	Shell_NotifyIcon(NIM_DELETE, &m_NotifyIconData);
+}
+
+
+BOOL CMFCAppDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (pMsg->message == WM_KEYDOWN&&pMsg->wParam == VK_ESCAPE)
+	{
+		pMsg->wParam = VK_RETURN;
+		//将ESC键的消息替换为回车键的消息，这样，按ESC的时候
+		//也会去调用OnOK函数，而OnOK什么也不做，这样ESC也被屏蔽
+	}
+
+	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+LRESULT CMFCAppDlg::OnTrayNotify(WPARAM wParam, LPARAM lParam)
+{
+	static int flage = 1;
+	UINT uMsg = (UINT)lParam;
+
+	switch (uMsg)
+	{
+	case WM_RBUTTONUP:
+		{
+		//右键处理
+		CMenu menuTray;
+		CPoint point;
+		int id;
+		GetCursorPos(&point);
+
+		menuTray.LoadMenu(IDR_MENU2);
+		id = menuTray.GetSubMenu(0)->TrackPopupMenu(TPM_RETURNCMD | TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, this);
+		switch (id)
+		{
+		case ID_TRAY_EXIT:
+			if (CanExit())
+				CDialog::OnCancel();
+			break;
+		default:
+			break;
+		}
+		break;
+		}
+	case WM_LBUTTONDBLCLK:
+		if (flage)
+		{
+			ShowWindow(SW_HIDE);
+			flage = 0;
+		}
+		else
+		{
+			SetForegroundWindow();
+			ShowWindow(SW_SHOWNORMAL);
+			flage = 1;
+		}
+		break;
+	default:
+		break;
+	}
+	return 0;
 }

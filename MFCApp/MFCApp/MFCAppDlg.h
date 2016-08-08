@@ -8,6 +8,8 @@
 #include "afxwin.h"
 #include "afxcmn.h"
 
+#define WM_NOTI (WM_USER+1)
+
 class CMFCAppDlgAutoProxy;
 
 
@@ -34,6 +36,12 @@ public:
 	COScopeCtrl m_Osc;
 	HANDLE thread01;
 	HANDLE thread02;
+
+	Gdiplus::GdiplusStartupInput    m_gdiplusStartupInput;
+	ULONG_PTR                       m_gdiplusToken;
+	Image*                          m_pImage;                           //图片对象
+
+	NOTIFYICONDATA                  m_NotifyIconData;                   //托盘图标
 
 // 实现
 protected:
@@ -68,4 +76,7 @@ public:
 	CListCtrl m_list_ioput;
 	afx_msg void On32775();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnDestroy();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg LRESULT OnTrayNotify(WPARAM wParam, LPARAM lParam);
 };
