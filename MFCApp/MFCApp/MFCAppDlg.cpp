@@ -118,6 +118,7 @@ BEGIN_MESSAGE_MAP(CMFCAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON3, &CMFCAppDlg::OnBnClickedButton3)
 	ON_BN_CLICKED(IDC_BUTTON4, &CMFCAppDlg::OnBnClickedButton4)
 	ON_BN_CLICKED(IDC_BUTTON5, &CMFCAppDlg::OnBnClickedButton5)
+	ON_WM_NCHITTEST()
 END_MESSAGE_MAP()
 
 BOOL ImageFromIDResource(UINT nID, LPCTSTR sTR, Image*&pImg)
@@ -765,4 +766,14 @@ void CMFCAppDlg::OnBnClickedButton5()
 		if (CanExit())
 			CDialog::OnCancel();
 	}
+}
+
+
+LRESULT CMFCAppDlg::OnNcHitTest(CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	UINT uRet = CDialog::OnNcHitTest(point);
+	return (HTCLIENT == uRet) ? HTCAPTION : uRet;
+
+	return CDialogEx::OnNcHitTest(point);
 }
