@@ -3,6 +3,7 @@
 //
 
 #include "OScopeCtrl.h"
+#include "GdipButton.h"
 
 #pragma once
 #include "afxwin.h"
@@ -23,6 +24,7 @@ class CMFCAppDlg : public CDialogEx
 public:
 	CMFCAppDlg(CWnd* pParent = NULL);	// 标准构造函数
 	virtual ~CMFCAppDlg();
+	void SetButtonBackGrounds(CDC *pDC);
 
 // 对话框数据
 	enum { IDD = IDD_MFCAPP_DIALOG };
@@ -37,9 +39,8 @@ public:
 	HANDLE thread01;
 	HANDLE thread02;
 
-	Gdiplus::GdiplusStartupInput    m_gdiplusStartupInput;
-	ULONG_PTR                       m_gdiplusToken;
-	Image*                          m_pImage;                           //图片对象
+//	Image*                          m_pImage;//png背景
+	HBITMAP m_hBitmap;//bmp背景
 
 	NOTIFYICONDATA                  m_NotifyIconData;                   //托盘图标
 
@@ -67,16 +68,22 @@ public:
 	CListCtrl m_list_garage;
 	CEdit m_sumcar;
 	CEdit m_freecar;
-	afx_msg void On32774();
-	afx_msg void On32773();
-	afx_msg void On32771();
-	afx_msg void On32772();
 	CEdit m_reservationcar;
 	CEdit m_Threadinfo;
 	CListCtrl m_list_ioput;
-	afx_msg void On32775();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnDestroy();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg LRESULT OnTrayNotify(WPARAM wParam, LPARAM lParam);
+	CGdipButton m_button1;
+	CGdipButton m_button2;
+	CGdipButton m_button3;
+	CGdipButton m_button4;
+	CGdipButton m_button5;
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButton3();
+	afx_msg void OnBnClickedButton4();
+	afx_msg void OnBnClickedButton5();
 };

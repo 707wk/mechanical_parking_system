@@ -18,6 +18,8 @@
 #include "IOCPserver.h"
 #include "md5.h"
 
+#include "GMemDC.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -92,6 +94,11 @@ void CMFCAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT3, m_reservationcar);
 	DDX_Control(pDX, IDC_EDIT4, m_Threadinfo);
 	DDX_Control(pDX, IDC_LIST3, m_list_ioput);
+	DDX_Control(pDX, IDC_BUTTON1, m_button1);
+	DDX_Control(pDX, IDC_BUTTON2, m_button2);
+	DDX_Control(pDX, IDC_BUTTON3, m_button3);
+	DDX_Control(pDX, IDC_BUTTON4, m_button4);
+	DDX_Control(pDX, IDC_BUTTON5, m_button5);
 }
 
 BEGIN_MESSAGE_MAP(CMFCAppDlg, CDialogEx)
@@ -101,14 +108,16 @@ BEGIN_MESSAGE_MAP(CMFCAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CMFCAppDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &CMFCAppDlg::OnBnClickedCancel)
 	ON_WM_TIMER()
-	ON_COMMAND(ID_32774, &CMFCAppDlg::On32774)
-	ON_COMMAND(ID_32773, &CMFCAppDlg::On32773)
-	ON_COMMAND(ID_32771, &CMFCAppDlg::On32771)
-	ON_COMMAND(ID_32772, &CMFCAppDlg::On32772)
-	ON_COMMAND(ID_32775, &CMFCAppDlg::On32775)
 	ON_MESSAGE(WM_NOTI , &CMFCAppDlg::OnTrayNotify)
 	ON_WM_SIZE()
 	ON_WM_DESTROY()
+	ON_WM_ICONERASEBKGND()
+	ON_WM_ERASEBKGND()
+	ON_BN_CLICKED(IDC_BUTTON1, &CMFCAppDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON2, &CMFCAppDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON3, &CMFCAppDlg::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON4, &CMFCAppDlg::OnBnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON5, &CMFCAppDlg::OnBnClickedButton5)
 END_MESSAGE_MAP()
 
 BOOL ImageFromIDResource(UINT nID, LPCTSTR sTR, Image*&pImg)
@@ -152,6 +161,11 @@ BOOL CMFCAppDlg::OnInitDialog()
 	ShowWindow(SW_MINIMIZE);
 
 	// TODO:  在此添加额外的初始化代码
+	m_button1.LoadStdImage(IDB_PNG_MAIN_MANAGE , _T("PNG"));
+	m_button2.LoadStdImage(IDB_PNG_MAIN_SETTING, _T("PNG"));
+	m_button3.LoadStdImage(IDB_PNG_MAIN_DEBUG  , _T("PNG"));
+	m_button4.LoadStdImage(IDB_PNG_MAIN_ABOUT  , _T("PNG"));
+	m_button5.LoadStdImage(IDB_PNG_MAIN_EXIT   , _T("PNG"));
 
 	//ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);隐藏任务栏图标
 
@@ -178,16 +192,21 @@ BOOL CMFCAppDlg::OnInitDialog()
 	Shell_NotifyIcon(NIM_ADD, &m_NotifyIconData);
 
 	//初始化GDI+.  
-	GdiplusStartup(&m_gdiplusToken, &m_gdiplusStartupInput, NULL);
+//	GdiplusStartup(&m_gdiplusToken, &m_gdiplusStartupInput, NULL);
 
 	//加载文件  
 	//CT2CW strFileName( _T("I:\\编程练习\\CommonFiles\\Test02.png") );  
 	//m_pImage = new Image( _T("I:\\编程练习\\CommonFiles\\Test02.png") );  
 	//m_pImage=Image::FromFile(_T("I:\\编程练习\\CommonFiles\\Test02.png"));  
-	m_pImage = Image::FromFile(_T("res\\bg.png"));
-	//ImageFromIDResource(IDB_PNG_BG, _T("png"), (Image*&)m_pImage);
+	//m_pImage = Image::FromFile(_T("res\\bg.png"));
+//	ImageFromIDResource(IDB_PNG_BG, _T("png"), (Image*&)m_pImage);
+	HINSTANCE	hInstResource = NULL;
+	// Find correct resource handle
+	hInstResource = AfxFindResourceHandle(MAKEINTRESOURCE(IDB_BITMAP_BG), RT_BITMAP);
+	// Load bitmap In
+	m_hBitmap = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(IDB_BITMAP_BG), IMAGE_BITMAP, 0, 0, 0);//*/
 
-	//错误判断  
+/*	//错误判断  
 	if ((m_pImage == NULL) || (m_pImage->GetLastStatus() != Ok))
 	{
 		if (m_pImage)
@@ -197,7 +216,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 		}
 		exit(1);
 		//return FALSE;
-	}
+	}//*/
 
 //	MYSQL_RES *res;                    //查询结果集
 //	MYSQL_ROW column;                  //数据行的列
@@ -265,8 +284,8 @@ BOOL CMFCAppDlg::OnInitDialog()
 
 void CMFCAppDlg::OnPaint()
 {
-	Graphics graphics(GetDC()->GetSafeHdc());
-	graphics.DrawImage(m_pImage, 0, 0, m_pImage->GetWidth(), m_pImage->GetHeight());
+//	Graphics graphics(GetDC()->GetSafeHdc());
+//	graphics.DrawImage(m_pImage, 0, 0, m_pImage->GetWidth(), m_pImage->GetHeight());
 	//printf("%d %d\n", m_pImage->GetWidth(), m_pImage->GetHeight());
 	if (IsIconic())
 	{
@@ -567,44 +586,6 @@ void CMFCAppDlg::update_list()
 	m_Threadinfo.SetWindowText(tmp);
 }
 
-void CMFCAppDlg::On32774()
-{
-	// TODO:  在此添加命令处理程序代码
-	CAbout dlg;
-	dlg.DoModal();
-	//ShellExecute(NULL, _T("open"), _T("http://gxy.hunnu.edu.cn/"), NULL, NULL, SW_SHOWNORMAL);
-}
-
-void CMFCAppDlg::On32773()
-{
-	// TODO:  Web端
-	ShellExecute(NULL, _T("open"), _T("http://127.0.0.1/manage/"), NULL, NULL, SW_SHOWNORMAL);
-}
-
-void CMFCAppDlg::On32771()
-{
-	// TODO:  在此添加命令处理程序代码
-	if (CanExit())
-		CDialog::OnCancel();
-}
-
-void CMFCAppDlg::On32772()
-{
-	// TODO:  在此添加命令处理程序代码
-	serverinfo.runstate = 0;
-
-	debugmodel dlg;
-	dlg.DoModal();
-
-	serverinfo.runstate = 1;
-}
-
-void CMFCAppDlg::On32775()
-{
-	// TODO: 设置
-}
-
-
 void CMFCAppDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialogEx::OnSize(nType, cx, cy);
@@ -625,7 +606,7 @@ void CMFCAppDlg::OnSize(UINT nType, int cx, int cy)
 	GetWindowRect(&rc);
 	//获得窗口矩形
 	rc -= rc.TopLeft();
-	rgn.CreateRoundRectRgn(rc.left, rc.top, rc.right, rc.bottom, 15, 15);
+	rgn.CreateRoundRectRgn(rc.left, rc.top, rc.right, rc.bottom, 5, 5);
 	//根据窗口矩形创建一个圆角矩形最后两个是形成圆角的大小
 	SetWindowRgn(rgn, TRUE);//*/
 }
@@ -698,4 +679,90 @@ LRESULT CMFCAppDlg::OnTrayNotify(WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return 0;
+}
+
+BOOL CMFCAppDlg::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	CRect rect;
+	GetClientRect(rect);
+
+	GCMemDC pDevC(pDC, rect);
+
+	/////////////////////////////////////////////////////////////////////////////////
+	// just put something in the background - unrelated to GdipButton
+	/////////////////////////////////////////////////////////////////////////////////
+	if (m_hBitmap)
+	{
+		pDevC->SelectObject(m_hBitmap);
+	}//*/
+	/////////////////////////////////////////////////////////////////////////////////
+
+
+	/////////////////////////////////////////////////////////////////////////////////
+	// Since this function just painted the background into the memory DC,
+	// this is the correct information that can be provided to the buttons
+	/////////////////////////////////////////////////////////////////////////////////
+	SetButtonBackGrounds(pDevC);
+	/////////////////////////////////////////////////////////////////////////////////
+
+	//return TRUE;
+
+	return CDialogEx::OnEraseBkgnd(pDC);
+}
+
+void CMFCAppDlg::SetButtonBackGrounds(CDC *pDC)
+{
+	// call with a memory DC or don't even bother since
+	// it will defeat the purpose of doing this
+	m_button1.SetBkGnd(pDC);
+	m_button2.SetBkGnd(pDC);
+	m_button3.SetBkGnd(pDC);
+	m_button4.SetBkGnd(pDC);
+	m_button5.SetBkGnd(pDC);
+}//*/
+
+
+void CMFCAppDlg::OnBnClickedButton1()
+{
+	// TODO:  Web端
+	ShellExecute(NULL, _T("open"), _T("http://127.0.0.1/manage/"), NULL, NULL, SW_SHOWNORMAL);
+}
+
+
+void CMFCAppDlg::OnBnClickedButton2()
+{
+	// TODO: 设置
+	MessageBox(_T("模块建设中"), _T("设置"), MB_OK);
+}
+
+
+void CMFCAppDlg::OnBnClickedButton3()
+{
+	// TODO:  调试
+	serverinfo.runstate = 0;
+
+	debugmodel dlg;
+	dlg.DoModal();
+
+	serverinfo.runstate = 1;
+}
+
+
+void CMFCAppDlg::OnBnClickedButton4()
+{
+	// TODO:  关于
+	CAbout dlg;
+	dlg.DoModal();
+}
+
+
+void CMFCAppDlg::OnBnClickedButton5()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if (MessageBox(_T("确定退出本程序?"), _T("退出"), MB_OKCANCEL) == IDOK)
+	{
+		if (CanExit())
+			CDialog::OnCancel();
+	}
 }

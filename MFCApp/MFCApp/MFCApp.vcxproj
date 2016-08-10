@@ -111,14 +111,17 @@
   <ItemGroup>
     <ClInclude Include="About.h" />
     <ClInclude Include="CCarbarnInfo.h" />
+    <ClInclude Include="CGdiPlusBitmap.h" />
     <ClInclude Include="ControlCode.h" />
     <ClInclude Include="CWayFinding.h" />
     <ClInclude Include="DataStructure.h" />
     <ClInclude Include="debugmodel.h" />
     <ClInclude Include="DlgProxy.h" />
+    <ClInclude Include="GdipButton.h" />
     <ClInclude Include="ioClient.h" />
     <ClInclude Include="IOCPserver.h" />
     <ClInclude Include="md5.h" />
+    <ClInclude Include="GMemDC.h" />
     <ClInclude Include="MFCApp.h" />
     <ClInclude Include="MFCAppDlg.h" />
     <ClInclude Include="OScopeCtrl.h" />
@@ -133,6 +136,7 @@
     <ClCompile Include="CWayFinding.cpp" />
     <ClCompile Include="debugmodel.cpp" />
     <ClCompile Include="DlgProxy.cpp" />
+    <ClCompile Include="GdipButton.cpp" />
     <ClCompile Include="ioClient.cpp" />
     <ClCompile Include="IOCPserver.cpp" />
     <ClCompile Include="md5.cpp" />
@@ -158,8 +162,14 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\about.png" />
+    <Image Include="res\bg.bmp" />
     <Image Include="res\bg.png" />
     <Image Include="res\green.ico" />
+    <Image Include="res\main_about.png" />
+    <Image Include="res\main_debug.png" />
+    <Image Include="res\main_exit.png" />
+    <Image Include="res\main_manage.png" />
+    <Image Include="res\main_setting.png" />
     <Image Include="res\MFCApp.ico" />
     <Image Include="res\red.ico" />
   </ItemGroup>

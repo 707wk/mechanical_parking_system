@@ -69,6 +69,15 @@
     <ClInclude Include="About.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CGdiPlusBitmap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GdipButton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GMemDC.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MFCApp.cpp">
@@ -110,6 +119,9 @@
     <ClCompile Include="About.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="GdipButton.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="MFCApp.idl">
@@ -142,6 +154,24 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\about.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\main_about.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\main_debug.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\main_exit.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\main_manage.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\main_setting.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\bg.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

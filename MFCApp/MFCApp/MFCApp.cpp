@@ -27,6 +27,9 @@ using namespace std;
 #define new DEBUG_NEW
 #endif
 
+Gdiplus::GdiplusStartupInput    m_gdiplusStartupInput;
+ULONG_PTR                       m_gdiplusToken;
+
 struct serverset serverinfo;
 
 pthread_mutex_t work_mutex; //全局互斥锁对象
@@ -557,6 +560,9 @@ BOOL CMFCAppApp::InitInstance()
 
 	mapinfo = new CWayFinding;
 
+	//初始化GDI+.  
+	GdiplusStartup(&m_gdiplusToken, &m_gdiplusStartupInput, NULL);
+
 	CMFCAppDlg maindlg;
 	dlg = &maindlg;
 	m_pMainWnd = &maindlg;
@@ -596,5 +602,7 @@ int CMFCAppApp::ExitInstance()
 {
 	AfxOleTerm(FALSE);
 
+	Gdiplus::GdiplusShutdown(m_gdiplusToken);
+	
 	return CWinApp::ExitInstance();
 }
