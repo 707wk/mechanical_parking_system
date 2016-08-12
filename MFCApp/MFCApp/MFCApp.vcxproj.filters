@@ -174,6 +174,51 @@
     <Image Include="res\bg.bmp">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\main\bg.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\main\about.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\main\main_about.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\main\main_debug.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\main\main_exit.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\main\main_manage.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\main\main_setting.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\main\bg.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\debugdlg\del.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\debugdlg\location.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\debugdlg\reset.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\debugdlg\save.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\debugdlg\status.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\debugdlg\stop.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\debugdlg\bg.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Library Include="libmysql.lib" />

@@ -9,6 +9,11 @@
 #include "ControlCode.h"
 #include "ThreadFuniction.h"
 
+#include "GMemDC.h"
+
+#define TESTPUTSEND printf("sen:%02X-%02X-%02X-%02X-%02X -> ",data[1],data[3],data[4],data[5],data[6]);
+#define TESTPUTRECN printf("rec:%02X-%02X-%02X-%02X\n",recstr[1],recstr[2],recstr[3],recstr[4]);
+
 extern struct serverset serverinfo;
 
 extern HANDLE hCom;  //全局变量，串口句柄
@@ -53,6 +58,11 @@ void debugmodel::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT2, m_col);
 	DDX_Control(pDX, IDC_EDIT5, m_location);
 	DDX_Control(pDX, IDC_EDIT4, m_state);
+	DDX_Control(pDX, IDC_BUTTON1, m_save);
+	DDX_Control(pDX, IDC_BUTTON2, m_del);
+	DDX_Control(pDX, IDC_BUTTON3, m_loca);
+	DDX_Control(pDX, IDC_BUTTON4, m_status);
+	DDX_Control(pDX, IDC_BUTTON5, m_stop);
 }
 
 
@@ -62,9 +72,10 @@ BEGIN_MESSAGE_MAP(debugmodel, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &debugmodel::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &debugmodel::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON5, &debugmodel::OnBnClickedButton5)
-	ON_BN_CLICKED(IDC_BUTTON6, &debugmodel::OnBnClickedButton6)
 	ON_BN_CLICKED(IDC_BUTTON3, &debugmodel::OnBnClickedButton3)
 	ON_BN_CLICKED(IDC_BUTTON4, &debugmodel::OnBnClickedButton4)
+	ON_WM_PAINT()
+	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 BEGIN_DISPATCH_MAP(debugmodel, CDialogEx)
@@ -104,6 +115,20 @@ BOOL debugmodel::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
+	m_save.LoadStdImage(IDB_PNG_SAVE    , _T("PNG"));
+	m_del.LoadStdImage(IDB_PNG_DEL      , _T("PNG"));
+	m_loca.LoadStdImage(IDB_PNG_LOCATION, _T("PNG"));
+	m_status.LoadStdImage(IDB_PNG_STATUS, _T("PNG"));
+	m_stop.LoadStdImage(IDB_PNG_STOP    , _T("PNG"));
+	m_stop.LoadAltImage(IDB_PNG_RESET   , _T("PNG"));
+	m_stop.EnableToggle(TRUE);
+
+	HINSTANCE	hInstResource = NULL;
+	// Find correct resource handle
+	hInstResource = AfxFindResourceHandle(MAKEINTRESOURCE(IDB_BITMAP_DEBUG), RT_BITMAP);
+	// Load bitmap In
+	m_hBitmap = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(IDB_BITMAP_DEBUG), IMAGE_BITMAP, 0, 0, 0);//*/
+
 	MYSQL_RES *res;                    //查询结果集
 	MYSQL_ROW column;                  //数据行的列
 
@@ -164,12 +189,15 @@ void debugmodel::OnBnClickedButton1()
 
 	data[6] = (data[1] + data[3] + data[4] + data[5]) % CHECKMOD;
 
+	TESTPUTSEND
+
 	OnSend(data, 7);
 	Sleep(100);
 	memset(recstr, '\0', COMLEN);
 	OnReceive(recstr, 4);
 
-	putinfo(recstr);
+	TESTPUTRECN
+	//putinfo(recstr);
 }
 
 
@@ -204,18 +232,23 @@ void debugmodel::OnBnClickedButton2()
 
 	data[6] = (data[1] + data[3] + data[4] + data[5]) % CHECKMOD;
 
+	TESTPUTSEND
+
 	OnSend(data, 7);
 	Sleep(100);
 	memset(recstr, '\0', COMLEN);
 	OnReceive(recstr, 4);
 
-	putinfo(recstr);
+	TESTPUTRECN
+	//putinfo(recstr);
 }
 
 
 void debugmodel::OnBnClickedButton5()
 {
 	// TODO:  急停
+	static int flage = 1;
+
 	char data[] = "1234567";
 
 	data[0] = ADDFIRST;
@@ -228,7 +261,17 @@ void debugmodel::OnBnClickedButton5()
 		return;
 
 	data[1] = _wtoi(tmp.GetBuffer(0));
-	data[3] = STOP;
+	if (flage)
+	{
+		data[3] = STOP;
+		flage = 0;
+	}
+	else
+	{
+		data[3] = RESET;
+		flage = 1;
+	}
+
 	//m_row.GetWindowText(tmp);
 	data[4] = 0;// _wtoi(tmp.GetBuffer(0));
 	//m_col.GetWindowText(tmp);
@@ -236,15 +279,18 @@ void debugmodel::OnBnClickedButton5()
 
 	data[6] = (data[1] + data[3] + data[4] + data[5]) % CHECKMOD;
 
+	TESTPUTSEND
+
 	OnSend(data, 7);
 	Sleep(100);
 	memset(recstr, '\0', COMLEN);
 	OnReceive(recstr, 4);
 
-	putinfo(recstr);
+	TESTPUTRECN
+	//putinfo(recstr);
 }
 
-
+/*
 void debugmodel::OnBnClickedButton6()
 {
 	// TODO:  复位
@@ -274,7 +320,7 @@ void debugmodel::OnBnClickedButton6()
 	OnReceive(recstr, 4);
 
 	putinfo(recstr);
-}
+}//*/
 
 
 void debugmodel::OnBnClickedButton3()
@@ -300,12 +346,15 @@ void debugmodel::OnBnClickedButton3()
 
 	data[6] = (data[1] + data[3] + data[4] + data[5]) % CHECKMOD;
 
+	TESTPUTSEND
+
 	OnSend(data, 7);
 	Sleep(100);
 	memset(recstr, '\0', COMLEN);
 	OnReceive(recstr, 4);
 
-	putinfo(recstr);
+	TESTPUTRECN
+	//putinfo(recstr);
 
 	tmp.Format(_T("第%d行第%d列"),recstr[2],recstr[1]);
 	m_location.SetWindowTextW(tmp);
@@ -335,12 +384,15 @@ void debugmodel::OnBnClickedButton4()
 
 	data[6] = (data[1] + data[3] + data[4] + data[5]) % CHECKMOD;
 
+	TESTPUTSEND
+
 	OnSend(data, 7);
 	Sleep(100);
 	memset(recstr, '\0', COMLEN);
 	OnReceive(recstr, 4);
 
-	putinfo(recstr);
+	TESTPUTRECN
+	//putinfo(recstr);
 
 	switch (recstr[1])
 	{
@@ -370,15 +422,61 @@ void debugmodel::OnBnClickedButton4()
 	}
 }
 
-void debugmodel::putinfo(char* recstr)
+void debugmodel::OnPaint()
 {
-//	CString tmp;
-//	tmp.Format(_T(
-	printf("rev:%02X-%02X-%02X-%02X\n",
-		recstr[0], recstr[1], recstr[2], recstr[3]);
-//	CString strtmp;
-//	m_info.GetWindowText(strtmp);
-//	strtmp = _T("\r\n") + strtmp;
-//	strtmp = tmp + strtmp;
-//	m_info.SetWindowText(strtmp);
+	CPaintDC dc(this); // device context for painting
+					   // TODO: 在此处添加消息处理程序代码
+					   // 不为绘图消息调用 CDialogEx::OnPaint()
+	if (IsIconic())
+	{
+		CPaintDC dc(this); // 用于绘制的设备上下文
+
+		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
+	}
+	else
+	{
+		CDialogEx::OnPaint();
+	}
 }
+
+BOOL debugmodel::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	CRect rect;
+	GetClientRect(rect);
+
+	GCMemDC pDevC(pDC, rect);
+
+	/////////////////////////////////////////////////////////////////////////////////
+	// just put something in the background - unrelated to GdipButton
+	/////////////////////////////////////////////////////////////////////////////////
+	if (m_hBitmap)
+	{
+		pDevC->SelectObject(m_hBitmap);
+	}//
+	 /////////////////////////////////////////////////////////////////////////////////
+
+
+	 /////////////////////////////////////////////////////////////////////////////////
+	 // Since this function just painted the background into the memory DC,
+	 // this is the correct information that can be provided to the buttons
+	 /////////////////////////////////////////////////////////////////////////////////
+	SetButtonBackGrounds(pDevC);
+	/////////////////////////////////////////////////////////////////////////////////
+
+	//return TRUE;
+
+	return CDialogEx::OnEraseBkgnd(pDC);
+}
+
+void debugmodel::SetButtonBackGrounds(CDC *pDC)
+{
+	// call with a memory DC or don't even bother since
+	// it will defeat the purpose of doing this
+	m_save.SetBkGnd(pDC);
+	m_del.SetBkGnd(pDC);
+	m_loca.SetBkGnd(pDC);
+	m_status.SetBkGnd(pDC);
+	m_stop.SetBkGnd(pDC);
+}//*/

@@ -17,8 +17,6 @@ public:
 #endif
 
 public:
-	Gdiplus::GdiplusStartupInput    m_gdiplusStartupInput;
-	ULONG_PTR                       m_gdiplusToken;
 	Image*                          m_pImage;                           //Õº∆¨∂‘œÛ
 
 protected:

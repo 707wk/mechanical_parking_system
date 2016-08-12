@@ -121,33 +121,6 @@ BEGIN_MESSAGE_MAP(CMFCAppDlg, CDialogEx)
 	ON_WM_NCHITTEST()
 END_MESSAGE_MAP()
 
-BOOL ImageFromIDResource(UINT nID, LPCTSTR sTR, Image*&pImg)
-{
-	HINSTANCE hInst = AfxGetResourceHandle();
-	HRSRC hRsrc = ::FindResource(hInst, MAKEINTRESOURCE(nID), sTR);
-	// type
-	if (!hRsrc)
-		return FALSE;
-	// load resource into memory
-	DWORD len = SizeofResource(hInst, hRsrc);
-	BYTE*lpRsrc = (BYTE*)LoadResource(hInst, hRsrc);
-	if (!lpRsrc)
-		return FALSE;
-	// Allocate global memory on which to create stream
-	HGLOBAL m_hMem = GlobalAlloc(GMEM_FIXED, len);
-	BYTE*pmem = (BYTE*)GlobalLock(m_hMem);
-	memcpy(pmem, lpRsrc, len);
-	IStream*pstm;
-	CreateStreamOnHGlobal(m_hMem, FALSE, &pstm);
-	// load from stream
-	pImg = Gdiplus::Image::FromStream(pstm);
-	// free/release stuff
-	GlobalUnlock(m_hMem);
-	pstm->Release();
-	FreeResource(lpRsrc);
-	return TRUE;
-}
-
 // CMFCAppDlg 消息处理程序
 
 BOOL CMFCAppDlg::OnInitDialog()
@@ -234,6 +207,7 @@ BOOL CMFCAppDlg::OnInitDialog()
 	m_Osc.SetGridColor(RGB(192, 192, 255));
 	m_Osc.SetPlotColor(RGB(255, 255, 0));
 	m_Osc.AppendPoint(0.0);
+//	GetDlgItem(IDC_CUSTOM1)->ModifyStyle(WS_BORDER, 0);
 
 	//设置列表主题
 	m_list_garage.SetExtendedStyle(
